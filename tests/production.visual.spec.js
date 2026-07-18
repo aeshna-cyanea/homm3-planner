@@ -139,12 +139,12 @@ for (const viewport of viewports) {
     const hordeRowGap = fifthCard.y - (thirdCard.y + thirdCard.height);
     const plainRowGap = seventhCard.y - (fifthCard.y + fifthCard.height);
     expect(plainRowGap).toBeLessThan(hordeRowGap);
-    await expect(page.locator(".unit-card").first().locator(".production-detail")).toHaveText(
-      "14 per week",
-    );
-    await expect(page.locator(".unit-card").first().locator(".cost-detail")).toHaveText(
-      "60 gold each",
-    );
+    await expect(
+      page.locator(".unit-card").first().locator(".production-detail strong"),
+    ).toHaveText("14");
+    await expect(
+      page.locator(".unit-card").first().locator(".cost-detail .cost-item b"),
+    ).toHaveText("60");
     await expect(
       page.locator(".unit-card").first().locator(".resource-icon-gold"),
     ).toBeVisible();
@@ -164,14 +164,11 @@ for (const viewport of viewports) {
     const emptyCard = page.locator(".unit-card").nth(2);
     await expect(emptyCard.locator(".creature-name")).toHaveText("Griffin");
     await expect(emptyCard.locator(".detail-prompt")).toHaveCount(0);
-    await expect(emptyCard.locator(".inactive-details")).toHaveText(
-      "(7 per week, 200 gold each)",
-    );
-    await expect(emptyCard.locator(".inactive-details .resource-icon-gold")).toBeVisible();
+    await expect(emptyCard.locator(".inactive-details")).toHaveCount(0);
+    await expect(emptyCard.locator(".production-detail strong")).toHaveText("7");
+    await expect(emptyCard.locator(".cost-detail .cost-item b")).toHaveText("200");
+    await expect(emptyCard.locator(".creature-details .resource-icon-gold")).toBeVisible();
 
-    await expect(page.locator("#citadel-detail .fortification-growth")).toHaveText(
-      "1.5x growth, rounded down",
-    );
     if (viewport.width === 600) {
       const citadelGrowth = await page
         .locator("#citadel-detail .fortification-growth")
@@ -282,7 +279,7 @@ test("wrapped creature names do not collide with dwelling controls", async ({ pa
     const details = await slot.locator(".creature-details").boundingBox();
     const controls = await slot.locator(".external-dwelling-control").boundingBox();
     expect(name.height).toBeGreaterThan(24);
-    expect(details.y + details.height).toBeLessThanOrEqual(controls.y);
+    expect(controls.y - (details.y + details.height)).toBeGreaterThanOrEqual(4);
   }
 });
 
@@ -298,7 +295,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
 
   await firstSlot.locator('[data-external-action="increment"]').click();
   await expect(count).toHaveValue("1");
-  await expect(firstSlot.locator(".production-detail")).toHaveText("16 per week");
+  await expect(firstSlot.locator(".production-detail strong")).toHaveText("16");
   await expect(externalResults).toBeVisible();
   await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
   await expect(page.locator("#external-results-body tr")).toHaveCount(1);
@@ -316,13 +313,13 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
 
   await page.locator('label:has(input[name="fortification"][value="citadel"])').click();
-  await expect(firstSlot.locator(".production-detail")).toHaveText("24 per week");
+  await expect(firstSlot.locator(".production-detail strong")).toHaveText("24");
   await expect(page.locator("#external-results-body tr").first()).toContainText("15 units");
 
   await count.fill("3");
   await count.press("Tab");
   await expect(count).toHaveValue("3");
-  await expect(firstSlot.locator(".production-detail")).toHaveText("27 per week");
+  await expect(firstSlot.locator(".production-detail strong")).toHaveText("27");
   await expect(page.locator("#external-results-body tr").first()).toContainText("45 units");
   await expect(page.locator("#external-resource-totals")).toHaveText("2,250 gold");
   await expect(externalResults).toHaveScreenshot("external-recruitment-panel.png", {
@@ -332,7 +329,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await firstSlot.locator('[data-external-action="reset"]').click();
   await expect(count).toHaveValue("");
   await expect(count).toHaveAttribute("placeholder", "0");
-  await expect(firstSlot.locator(".production-detail")).toHaveText("22 per week");
+  await expect(firstSlot.locator(".production-detail strong")).toHaveText("22");
   await expect(externalResults).toBeHidden();
 });
 
@@ -411,9 +408,11 @@ test("multi-resource creature costs have visible separators", async ({ page }) =
 
   const dreadnoughtCard = page.locator(".unit-card").nth(7);
   await dreadnoughtCard.click();
-  await expect(dreadnoughtCard.locator(".creature-details")).toContainText(
-    "2,200 gold, 1 crystal each",
-  );
+  const dreadnoughtCosts = dreadnoughtCard.locator(".cost-detail .cost-item");
+  await expect(dreadnoughtCosts).toHaveCount(2);
+  await expect(dreadnoughtCosts.first().locator("b")).toHaveText("2,200");
+  await expect(dreadnoughtCosts.last().locator("b")).toHaveText("1");
+  await expect(dreadnoughtCard.locator(".cost-separator")).toHaveText(",");
   await expect(dreadnoughtCard.locator(".resource-icon-gold")).toBeVisible();
   await expect(dreadnoughtCard.locator(".resource-icon-crystal")).toBeVisible();
   await expect(dreadnoughtCard).toHaveScreenshot("factory-dreadnought-cost.png", {

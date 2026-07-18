@@ -142,6 +142,20 @@ function productionFor(growth, tier, slotIndex) {
   return adjustedGrowth;
 }
 
+function renderCardDetails(creature, tier, slotIndex) {
+  if (!creature) return "";
+
+  return (
+    '<span class="production-detail">' +
+    "<strong>" +
+    formatNumber(productionFor(creature.growth, tier, slotIndex)) +
+    "</strong>/week, </span>" +
+    '<span class="cost-detail">' +
+    formatCost(creature.cost) +
+    "</span>"
+  );
+}
+
 function dwellingSlots() {
   const roster = state.rosters.get(state.town);
   const slots = [];
@@ -404,24 +418,8 @@ function renderCards() {
         ".",
     );
 
-    let details = basicCreature
-        ? '<span class="inactive-details">' +
-          '<span class="production-detail">(<strong>' +
-          formatNumber(productionFor(basicCreature.growth, tier, slotIndex)) +
-          "</strong> per week, </span>" +
-          '<span class="cost-detail">' +
-          formatCost(basicCreature.cost) +
-          " each)</span></span>"
-        : "";
-    if (creature) {
-      details =
-        '<span class="production-detail"><strong>' +
-        formatNumber(productionFor(creature.growth, tier, slotIndex)) +
-        "</strong> per week</span>" +
-        '<span class="cost-detail">' +
-        formatCost(creature.cost) +
-        " each</span>";
-    }
+    const detailCreature = creature || basicCreature;
+    const details = renderCardDetails(detailCreature, tier, slotIndex);
 
     card.innerHTML =
       '<span class="card-top">' +

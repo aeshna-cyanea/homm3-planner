@@ -419,12 +419,6 @@ select:focus-visible {
 }
 .creature-details strong { color: var(--ink); font-weight: 650; }
 .production-detail { white-space: nowrap; }
-.inactive-details {
-  display: inline-flex;
-  min-width: 0;
-  flex-wrap: wrap;
-  gap: 0.125rem 0.3125rem;
-}
 
 .external-dwelling-control {
   position: absolute;
@@ -712,6 +706,7 @@ select:focus-visible {
 /* Three 11rem cards plus two 0.75rem gaps need 34.5rem. */
 @container creature-scheme (max-width: 34.5rem) {
   .creature-name { margin-top: 0.6875rem; }
+  .unit-card { padding: 0.53125rem 0.53125rem 3.4375rem; }
 }
 
 /* Two 11rem cards plus their 0.75rem gap need 22.75rem. */
@@ -719,8 +714,8 @@ select:focus-visible {
   .unit-slot {
     flex-basis: calc((100% - var(--unit-card-column-gap)) / 2);
     min-width: 0;
-    height: calc(var(--unit-card-height) + 0.875rem);
-    min-height: calc(var(--unit-card-height) + 0.875rem);
+    height: calc(var(--unit-card-height) + 0.25rem);
+    min-height: calc(var(--unit-card-height) + 0.25rem);
   }
 }
 
