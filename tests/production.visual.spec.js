@@ -72,6 +72,8 @@ for (const viewport of viewports) {
       return {
         min: resolvedWidth("--unit-card-min-width"),
         max: resolvedWidth("--unit-card-max-width"),
+        minHeight: resolvedWidth("--unit-card-min-height"),
+        maxHeight: resolvedWidth("--unit-card-max-height"),
         gap: Number.parseFloat(getComputedStyle(grid).columnGap),
       };
     });
@@ -87,6 +89,8 @@ for (const viewport of viewports) {
       );
     }
     expect(firstCard.width).toBeLessThanOrEqual(cardWidths.max + 0.5);
+    expect(firstCard.height).toBeGreaterThanOrEqual(cardWidths.minHeight - 0.5);
+    expect(firstCard.height).toBeLessThanOrEqual(cardWidths.maxHeight + 0.5);
     expect(fifthCard.y).toBeGreaterThan(firstCard.y);
     if (viewport.width === 900) {
       expect(thirdCard.y).toBe(firstCard.y);
@@ -229,11 +233,13 @@ test("card columns respond to scheme width rather than viewport width", async ({
   expect(splitScheme.width).toBeLessThan(singleColumnScheme.width);
   expect(splitThird.y).toBe(splitFirst.y);
   expect(splitFourth.y).toBeGreaterThan(splitFirst.y);
+  expect(splitFirst.height).toBeLessThan(singleFirst.height);
 
   await page.setViewportSize({ width: 1440, height: 700 });
   const wideFirst = await page.locator(".unit-slot").first().boundingBox();
   const wideFourth = await page.locator(".unit-slot").nth(3).boundingBox();
   expect(wideFourth.y).toBe(wideFirst.y);
+  expect(wideFirst.height).toBeGreaterThan(splitFirst.height);
 });
 
 test("external dwellings add to base growth and reset independently", async ({ page }) => {

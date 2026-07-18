@@ -12,7 +12,8 @@
   --shadow: 0 22px 55px rgba(0, 0, 0, 0.36);
   --unit-card-min-width: 11rem;
   --unit-card-max-width: 13.75rem;
-  --unit-card-height: 220px;
+  --unit-card-min-height: 11rem;
+  --unit-card-max-height: 13.75rem;
   --unit-card-column-gap: 0.75rem;
   --resource-gold: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAACXBIWXMAAAsTAAALEwEAmpwYAAABvElEQVR42gXBTWvTYADA8f+TPElaawajW1tdSmEOauc2xSpCB0M9CMN5mEPFoYIHBRHcQfslph71G/hyUkFFEIVd5sF3PMnYatEKdrNra2abpmme/X4iETeujKZj94czCel1fjVWy3J+o9x79cNrAQAAAMCxfNRvfp5SYeOG2ipfU6cKlgIAAJkDDgMZAOk2MK4vLDM6/IGjx9PUawIAgT43nQ/uZMYSfZubvv5iqX1alqr+o7Aenj9R6JHIjHNx1lbtJz/V5P46t+89JFQfkcEfzlx4+VaaQlRFVOPTN0Hz/zNmzp0UV4s5GrWd3C3O4wxJ9o0VaNa6SB9NdoMe4zmDxQeClZXX7MnGOJLvY7ViMZSMYlgGAoVmaaIkA7DNNrWOQc31GUm79GcXiGlddjsmkZhDr6fQW7r44naF83hJM0eSYnDL9UnFDFKpv7x/V6Xt+uwa+M3X734JtXYJGbEjCGsgm9qhzk5o6umipdaWi2r6gBk6CVMd3GtvJG19Qk7OPNcDz/UAT1cmoSVo/YtiBW8QuhCV9Y6orPtcnnIEAIVcPwBRy7g5GDO9XFyoubz07Ii8BTB7KA7ANplwpQSg/SqJAAAAAElFTkSuQmCC");
   --resource-wood: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAMCAYAAAC5tzfZAAAACXBIWXMAAQAPAAEADwHovd9FAAAAAXNSR0IB2cksfwAAAjJJREFUeNptjU1MkgEcxv/6wosoH4IohAoKas5XEoaKAhFfohIB+toKRgVp2qBiK6zUmCv6GIfcXHWs2VraqlPH1jrUaqtLnVqbl47NLnbp4uHptVXz4LM9/z2H5/d/aIdkUYfpw6kgtynkNMOIqLddT4EeI9VVM+TpMpDVrKdGjZJIJasiKStWqmvYL+khK16UMsgGu0BEx1t0KnHQugvk7jbRIGdSzMb6Mc87Mebpw9nRfgS7jUiHbJ+trQ28lCHycsb/kCBWnPLb2jp06q0biQNYno7AoNfDb+vEYmoU5Rkfeoy1d7v09WTvaPoHkat4NPDzUtwJl8WMqZAdq/kweHcriET49bqIZ4s8fBbjbZO2jprqBSje2/Kmz9yEyREHbgpLWpUc2dgg1haOIOroANe2B8v5Yby9cwI6uaKsUcqI0h4bnuRCaNAokI8MoMg7IRFJ8fjaMWy8LEDKsJjwdmNpegQrczGo5dISKaXi0sr5CB6cCaG+UYvr6YPIBTjMJp0oTvmwdpXH+4cZWAxarD/KCg8soNqqCoq49t5avTyOQnAf5DUyvLuXwf0LUehkCiyc3I+l0wEwlRWYCTuR8HEfqZoVUU21hDiT4cfzc/Gt5ACH3IQbFxN+fH81j9y4A2G7+RMR8Q1qFc8110qEXEHbh2UlSltn8/rTK2MoCEUi+lbODuGwl9s45DBrt1vtzTqymTRETGXlH/9VbC7p3EwFua9CVgv2Cm6cHLbSTug35eXDCbDK6oAAAAAASUVORK5CYII=");
@@ -183,6 +184,11 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
 .scheme-section {
   container-name: creature-scheme;
   container-type: inline-size;
+  --unit-card-height: clamp(
+    var(--unit-card-min-height),
+    calc(25cqi - 0.75 * var(--unit-card-column-gap)),
+    var(--unit-card-max-height)
+  );
 }
 
 .town-control,
