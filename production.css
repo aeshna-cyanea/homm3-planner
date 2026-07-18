@@ -12,8 +12,6 @@
   --shadow: 0 1.375rem 3.4375rem rgba(0, 0, 0, 0.36);
   --unit-card-min-width: 11rem;
   --unit-card-max-width: 13.75rem;
-  --unit-card-min-height: 11rem;
-  --unit-card-max-height: 13.75rem;
   --unit-card-column-gap: 0.75rem;
   --state-icon-none: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3C/svg%3E");
   --state-icon-basic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
@@ -176,11 +174,6 @@ h2 {
 .scheme-section {
   container-name: creature-scheme;
   container-type: inline-size;
-  --unit-card-height: clamp(
-    var(--unit-card-min-height),
-    calc(25cqi - 0.75 * var(--unit-card-column-gap)),
-    var(--unit-card-max-height)
-  );
 }
 
 .town-control,
@@ -308,6 +301,7 @@ select { font-size: 1rem; }
 .unit-grid {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: center;
   gap: 1.875rem var(--unit-card-column-gap);
   width: 100%;
@@ -320,27 +314,36 @@ select { font-size: 1rem; }
 
 .unit-slot {
   position: relative;
+  display: grid;
   flex: 1 1 var(--unit-card-min-width);
   min-width: var(--unit-card-min-width);
   max-width: var(--unit-card-max-width);
-  height: var(--unit-card-height);
 }
 
 .unit-slot.has-horde { margin-bottom: 3.375rem; }
 
 .unit-card {
   display: grid;
-  padding: 1.0625rem 1.0625rem 3.4375rem;
+  grid-template-rows: minmax(0, 1fr) auto;
   overflow: hidden;
   color: inherit;
-  text-align: left;
   border: 1px solid var(--line);
   border-radius: 0.6875rem;
   background: var(--panel-soft);
-  cursor: pointer;
   transition: transform 130ms ease, border-color 130ms ease, background 130ms ease;
   width: 100%;
-  height: 100%;
+}
+
+.unit-card-cycle {
+  display: grid;
+  min-width: 0;
+  padding: 1.0625rem 1.0625rem 0.5rem;
+  color: inherit;
+  text-align: left;
+  border: 0;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .unit-card:hover { transform: translateY(-0.125rem); border-color: #8b7757; }
@@ -349,7 +352,7 @@ select { font-size: 1rem; }
   border-bottom-left-radius: 0;
 }
 .unit-slot.has-horde .unit-card:hover { transform: none; }
-.unit-card:focus-visible {
+.unit-card:has(.unit-card-cycle:focus-visible) {
   outline: 0.1875rem solid rgba(221, 182, 94, 0.35);
   outline-offset: 0.1875rem;
 }
@@ -423,16 +426,12 @@ select { font-size: 1rem; }
 .production-detail { white-space: nowrap; }
 
 .external-dwelling-control {
-  position: absolute;
-  z-index: 3;
-  right: 0.6875rem;
-  bottom: 0.6875rem;
-  left: 0.6875rem;
   display: grid;
   grid-template-columns: auto 1.5625rem calc(2ch + 0.875rem) 1.5625rem 1.5625rem;
   align-items: center;
-  justify-content: end;
+  justify-self: center;
   gap: 0.1875rem;
+  margin-bottom: 0.6875rem;
 }
 
 .external-dwelling-icon {
@@ -701,7 +700,8 @@ select { font-size: 1rem; }
 /* Three 11rem cards plus two 0.75rem gaps need 34.5rem. */
 @container creature-scheme (max-width: 34.5rem) {
   .creature-name { margin-top: 0.6875rem; }
-  .unit-card { padding: 0.53125rem 0.53125rem 3.4375rem; }
+  .unit-card-cycle { padding: 0.53125rem 0.53125rem 0.375rem; }
+  .external-dwelling-control { margin-bottom: 0.53125rem; }
 }
 
 /* Two 11rem cards plus their 0.75rem gap need 22.75rem. */
@@ -709,7 +709,6 @@ select { font-size: 1rem; }
   .unit-slot {
     flex-basis: calc((100% - var(--unit-card-column-gap)) / 2);
     min-width: 0;
-    height: calc(var(--unit-card-height) + 0.25rem);
   }
 }
 
@@ -727,11 +726,12 @@ select { font-size: 1rem; }
 
 @media (max-width: 22.5rem) {
   .external-dwelling-control {
-    right: 0.3125rem;
-    bottom: 0.5625rem;
-    left: 0.3125rem;
-    grid-template-columns: auto 1.3125rem calc(2ch + 0.6875rem) 1.3125rem 1.3125rem;
+    grid-template-columns: auto repeat(4, minmax(0, 1fr));
+    justify-self: center;
     gap: 0.125rem;
+    width: calc(100% - 0.625rem);
+    max-width: 7rem;
+    margin-bottom: 0.5625rem;
   }
 
   .external-dwelling-icon { font-size: 0.72rem; }

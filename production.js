@@ -393,17 +393,19 @@ function renderCards(slots) {
     const followingSelection = nextSelection(slotData, selection);
     const followingCreature = creatureFor(slotData, followingSelection);
     const slot = document.createElement("div");
-    const card = document.createElement("button");
+    const card = document.createElement("div");
+    const cycleButton = document.createElement("button");
     slot.className = "unit-slot" + (horde ? " has-horde" : "");
     card.className = "unit-card";
-    card.type = "button";
-    card.dataset.slot = String(slotIndex);
     card.dataset.stage = String(stage);
+    cycleButton.className = "unit-card-cycle";
+    cycleButton.type = "button";
+    cycleButton.dataset.slot = String(slotIndex);
 
     const basicCreature = basicCreatureFor(slotData);
     const creatureName = creature?.name || basicCreature?.name || "Unknown creature";
     const nextName = followingCreature?.name || "no unit";
-    card.setAttribute(
+    cycleButton.setAttribute(
       "aria-label",
       "Tier " +
         tier +
@@ -418,7 +420,7 @@ function renderCards(slots) {
     const detailCreature = creature || basicCreature;
     const details = renderCardDetails(detailCreature, tier, slotIndex);
 
-    card.innerHTML =
+    cycleButton.innerHTML =
       '<span class="card-top">' +
       '<span class="tier-label">Tier ' +
       tier +
@@ -434,6 +436,7 @@ function renderCards(slots) {
       details +
       "</span>";
 
+    card.append(cycleButton);
     slot.append(card);
 
     const externalCount = state.externalDwellings[slotIndex] || 0;
@@ -469,7 +472,7 @@ function renderCards(slots) {
       '"' +
       (externalCount === 0 ? " disabled" : "") +
       ">⟲</button>";
-    slot.append(externalControl);
+    card.append(externalControl);
 
     if (horde) {
       const toggle = document.createElement("label");
@@ -653,9 +656,9 @@ function normalizedExternalCount(value) {
 }
 
 elements.unitGrid.addEventListener("click", function cycleDwelling(event) {
-  const card = event.target.closest(".unit-card");
-  if (!card) return;
-  const slotIndex = Number(card.dataset.slot);
+  const cycleButton = event.target.closest(".unit-card-cycle");
+  if (!cycleButton) return;
+  const slotIndex = Number(cycleButton.dataset.slot);
   const slot = dwellingSlots()[slotIndex];
   state.selections[slotIndex] = nextSelection(slot, state.selections[slotIndex]);
   if (state.selections[slotIndex] < 0) state.hordeEnabled[slotIndex] = false;

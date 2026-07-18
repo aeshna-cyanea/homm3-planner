@@ -72,8 +72,6 @@ for (const viewport of viewports) {
       return {
         min: resolvedWidth("--unit-card-min-width"),
         max: resolvedWidth("--unit-card-max-width"),
-        minHeight: resolvedWidth("--unit-card-min-height"),
-        maxHeight: resolvedWidth("--unit-card-max-height"),
         gap: Number.parseFloat(getComputedStyle(grid).columnGap),
       };
     });
@@ -89,8 +87,6 @@ for (const viewport of viewports) {
       );
     }
     expect(firstCard.width).toBeLessThanOrEqual(cardWidths.max + 0.5);
-    expect(firstCard.height).toBeGreaterThanOrEqual(cardWidths.minHeight - 0.5);
-    expect(firstCard.height).toBeLessThanOrEqual(cardWidths.maxHeight + 0.5);
     const nameMarginTop = await page.locator(".creature-name").first().evaluate(
       function computedMargin(name) {
         return Number.parseFloat(getComputedStyle(name).marginTop);
@@ -117,6 +113,9 @@ for (const viewport of viewports) {
     const firstCardBody = await page.locator(".unit-card").nth(0).boundingBox();
     const firstExternalControl = page.locator(".external-dwelling-control").first();
     const firstExternalBox = await firstExternalControl.boundingBox();
+    await expect(
+      page.locator(".unit-card").first().locator(".external-dwelling-control"),
+    ).toHaveCount(1);
     await expect(firstExternalControl.locator(".external-dwelling-icon")).toHaveText("🏠");
     await expect(firstExternalControl.locator(".external-dwelling-input")).toHaveValue("");
     await expect(firstExternalControl.locator(".external-dwelling-input")).toHaveAttribute(
@@ -127,6 +126,23 @@ for (const viewport of viewports) {
     expect(firstExternalBox.y + firstExternalBox.height).toBeLessThanOrEqual(
       firstCardBody.y + firstCardBody.height,
     );
+    const dwellingContainment = await page.locator(".unit-card").evaluateAll((cards) =>
+      cards.map((card) => {
+        const cardBounds = card.getBoundingClientRect();
+        const control = card.querySelector(".external-dwelling-control");
+        const controlBounds = control.getBoundingClientRect();
+        return {
+          leftInset: controlBounds.left - cardBounds.left,
+          rightInset: cardBounds.right - controlBounds.right,
+          internalOverflow: control.scrollWidth - control.clientWidth,
+        };
+      }),
+    );
+    for (const measurement of dwellingContainment) {
+      expect(measurement.leftInset).toBeGreaterThanOrEqual(-0.5);
+      expect(measurement.rightInset).toBeGreaterThanOrEqual(-0.5);
+      expect(measurement.internalOverflow).toBeLessThanOrEqual(1);
+    }
 
     const firstHordeSlot = page.locator(".unit-slot.has-horde").first();
     const firstHordeCard = await firstHordeSlot.locator(".unit-card").boundingBox();
@@ -255,13 +271,11 @@ test("card columns respond to scheme width rather than viewport width", async ({
   expect(splitScheme.width).toBeLessThan(singleColumnScheme.width);
   expect(splitThird.y).toBe(splitFirst.y);
   expect(splitFourth.y).toBeGreaterThan(splitFirst.y);
-  expect(splitFirst.height).toBeLessThan(singleFirst.height);
 
   await page.setViewportSize({ width: 1440, height: 700 });
   const wideFirst = await page.locator(".unit-slot").first().boundingBox();
   const wideFourth = await page.locator(".unit-slot").nth(3).boundingBox();
   expect(wideFourth.y).toBe(wideFirst.y);
-  expect(wideFirst.height).toBeGreaterThan(splitFirst.height);
 });
 
 test("recruitment wraps before the scheme drops below three columns", async ({ page }) => {
@@ -286,9 +300,9 @@ test("wrapped creature names do not collide with dwelling controls", async ({ pa
   await page.goto("/production.html");
   await page.locator("#town-select").selectOption("factory");
 
-  await page.locator(".unit-card").first().click();
-  await page.locator(".unit-card").nth(6).click();
-  await page.locator(".unit-card").nth(6).click();
+  await page.locator(".unit-card-cycle").first().click();
+  await page.locator(".unit-card-cycle").nth(6).click();
+  await page.locator(".unit-card-cycle").nth(6).click();
 
   for (const slotIndex of [0, 6]) {
     const slot = page.locator(".unit-slot").nth(slotIndex);
@@ -324,7 +338,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
   expect(externalBox.x).toBe(weeklyBox.x);
   expect(externalBox.y).toBeGreaterThan(weeklyBox.y + weeklyBox.height);
 
-  await firstSlot.locator(".unit-card").click();
+  await firstSlot.locator(".unit-card-cycle").click();
   await expect(firstSlot.locator(".creature-name")).toHaveText("Familiar");
   await expect(page.locator("#external-results-body tr").first()).toContainText("Imp");
   await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
@@ -368,7 +382,7 @@ for (const [surface, url] of [
     await page.locator('label:has(input[name="fortification"][value="castle"])').click();
 
     const thirdSlot = page.locator(".unit-slot").nth(2);
-    await thirdSlot.locator(".unit-card").click();
+    await thirdSlot.locator(".unit-card-cycle").click();
     await thirdSlot.locator('[data-external-action="increment"]').click();
     await thirdSlot.locator('[data-external-action="increment"]').click();
     await thirdSlot.locator(".horde-toggle").click();
@@ -399,7 +413,7 @@ for (const [surface, url] of [
     await expect(page.locator("#external-results-section")).toBeVisible();
 
     await page.locator('label:has(input[name="fortification"][value="fort"])').click();
-    await page.locator(".unit-slot").nth(2).locator(".unit-card").click();
+    await page.locator(".unit-slot").nth(2).locator(".unit-card-cycle").click();
     await page.locator(".unit-slot").nth(2).locator('[data-external-action="increment"]').click();
     await page.locator("#reset-scheme").click();
     await expect(page.locator("#town-select")).toHaveValue("castle");
@@ -427,7 +441,7 @@ test("multi-resource creature costs have visible separators", async ({ page }) =
   await page.locator("#town-select").selectOption("factory");
 
   const dreadnoughtCard = page.locator(".unit-card").nth(7);
-  await dreadnoughtCard.click();
+  await dreadnoughtCard.locator(".unit-card-cycle").click();
   const dreadnoughtCosts = dreadnoughtCard.locator(".cost-detail .cost-item");
   await expect(dreadnoughtCosts).toHaveCount(2);
   await expect(dreadnoughtCosts.first().locator("b")).toHaveText("2,200");
@@ -456,7 +470,7 @@ test("all resource costs use embedded wiki icons", async ({ page }) => {
   for (const [town, resource] of creatureResources) {
     await page.locator("#town-select").selectOption(town);
     const tierSevenCard = page.locator(".unit-card").nth(6);
-    await tierSevenCard.click();
+    await tierSevenCard.locator(".unit-card-cycle").click();
     await expect(tierSevenCard.locator(`.resource-icon-${resource}`)).toBeVisible();
   }
 
