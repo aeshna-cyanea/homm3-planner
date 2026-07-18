@@ -332,14 +332,14 @@ function renderFortificationDetails() {
       '<span class="fortification-growth">1.5x growth, rounded down </span>' +
       '<span class="fortification-cost">' +
       formatCost(citadel.cost) +
-      "&nbsp;to build</span>";
+      "</span>";
   }
   if (castle) {
     elements.castleDetail.innerHTML =
       '<span class="fortification-growth">2x growth </span>' +
       '<span class="fortification-cost">' +
       formatCost(castle.cost) +
-      "&nbsp;to build</span>";
+      "</span>";
   }
 }
 
@@ -494,7 +494,7 @@ function renderCards() {
         horde.growth_bonus +
         " growth · " +
         formatCost(horde.cost) +
-        "&nbsp;to build</small></span>";
+        "</small></span>";
       slot.append(toggle);
     }
 

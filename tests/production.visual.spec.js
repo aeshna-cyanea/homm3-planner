@@ -91,6 +91,14 @@ for (const viewport of viewports) {
     expect(firstCard.width).toBeLessThanOrEqual(cardWidths.max + 0.5);
     expect(firstCard.height).toBeGreaterThanOrEqual(cardWidths.minHeight - 0.5);
     expect(firstCard.height).toBeLessThanOrEqual(cardWidths.maxHeight + 0.5);
+    const nameMarginTop = await page.locator(".creature-name").first().evaluate(
+      function computedMargin(name) {
+        return Number.parseFloat(getComputedStyle(name).marginTop);
+      },
+    );
+    const compactNameSpacing =
+      unitGrid.width <= 3 * cardWidths.min + 2 * cardWidths.gap + 0.5;
+    expect(nameMarginTop).toBeCloseTo(compactNameSpacing ? 11 : 22, 0);
     expect(fifthCard.y).toBeGreaterThan(firstCard.y);
     if (viewport.width === 900) {
       expect(thirdCard.y).toBe(firstCard.y);

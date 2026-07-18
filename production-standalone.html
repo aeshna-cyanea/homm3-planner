@@ -408,7 +408,7 @@ select:focus-visible {
 
 .creature-name {
   align-self: end;
-  margin: 22px 0 5px;
+  margin: 1.375rem 0 0.3125rem;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.25rem;
   font-weight: 600;
@@ -713,6 +713,11 @@ select:focus-visible {
 
 @container planner-inputs (max-width: 742px) {
   .control-panel { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+}
+
+/* Three 11rem cards plus two 0.75rem gaps need 34.5rem. */
+@container creature-scheme (max-width: 34.5rem) {
+  .creature-name { margin-top: 0.6875rem; }
 }
 
 /* Two 11rem cards plus their 0.75rem gap need 22.75rem. */
@@ -1212,14 +1217,14 @@ function renderFortificationDetails() {
       '<span class="fortification-growth">1.5x growth, rounded down </span>' +
       '<span class="fortification-cost">' +
       formatCost(citadel.cost) +
-      "&nbsp;to build</span>";
+      "</span>";
   }
   if (castle) {
     elements.castleDetail.innerHTML =
       '<span class="fortification-growth">2x growth </span>' +
       '<span class="fortification-cost">' +
       formatCost(castle.cost) +
-      "&nbsp;to build</span>";
+      "</span>";
   }
 }
 
@@ -1374,7 +1379,7 @@ function renderCards() {
         horde.growth_bonus +
         " growth · " +
         formatCost(horde.cost) +
-        "&nbsp;to build</small></span>";
+        "</small></span>";
       slot.append(toggle);
     }
 
