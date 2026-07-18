@@ -71,8 +71,17 @@ creature data:
 ./build_standalone.py
 ```
 
-The generated `production-standalone.html` contains all styles, logic, and
-HotA data. It can be opened directly or shared as one offline file.
+The ignored, generated `production-standalone.html` contains all styles, logic,
+and HotA data. It can be opened directly or shared as one offline file.
+
+To regenerate it automatically before each commit, enable the repository's
+tracked Git hooks once after cloning:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The visual-test commands also build the standalone file automatically.
 
 ### Visual regression tests
 
