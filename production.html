@@ -13,108 +13,107 @@
 
     <div class="planner-layout">
       <div class="planner-inputs">
-    <section class="control-panel" id="town-selection" aria-label="Production settings">
-      <label class="town-control" for="town-select">
-        <span>Town</span>
-        <select id="town-select" disabled>
-          <option>Loading creatures…</option>
-        </select>
-      </label>
-
-      <div class="fortification-control">
-        <span class="fortification-label" id="fortification-label">Fortification</span>
-        <div class="radio-group" role="radiogroup" aria-labelledby="fortification-label">
-          <label>
-            <input type="radio" name="fortification" value="fort" checked>
-            <span><strong>Fort</strong><small><span class="fortification-growth">Base growth</span></small></span>
+        <section class="control-panel" id="town-selection" aria-label="Production settings">
+          <label class="town-control" for="town-select">
+            <span>Town</span>
+            <select id="town-select" disabled>
+              <option>Loading creatures…</option>
+            </select>
           </label>
-          <label>
-            <input type="radio" name="fortification" value="citadel">
-            <span><strong>Citadel</strong><small id="citadel-detail">×1.5, rounded down</small></span>
-          </label>
-          <label>
-            <input type="radio" name="fortification" value="castle">
-            <span><strong>Castle</strong><small id="castle-detail">×2 growth</small></span>
-          </label>
-        </div>
-      </div>
-    </section>
 
-    <section class="scheme-section" aria-labelledby="scheme-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Production scheme</p>
-          <h2 id="scheme-title">Creature dwellings</h2>
-        </div>
-        <p class="cycle-key">Click a tier to cycle its available creatures.</p>
-      </div>
-      <div class="unit-grid" id="unit-grid" aria-live="polite"></div>
-    </section>
-      </div>
-
-    <div class="results-column">
-    <section class="results-section" aria-labelledby="results-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow" id="results-title">Weekly recruitment</p>
-          <div class="totals" id="totals" hidden aria-live="polite">
-            <div class="resource-totals" id="resource-totals"></div>
+          <div class="fortification-control">
+            <span class="fortification-label" id="fortification-label">Fortification</span>
+            <div class="radio-group" role="radiogroup" aria-labelledby="fortification-label">
+              <label>
+                <input type="radio" name="fortification" value="fort" checked>
+                <span><strong>Fort</strong><small><span class="fortification-growth">Base growth</span></small></span>
+              </label>
+              <label>
+                <input type="radio" name="fortification" value="citadel">
+                <span><strong>Citadel</strong><small id="citadel-detail">×1.5, rounded down</small></span>
+              </label>
+              <label>
+                <input type="radio" name="fortification" value="castle">
+                <span><strong>Castle</strong><small id="castle-detail">×2 growth</small></span>
+              </label>
+            </div>
           </div>
-        </div>
-        <p class="result-context" id="result-context"></p>
-      </div>
+        </section>
 
-      <div class="empty-results" id="empty-results">
-        Select a dwelling to begin the production plan.
-      </div>
-
-      <div class="results-table-wrap" id="results-table-wrap" hidden>
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th scope="col">Creature</th>
-              <th scope="col">Produced</th>
-              <th scope="col">Each</th>
-              <th scope="col">Weekly cost</th>
-            </tr>
-          </thead>
-          <tbody id="results-body"></tbody>
-        </table>
-      </div>
-
-    </section>
-
-    <section class="results-section" id="external-results-section" aria-labelledby="external-results-title" hidden>
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow" id="external-results-title">External recruitment</p>
-          <div class="totals" aria-live="polite">
-            <div class="resource-totals" id="external-resource-totals"></div>
+        <section class="scheme-section" aria-labelledby="scheme-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Production scheme</p>
+              <h2 id="scheme-title">Creature dwellings</h2>
+            </div>
+            <p class="cycle-key">Click a tier to cycle its available creatures.</p>
           </div>
+          <div class="unit-grid" id="unit-grid" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="results-column">
+        <section class="results-section" aria-labelledby="results-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" id="results-title">Weekly recruitment</p>
+              <div class="totals" id="totals" hidden aria-live="polite">
+                <div class="resource-totals" id="resource-totals"></div>
+              </div>
+            </div>
+            <p class="result-context" id="result-context"></p>
+          </div>
+
+          <div class="empty-results" id="empty-results">
+            Select a dwelling to begin the production plan.
+          </div>
+
+          <div class="results-table-wrap" id="results-table-wrap" hidden>
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th scope="col">Creature</th>
+                  <th scope="col">Produced</th>
+                  <th scope="col">Each</th>
+                  <th scope="col">Weekly cost</th>
+                </tr>
+              </thead>
+              <tbody id="results-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="results-section" id="external-results-section" aria-labelledby="external-results-title" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" id="external-results-title">External recruitment</p>
+              <div class="totals" aria-live="polite">
+                <div class="resource-totals" id="external-resource-totals"></div>
+              </div>
+            </div>
+            <p class="result-context" id="external-result-context"></p>
+          </div>
+
+          <div class="results-table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th scope="col">Creature</th>
+                  <th scope="col">Produced</th>
+                  <th scope="col">Each</th>
+                  <th scope="col">Weekly cost</th>
+                </tr>
+              </thead>
+              <tbody id="external-results-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="state-actions">
+          <button class="reset-button" id="save-state" type="button">Save State</button>
+          <button class="reset-button" id="reset-scheme" type="button">Reset State</button>
         </div>
-        <p class="result-context" id="external-result-context"></p>
       </div>
-
-      <div class="results-table-wrap">
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th scope="col">Creature</th>
-              <th scope="col">Produced</th>
-              <th scope="col">Each</th>
-              <th scope="col">Weekly cost</th>
-            </tr>
-          </thead>
-          <tbody id="external-results-body"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <div class="state-actions">
-      <button class="reset-button" id="save-state" type="button">Save State</button>
-      <button class="reset-button" id="reset-scheme" type="button">Reset State</button>
-    </div>
-    </div>
     </div>
 
     <div class="load-error" id="load-error" hidden role="alert"></div>

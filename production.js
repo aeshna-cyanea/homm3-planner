@@ -3,6 +3,7 @@
 const STORAGE_KEY = "hota-production-planner-state";
 const FORTIFICATION_LEVELS = new Set(["fort", "citadel", "castle"]);
 const RESOURCE_ORDER = ["gold", "wood", "ore", "mercury", "sulfur", "crystal", "gem"];
+const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
 const TOWN_ORDER = [
   "castle", "rampart", "tower", "inferno", "necropolis", "dungeon",
   "stronghold", "fortress", "conflux", "cove", "factory", "bulwark",
@@ -53,7 +54,7 @@ const elements = {
 };
 
 function formatNumber(value) {
-  return new Intl.NumberFormat("en-US").format(value);
+  return NUMBER_FORMATTER.format(value);
 }
 
 function titleCase(value) {
@@ -222,10 +223,8 @@ function serializedPlannerState() {
 function persistPlannerState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(serializedPlannerState()));
-    return true;
   } catch (_error) {
     // Storage may be disabled or unavailable for this origin, especially under file:// policies.
-    return false;
   }
 }
 
@@ -382,9 +381,8 @@ function renderTownOptions() {
   elements.townSelect.disabled = false;
 }
 
-function renderCards() {
+function renderCards(slots) {
   elements.unitGrid.replaceChildren();
-  const slots = dwellingSlots();
 
   slots.forEach(function renderSlot(slotData, slotIndex) {
     const tier = slotData.tier;
@@ -400,7 +398,6 @@ function renderCards() {
     card.className = "unit-card";
     card.type = "button";
     card.dataset.slot = String(slotIndex);
-    card.dataset.tier = String(tier);
     card.dataset.stage = String(stage);
 
     const basicCreature = basicCreatureFor(slotData);
@@ -465,7 +462,7 @@ function renderCards() {
       '"' +
       (externalCount === 99 ? " disabled" : "") +
       ">+</button>" +
-      '<button class="external-dwelling-button external-dwelling-reset" type="button" data-external-action="reset" data-slot="' +
+      '<button class="external-dwelling-button" type="button" data-external-action="reset" data-slot="' +
       slotIndex +
       '" aria-label="Reset external dwellings for ' +
       creatureName +
@@ -500,11 +497,32 @@ function renderCards() {
   });
 }
 
-function renderResults() {
+function renderResultRow(name, detail, production, unitCost, weeklyCost) {
+  return (
+    "<tr>" +
+      "<td><strong>" +
+      name +
+      "</strong><small>" +
+      detail +
+      "</small></td>" +
+      "<td>" +
+      formatNumber(production) +
+      " <small>units</small></td>" +
+      '<td><span class="cost-list">' +
+      formatCost(unitCost) +
+      "</span></td>" +
+      '<td><span class="cost-list">' +
+      formatCost(weeklyCost) +
+      "</span></td>" +
+    "</tr>"
+  );
+}
+
+function renderResults(slots) {
   const rows = [];
   const totalsByResource = {};
 
-  dwellingSlots().forEach(function addResult(slotData, slotIndex) {
+  slots.forEach(function addResult(slotData, slotIndex) {
     const tier = slotData.tier;
     const selection = state.selections[slotIndex];
     const creature = creatureFor(slotData, selection);
@@ -515,27 +533,13 @@ function renderResults() {
     const weeklyCost = multiplyCost(creature.cost, production);
     addCost(totalsByResource, weeklyCost);
 
-    rows.push(
-      "<tr>" +
-        "<td><strong>" +
-        creature.name +
-        "</strong><small>Tier " +
-        tier +
-        " · " +
-        stateName(creature.upgrade_stage) +
-        (activeHorde ? " · " + activeHorde.name : "") +
-        "</small></td>" +
-        "<td>" +
-        formatNumber(production) +
-        " <small>units</small></td>" +
-        '<td><span class="cost-list">' +
-        formatCost(creature.cost) +
-        "</span></td>" +
-        '<td><span class="cost-list">' +
-        formatCost(weeklyCost) +
-        "</span></td>" +
-      "</tr>",
-    );
+    const detail =
+      "Tier " +
+      tier +
+      " · " +
+      stateName(creature.upgrade_stage) +
+      (activeHorde ? " · " + activeHorde.name : "");
+    rows.push(renderResultRow(creature.name, detail, production, creature.cost, weeklyCost));
   });
 
   elements.resultContext.textContent =
@@ -566,19 +570,19 @@ function renderResourceTotals(container, totalsByResource) {
       return (
         '<span class="resource-total"><strong>' +
         formatNumber(entry[1]) +
-        '</strong><span class="resource-total-label">' +
+        "</strong>" +
         resourceIcon(entry[0]) +
-        "</span></span>"
+        "</span>"
       );
     })
     .join("");
 }
 
-function renderExternalResults() {
+function renderExternalResults(slots) {
   const rows = [];
   const totalsByResource = {};
 
-  dwellingSlots().forEach(function addExternalResult(slotData, slotIndex) {
+  slots.forEach(function addExternalResult(slotData, slotIndex) {
     const dwellingCount = state.externalDwellings[slotIndex] || 0;
     if (dwellingCount === 0) return;
 
@@ -589,27 +593,21 @@ function renderExternalResults() {
     const weeklyCost = multiplyCost(basicCreature.cost, production);
     addCost(totalsByResource, weeklyCost);
 
+    const detail =
+      "Tier " +
+      slotData.tier +
+      " · Basic · " +
+      dwellingCount +
+      " external dwelling" +
+      (dwellingCount === 1 ? "" : "s");
     rows.push(
-      "<tr>" +
-        "<td><strong>" +
-        basicCreature.name +
-        "</strong><small>Tier " +
-        slotData.tier +
-        " · Basic · " +
-        dwellingCount +
-        " external dwelling" +
-        (dwellingCount === 1 ? "" : "s") +
-        "</small></td>" +
-        "<td>" +
-        formatNumber(production) +
-        " <small>units</small></td>" +
-        '<td><span class="cost-list">' +
-        formatCost(basicCreature.cost) +
-        "</span></td>" +
-        '<td><span class="cost-list">' +
-        formatCost(weeklyCost) +
-        "</span></td>" +
-      "</tr>",
+      renderResultRow(
+        basicCreature.name,
+        detail,
+        production,
+        basicCreature.cost,
+        weeklyCost,
+      ),
     );
   });
 
@@ -627,9 +625,10 @@ function renderExternalResults() {
 }
 
 function render() {
-  renderCards();
-  renderResults();
-  renderExternalResults();
+  const slots = dwellingSlots();
+  renderCards(slots);
+  renderResults(slots);
+  renderExternalResults(slots);
 }
 
 function resetCreatureSelections() {

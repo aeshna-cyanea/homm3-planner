@@ -96,11 +96,10 @@ h2, p { margin-top: 0; }
 h2 {
   margin-bottom: 0;
   font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
   font-weight: 600;
   letter-spacing: -0.025em;
 }
-
-h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
 
 .eyebrow {
   margin-bottom: 0.5rem;
@@ -122,7 +121,6 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
 
 .state-actions {
   display: flex;
-  flex: 0 0 auto;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.5rem;
@@ -147,14 +145,12 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 1.375rem;
-  margin-top: 0;
   container-name: planner-layout;
   container-type: inline-size;
 }
 
 .planner-inputs,
-.results-column,
-.results-section {
+.results-column {
   min-width: 0;
 }
 
@@ -173,7 +169,6 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
   grid-template-columns: max-content minmax(28.125rem, 1fr);
   align-items: start;
   gap: 1.75rem;
-  margin-top: 0;
   padding: 1.375rem;
   border-radius: 0.875rem;
 }
@@ -233,9 +228,6 @@ select:focus-visible {
 
 .fortification-control {
   min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
   container-name: fortification-control;
   container-type: inline-size;
 }
@@ -244,7 +236,6 @@ select:focus-visible {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   min-width: 0;
-  align-items: stretch;
   gap: 0.5rem;
 }
 
@@ -333,15 +324,12 @@ select { font-size: 1rem; }
   min-width: var(--unit-card-min-width);
   max-width: var(--unit-card-max-width);
   height: var(--unit-card-height);
-  min-height: var(--unit-card-height);
 }
 
 .unit-slot.has-horde { margin-bottom: 3.375rem; }
 
 .unit-card {
-  position: relative;
   display: grid;
-  min-height: var(--unit-card-height);
   padding: 1.0625rem 1.0625rem 3.4375rem;
   overflow: hidden;
   color: inherit;
@@ -424,8 +412,6 @@ select { font-size: 1rem; }
 }
 
 .creature-details {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 0.125rem 0.5rem;
@@ -631,7 +617,6 @@ select { font-size: 1rem; }
 .cost-item {
   display: inline-flex;
   align-items: center;
-  break-inside: avoid;
   white-space: nowrap;
 }
 .cost-item b {
@@ -642,9 +627,6 @@ select { font-size: 1rem; }
 .cost-separator { margin-left: 0.0625rem; color: var(--muted); }
 
 .totals {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
   margin-top: 0.25rem;
 }
 
@@ -652,19 +634,16 @@ select { font-size: 1rem; }
 .results-section .result-context { margin-top: 0.625rem; }
 
 .resource-totals {
-  min-height: 4.875rem;
-  padding: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 0.5625rem;
-  background: rgba(221, 182, 94, 0.06);
-}
-
-.resource-totals {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 0.75rem 1.25rem;
+  min-height: 4.875rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5625rem;
+  background: rgba(221, 182, 94, 0.06);
 }
 .resource-total {
   display: inline-flex;
@@ -680,11 +659,6 @@ select { font-size: 1rem; }
   font-family: Georgia, serif;
   font-size: inherit;
   font-variant-numeric: tabular-nums;
-}
-.resource-total-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
 }
 .resource-total .resource-icon-gold { width: 1em; height: 1em; }
 .resource-total .resource-icon-wood,
@@ -736,13 +710,11 @@ select { font-size: 1rem; }
     flex-basis: calc((100% - var(--unit-card-column-gap)) / 2);
     min-width: 0;
     height: calc(var(--unit-card-height) + 0.25rem);
-    min-height: calc(var(--unit-card-height) + 0.25rem);
   }
 }
 
 @media (max-width: 48.75rem) {
   .app-shell { width: calc(100% - 1.25rem); padding-top: 1.75rem; }
-  .totals { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 32.5rem) {
