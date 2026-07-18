@@ -27,14 +27,16 @@ const state = {
   fortification: "fort",
   selections: [],
   hordeEnabled: [],
-  externalDwellings: [],
+  externalDwellings: new Map(),
   rosters: new Map(),
+  dwellingCatalog: new Map(),
   fortificationBuildings: new Map(),
 };
 
 const elements = {
   townSelect: document.querySelector("#town-select"),
   unitGrid: document.querySelector("#unit-grid"),
+  externalDwellingGrid: document.querySelector("#external-dwelling-grid"),
   saveButton: document.querySelector("#save-state"),
   resetButton: document.querySelector("#reset-scheme"),
   emptyResults: document.querySelector("#empty-results"),
@@ -132,10 +134,24 @@ function hordeFor(slot) {
   return basicCreatureFor(slot)?.horde_building || null;
 }
 
+function externalDwellingCount(creatureName) {
+  return state.externalDwellings.get(creatureName) || 0;
+}
+
+function setExternalDwellingCount(creatureName, value) {
+  if (!state.dwellingCatalog.has(creatureName)) return;
+  const count = normalizedExternalCount(value);
+  if (count === 0) {
+    state.externalDwellings.delete(creatureName);
+  } else {
+    state.externalDwellings.set(creatureName, count);
+  }
+}
+
 function productionFor(growth, slot, slotIndex) {
   const horde = hordeFor(slot);
   const hordeBonus = state.hordeEnabled[slotIndex] && horde ? horde.growth_bonus : 0;
-  const externalBonus = state.externalDwellings[slotIndex] || 0;
+  const externalBonus = externalDwellingCount(basicCreatureFor(slot)?.name);
   const adjustedGrowth = growth + hordeBonus + externalBonus;
   if (state.fortification === "citadel") return Math.floor(adjustedGrowth * 1.5);
   if (state.fortification === "castle") return adjustedGrowth * 2;
@@ -222,7 +238,12 @@ function serializedPlannerState() {
         basicCreature: basicCreature?.name || null,
         selectedCreature: selectedCreature?.name || null,
         hordeEnabled: Boolean(state.hordeEnabled[slotIndex]),
-        externalDwellings: state.externalDwellings[slotIndex] || 0,
+      };
+    }),
+    externalDwellings: Array.from(state.externalDwellings, function serializeExternal(entry) {
+      return {
+        basicCreature: entry[0],
+        count: entry[1],
       };
     }),
   };
@@ -260,6 +281,7 @@ function restorePlannerState(savedState) {
   state.fortification = FORTIFICATION_LEVELS.has(savedState.fortification)
     ? savedState.fortification
     : "fort";
+  state.externalDwellings.clear();
   resetCreatureSelections();
 
   const savedDwellings = Array.isArray(savedState.dwellings) ? savedState.dwellings : [];
@@ -287,15 +309,31 @@ function restorePlannerState(savedState) {
       if (selection >= 0) state.selections[slotIndex] = selection;
     }
 
-    state.externalDwellings[slotIndex] = normalizedExternalCount(
-      savedDwelling.externalDwellings,
-    );
     state.hordeEnabled[slotIndex] = Boolean(
       savedDwelling.hordeEnabled &&
       state.selections[slotIndex] >= 0 &&
       hordeFor(slot),
     );
   });
+
+  const savedExternalDwellings = Array.isArray(savedState.externalDwellings)
+    ? savedState.externalDwellings
+    : [];
+  for (const savedExternal of savedExternalDwellings) {
+    if (!savedExternal || typeof savedExternal.basicCreature !== "string") continue;
+    setExternalDwellingCount(savedExternal.basicCreature, savedExternal.count);
+  }
+
+  // Migrate planner states saved before external dwellings became global.
+  if (savedExternalDwellings.length === 0) {
+    for (const savedDwelling of savedDwellings) {
+      if (!savedDwelling || typeof savedDwelling.basicCreature !== "string") continue;
+      setExternalDwellingCount(
+        savedDwelling.basicCreature,
+        savedDwelling.externalDwellings,
+      );
+    }
+  }
 
   return true;
 }
@@ -312,17 +350,20 @@ function buildRosters(creaturesByFaction) {
     if (!Array.isArray(creatureRoots)) {
       throw new Error("Creature faction " + faction + " is not an array");
     }
-    if (faction === "neutral") continue;
+    const slots = creatureRoots.map(function dwelling(rootCreature) {
+      const slot = {
+        faction: faction,
+        tier: rootCreature.level,
+        creatures: creatureUpgradeChain(rootCreature),
+      };
+      state.dwellingCatalog.set(rootCreature.name, {
+        faction: faction,
+        slot: slot,
+      });
+      return slot;
+    });
 
-    state.rosters.set(
-      faction,
-      creatureRoots.map(function dwelling(rootCreature) {
-        return {
-          tier: rootCreature.level,
-          creatures: creatureUpgradeChain(rootCreature),
-        };
-      }),
-    );
+    if (faction !== "neutral") state.rosters.set(faction, slots);
   }
 
   for (const [town, roster] of state.rosters) {
@@ -449,7 +490,8 @@ function renderCards(slots) {
     card.append(cycleButton);
     slot.append(card);
 
-    const externalCount = state.externalDwellings[slotIndex] || 0;
+    const externalCreatureName = basicCreature?.name || creatureName;
+    const externalCount = externalDwellingCount(externalCreatureName);
     const externalControl = document.createElement("div");
     externalControl.className = "external-dwelling-control";
     externalControl.innerHTML =
@@ -457,7 +499,7 @@ function renderCards(slots) {
       '<button class="external-dwelling-button" type="button" data-external-action="decrement" data-slot="' +
       slotIndex +
       '" aria-label="Remove an external dwelling for ' +
-      creatureName +
+      externalCreatureName +
       '"' +
       (externalCount === 0 ? " disabled" : "") +
       ">−</button>" +
@@ -466,19 +508,19 @@ function renderCards(slots) {
       '" data-slot="' +
       slotIndex +
       '" aria-label="External dwellings for ' +
-      creatureName +
+      externalCreatureName +
       '">' +
       '<button class="external-dwelling-button" type="button" data-external-action="increment" data-slot="' +
       slotIndex +
       '" aria-label="Add an external dwelling for ' +
-      creatureName +
+      externalCreatureName +
       '"' +
       (externalCount === 99 ? " disabled" : "") +
       ">+</button>" +
       '<button class="external-dwelling-button" type="button" data-external-action="reset" data-slot="' +
       slotIndex +
       '" aria-label="Reset external dwellings for ' +
-      creatureName +
+      externalCreatureName +
       '"' +
       (externalCount === 0 ? " disabled" : "") +
       ">⟲</button>";
@@ -508,6 +550,89 @@ function renderCards(slots) {
 
     elements.unitGrid.append(slot);
   });
+}
+
+function renderExternalDwellingCards() {
+  elements.externalDwellingGrid.replaceChildren();
+
+  for (const [creatureName, count] of state.externalDwellings) {
+    const dwelling = state.dwellingCatalog.get(creatureName);
+    if (!dwelling) continue;
+    const creature = basicCreatureFor(dwelling.slot);
+    const slot = document.createElement("div");
+    const card = document.createElement("div");
+    const body = document.createElement("div");
+    slot.className = "unit-slot external-dwelling-slot";
+    card.className = "unit-card external-dwelling-card";
+    card.dataset.stage = "0";
+    card.dataset.creatureName = creatureName;
+    card.dataset.count = String(count);
+    body.className = "unit-card-cycle external-dwelling-card-body";
+    body.innerHTML =
+      '<span class="card-top">' +
+      '<span class="tier-label">' +
+      (TOWN_NAMES[dwelling.faction] || titleCase(dwelling.faction)) +
+      " · Tier " +
+      dwelling.slot.tier +
+      "</span>" +
+      '<button class="external-remove-button" type="button" aria-label="Remove all external dwellings for ' +
+      creature.name +
+      '"><svg class="external-remove-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="m9 9 6 6m0-6-6 6"></path></svg></button>' +
+      "</span>" +
+      '<span class="creature-name">' +
+      creature.name +
+      "</span>" +
+      '<span class="creature-details">' +
+      '<span class="production-detail"><strong>' +
+      formatNumber(creature.growth * count) +
+      "</strong>/week, </span>" +
+      '<span class="cost-detail">' +
+      formatCost(creature.cost) +
+      "</span></span>";
+    card.append(body);
+
+    const control = document.createElement("div");
+    control.className = "external-dwelling-control external-card-count-control";
+    control.innerHTML =
+      '<span class="external-dwelling-icon" aria-hidden="true">🏠</span>' +
+      '<button class="external-dwelling-button" type="button" data-external-card-action="decrement" aria-label="Remove one external dwelling for ' +
+      creature.name +
+      '"' +
+      (count <= 1 ? " disabled" : "") +
+      ">−</button>" +
+      '<input class="external-dwelling-input external-card-count-input" type="number" inputmode="numeric" min="1" max="99" value="' +
+      count +
+      '" aria-label="External dwellings for ' +
+      creature.name +
+      '">' +
+      '<button class="external-dwelling-button" type="button" data-external-card-action="increment" aria-label="Add one external dwelling for ' +
+      creature.name +
+      '"' +
+      (count >= 99 ? " disabled" : "") +
+      ">+</button>";
+    card.append(control);
+    slot.append(card);
+    elements.externalDwellingGrid.append(slot);
+  }
+
+  const addSlot = document.createElement("div");
+  const addCard = document.createElement("div");
+  const addBody = document.createElement("div");
+  addSlot.className = "unit-slot external-dwelling-slot add-dwelling-slot";
+  addCard.className = "unit-card add-dwelling-card";
+  addBody.className = "unit-card-cycle add-dwelling-card-body";
+  addBody.innerHTML =
+    '<span class="card-top">' +
+    '<span class="tier-label">New external dwelling</span>' +
+    '<span class="add-dwelling-symbol" aria-hidden="true">+</span>' +
+    "</span>" +
+    '<span class="creature-name">Add a dwelling</span>' +
+    '<label class="sr-only" for="external-dwelling-search">Search creatures</label>' +
+    '<input class="external-dwelling-search" id="external-dwelling-search" type="search" placeholder="Creature name" autocomplete="off" aria-describedby="external-search-note">' +
+    '<small class="external-search-note" id="external-search-note">Search will be added next.</small>';
+  addCard.append(addBody);
+  addSlot.append(addCard);
+  elements.externalDwellingGrid.append(addSlot);
 }
 
 function renderResultRow(name, detail, production, unitCost, weeklyCost) {
@@ -591,16 +716,14 @@ function renderResourceTotals(container, totalsByResource) {
     .join("");
 }
 
-function renderExternalResults(slots) {
+function renderExternalResults() {
   const rows = [];
   const totalsByResource = {};
 
-  slots.forEach(function addExternalResult(slotData, slotIndex) {
-    const dwellingCount = state.externalDwellings[slotIndex] || 0;
-    if (dwellingCount === 0) return;
-
-    const basicCreature = basicCreatureFor(slotData);
-    if (!basicCreature) return;
+  for (const [creatureName, dwellingCount] of state.externalDwellings) {
+    const dwelling = state.dwellingCatalog.get(creatureName);
+    if (!dwelling) continue;
+    const basicCreature = basicCreatureFor(dwelling.slot);
 
     const production = basicCreature.growth * dwellingCount;
     const weeklyCost = multiplyCost(basicCreature.cost, production);
@@ -608,7 +731,7 @@ function renderExternalResults(slots) {
 
     const detail =
       "Tier " +
-      slotData.tier +
+      dwelling.slot.tier +
       " · Basic · " +
       dwellingCount +
       " external dwelling" +
@@ -622,7 +745,7 @@ function renderExternalResults(slots) {
         weeklyCost,
       ),
     );
-  });
+  }
 
   const hasExternalResults = rows.length > 0;
   elements.externalResultsSection.hidden = !hasExternalResults;
@@ -631,8 +754,7 @@ function renderExternalResults(slots) {
     return;
   }
 
-  elements.externalResultContext.textContent =
-    (TOWN_NAMES[state.town] || titleCase(state.town)) + " · External dwellings";
+  elements.externalResultContext.textContent = "All factions · External dwellings";
   elements.externalResultsBody.innerHTML = rows.join("");
   renderResourceTotals(elements.externalResourceTotals, totalsByResource);
 }
@@ -640,8 +762,9 @@ function renderExternalResults(slots) {
 function render() {
   const slots = dwellingSlots();
   renderCards(slots);
+  renderExternalDwellingCards();
   renderResults(slots);
-  renderExternalResults(slots);
+  renderExternalResults();
 }
 
 function resetCreatureSelections() {
@@ -650,12 +773,12 @@ function resetCreatureSelections() {
     return index === 0 ? 0 : -1;
   });
   state.hordeEnabled = Array(slotCount).fill(false);
-  state.externalDwellings = Array(slotCount).fill(0);
 }
 
 function applyInitialPlannerState() {
   state.town = "castle";
   state.fortification = "fort";
+  state.externalDwellings.clear();
   resetCreatureSelections();
 }
 
@@ -686,21 +809,53 @@ elements.unitGrid.addEventListener("click", function adjustExternalDwelling(even
   const button = event.target.closest("[data-external-action]");
   if (!button) return;
   const slotIndex = Number(button.dataset.slot);
-  const current = state.externalDwellings[slotIndex] || 0;
+  const creatureName = basicCreatureFor(dwellingSlots()[slotIndex])?.name;
+  const current = externalDwellingCount(creatureName);
   if (button.dataset.externalAction === "increment") {
-    state.externalDwellings[slotIndex] = normalizedExternalCount(current + 1);
+    setExternalDwellingCount(creatureName, current + 1);
   } else if (button.dataset.externalAction === "decrement") {
-    state.externalDwellings[slotIndex] = normalizedExternalCount(current - 1);
+    setExternalDwellingCount(creatureName, current - 1);
   } else {
-    state.externalDwellings[slotIndex] = 0;
+    setExternalDwellingCount(creatureName, 0);
   }
   render();
 });
 
-elements.unitGrid.addEventListener("change", function setExternalDwellingCount(event) {
+elements.unitGrid.addEventListener("change", function setSchemeExternalDwellingCount(event) {
   if (!event.target.matches(".external-dwelling-input")) return;
   const slotIndex = Number(event.target.dataset.slot);
-  state.externalDwellings[slotIndex] = normalizedExternalCount(event.target.value);
+  const creatureName = basicCreatureFor(dwellingSlots()[slotIndex])?.name;
+  setExternalDwellingCount(creatureName, event.target.value);
+  render();
+});
+
+elements.externalDwellingGrid.addEventListener("click", function adjustExternalCard(event) {
+  const card = event.target.closest(".external-dwelling-card");
+  if (!card) return;
+  const creatureName = card.dataset.creatureName;
+
+  if (event.target.closest(".external-remove-button")) {
+    setExternalDwellingCount(creatureName, 0);
+    render();
+    return;
+  }
+
+  const button = event.target.closest("[data-external-card-action]");
+  if (!button) return;
+  const current = externalDwellingCount(creatureName);
+  if (button.dataset.externalCardAction === "increment") {
+    setExternalDwellingCount(creatureName, current + 1);
+  } else if (current > 1) {
+    setExternalDwellingCount(creatureName, current - 1);
+  }
+  render();
+});
+
+elements.externalDwellingGrid.addEventListener("change", function setExternalCardCount(event) {
+  if (!event.target.matches(".external-card-count-input")) return;
+  const card = event.target.closest(".external-dwelling-card");
+  const count = Math.max(1, normalizedExternalCount(event.target.value));
+  setExternalDwellingCount(card.dataset.creatureName, count);
   render();
 });
 

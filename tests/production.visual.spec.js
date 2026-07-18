@@ -181,7 +181,7 @@ for (const viewport of viewports) {
     expect(firstExternalBox.y + firstExternalBox.height).toBeLessThanOrEqual(
       firstCardBody.y + firstCardBody.height,
     );
-    const dwellingContainment = await page.locator(".unit-card").evaluateAll((cards) =>
+    const dwellingContainment = await page.locator("#unit-grid .unit-card").evaluateAll((cards) =>
       cards.map((card) => {
         const cardBounds = card.getBoundingClientRect();
         const control = card.querySelector(".external-dwelling-control");
@@ -313,13 +313,13 @@ test("Factory centers its final pair in the three-column layout", async ({ page 
 test("card columns respond to scheme width rather than viewport width", async ({ page }) => {
   await page.setViewportSize({ width: 1010, height: 700 });
   await page.goto("/production.html");
-  const singleColumnScheme = await page.locator(".scheme-section").boundingBox();
+  const singleColumnScheme = await page.locator(".scheme-section").first().boundingBox();
   const singleFirst = await page.locator(".unit-slot").first().boundingBox();
   const singleFourth = await page.locator(".unit-slot").nth(3).boundingBox();
   expect(singleFourth.y).toBe(singleFirst.y);
 
   await page.setViewportSize({ width: 1100, height: 700 });
-  const splitScheme = await page.locator(".scheme-section").boundingBox();
+  const splitScheme = await page.locator(".scheme-section").first().boundingBox();
   const splitFirst = await page.locator(".unit-slot").first().boundingBox();
   const splitThird = await page.locator(".unit-slot").nth(2).boundingBox();
   const splitFourth = await page.locator(".unit-slot").nth(3).boundingBox();
@@ -419,6 +419,94 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(externalResults).toBeHidden();
 });
 
+test("external dwelling cards stay synchronized across towns", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/production.html");
+
+  const externalGrid = page.locator("#external-dwelling-grid");
+  await expect(externalGrid.locator(".external-dwelling-card")).toHaveCount(0);
+  await expect(externalGrid.locator(".add-dwelling-card")).toHaveCount(1);
+  await expect(externalGrid.locator(".add-dwelling-card")).toContainText("Add a dwelling");
+  await expect(externalGrid.locator("#external-dwelling-search")).toHaveAttribute(
+    "placeholder",
+    "Creature name",
+  );
+
+  await page.locator("#town-select").selectOption("inferno");
+  const schemeSlot = page.locator("#unit-grid .unit-slot").first();
+  await schemeSlot.locator('[data-external-action="increment"]').click();
+
+  const externalCard = externalGrid.locator(".external-dwelling-card");
+  await expect(externalCard).toHaveCount(1);
+  await expect(externalCard.locator(".creature-name")).toHaveText("Imp");
+  await expect(externalCard.locator(".external-card-count-input")).toHaveValue("1");
+  await expect(externalCard.locator(".external-remove-icon")).toHaveCount(1);
+  await expect(
+    externalCard.locator('[data-external-card-action="decrement"]'),
+  ).toBeDisabled();
+  await expect(externalCard.locator('[data-external-action="reset"]')).toHaveCount(0);
+  await expect(externalCard.locator(".production-detail strong")).toHaveText("15");
+
+  await externalCard.locator('[data-external-card-action="increment"]').click();
+  await expect(schemeSlot.locator(".external-dwelling-input")).toHaveValue("2");
+  await expect(externalCard.locator(".external-card-count-input")).toHaveValue("2");
+  await expect(externalCard.locator(".production-detail strong")).toHaveText("30");
+  const externalCardBox = await externalCard.boundingBox();
+  const addCardBox = await externalGrid.locator(".add-dwelling-card").boundingBox();
+  expect(addCardBox.y).toBeCloseTo(externalCardBox.y, 1);
+  expect(addCardBox.height).toBeCloseTo(externalCardBox.height, 1);
+  await expect(page.locator(".external-dwellings-section")).toHaveScreenshot(
+    "external-dwelling-cards.png",
+    { animations: "disabled" },
+  );
+
+  await externalCard.locator('[data-external-card-action="decrement"]').click();
+  await expect(externalCard.locator(".external-card-count-input")).toHaveValue("1");
+  await expect(schemeSlot.locator(".external-dwelling-input")).toHaveValue("1");
+  await externalCard.locator(".external-card-count-input").fill("0");
+  await externalCard.locator(".external-card-count-input").press("Tab");
+  await expect(externalCard.locator(".external-card-count-input")).toHaveValue("1");
+
+  await page.locator("#town-select").selectOption("castle");
+  await expect(externalCard.locator(".creature-name")).toHaveText("Imp");
+  await expect(page.locator("#external-results-body")).toContainText("Imp");
+
+  await externalCard.locator(".external-remove-button").click();
+  await expect(externalGrid.locator(".external-dwelling-card")).toHaveCount(0);
+  await expect(page.locator("#external-results-section")).toBeHidden();
+
+  await page.locator("#town-select").selectOption("inferno");
+  await expect(
+    page.locator("#unit-grid .unit-slot").first().locator(".external-dwelling-input"),
+  ).toHaveValue("");
+});
+
+test("external dwelling cards fill at most four columns", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/production.html");
+
+  for (let slotIndex = 0; slotIndex < 5; slotIndex += 1) {
+    await page
+      .locator("#unit-grid .unit-slot")
+      .nth(slotIndex)
+      .locator('[data-external-action="increment"]')
+      .click();
+  }
+
+  const cards = page.locator("#external-dwelling-grid .external-dwelling-slot");
+  await expect(cards).toHaveCount(6);
+  const boxes = await cards.evaluateAll((slots) =>
+    slots.map((slot) => {
+      const bounds = slot.getBoundingClientRect();
+      return { x: bounds.x, y: bounds.y, width: bounds.width };
+    }),
+  );
+  expect(boxes[0].y).toBe(boxes[3].y);
+  expect(boxes[4].y).toBeGreaterThan(boxes[0].y);
+  expect(boxes[0].x).toBeLessThan(boxes[1].x);
+  expect(boxes[0].width).toBeCloseTo(boxes[3].width, 0);
+});
+
 test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
   await page.goto("/production.html");
 
@@ -472,6 +560,9 @@ for (const [surface, url] of [
     );
     expect(savedState.town).toBe("castle");
     expect(savedState.fortification).toBe("castle");
+    expect(savedState.externalDwellings).toEqual([
+      { basicCreature: "Griffin", count: 2 },
+    ]);
 
     await page.reload();
     await expect(page.locator("#town-select")).toHaveValue("castle");
@@ -486,6 +577,9 @@ for (const [surface, url] of [
     ).toHaveValue("2");
     await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
     await expect(page.locator("#external-results-section")).toBeVisible();
+    await expect(
+      page.locator("#external-dwelling-grid .external-dwelling-card"),
+    ).toHaveAttribute("data-count", "2");
 
     await page.locator('label:has(input[name="fortification"][value="fort"])').click();
     await page.locator(".unit-slot").nth(2).locator(".unit-card-cycle").click();
