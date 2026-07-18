@@ -29,7 +29,6 @@ const state = {
   hordeEnabled: [],
   externalDwellings: [],
   rosters: new Map(),
-  hordeBuildings: new Map(),
   fortificationBuildings: new Map(),
 };
 
@@ -129,12 +128,12 @@ function addCost(total, cost) {
   }
 }
 
-function hordeFor(tier) {
-  return state.hordeBuildings.get(state.town + ":" + tier) || null;
+function hordeFor(slot) {
+  return basicCreatureFor(slot)?.horde_building || null;
 }
 
-function productionFor(growth, tier, slotIndex) {
-  const horde = hordeFor(tier);
+function productionFor(growth, slot, slotIndex) {
+  const horde = hordeFor(slot);
   const hordeBonus = state.hordeEnabled[slotIndex] && horde ? horde.growth_bonus : 0;
   const externalBonus = state.externalDwellings[slotIndex] || 0;
   const adjustedGrowth = growth + hordeBonus + externalBonus;
@@ -143,13 +142,13 @@ function productionFor(growth, tier, slotIndex) {
   return adjustedGrowth;
 }
 
-function renderCardDetails(creature, tier, slotIndex) {
+function renderCardDetails(creature, slot, slotIndex) {
   if (!creature) return "";
 
   return (
     '<span class="production-detail">' +
     "<strong>" +
-    formatNumber(productionFor(creature.growth, tier, slotIndex)) +
+    formatNumber(productionFor(creature.growth, slot, slotIndex)) +
     "</strong>/week, </span>" +
     '<span class="cost-detail">' +
     formatCost(creature.cost) +
@@ -158,24 +157,35 @@ function renderCardDetails(creature, tier, slotIndex) {
 }
 
 function dwellingSlots() {
-  const roster = state.rosters.get(state.town);
-  const slots = [];
-  if (!roster) return slots;
+  return state.rosters.get(state.town) || [];
+}
 
-  const tiers = Array.from(roster.keys()).sort(function tierSort(left, right) {
-    return left - right;
-  });
-  for (const tier of tiers) {
-    let slot = null;
-    for (const creature of roster.get(tier) || []) {
-      if (!slot || creature.upgrade_stage === 0) {
-        slot = { tier: tier, creatures: [] };
-        slots.push(slot);
-      }
-      slot.creatures.push(creature);
+function creatureUpgradeChain(rootCreature) {
+  const creatures = [];
+  const visited = new Set();
+  let creature = rootCreature;
+
+  while (creature) {
+    if (visited.has(creature)) {
+      throw new Error("Creature upgrade cycle found at " + creature.name);
     }
+    if (
+      creature.horde_building !== undefined &&
+      (typeof creature.horde_building !== "object" ||
+        Array.isArray(creature.horde_building))
+    ) {
+      throw new Error(creature.name + " has an invalid horde_building");
+    }
+    visited.add(creature);
+    creatures.push(creature);
+    const upgrade = creature.upgraded_creature;
+    if (upgrade != null && (typeof upgrade !== "object" || Array.isArray(upgrade))) {
+      throw new Error(creature.name + " has an invalid upgraded_creature");
+    }
+    creature = upgrade || null;
   }
-  return slots;
+
+  return creatures;
 }
 
 function availableSelections(slot) {
@@ -198,9 +208,7 @@ function nextSelection(slot, currentSelection) {
 }
 
 function basicCreatureFor(slot) {
-  return slot.creatures.find(function basic(creature) {
-    return creature.upgrade_stage === 0;
-  }) || null;
+  return slot.creatures[0] || null;
 }
 
 function serializedPlannerState() {
@@ -285,7 +293,7 @@ function restorePlannerState(savedState) {
     state.hordeEnabled[slotIndex] = Boolean(
       savedDwelling.hordeEnabled &&
       state.selections[slotIndex] >= 0 &&
-      hordeFor(slot.tier),
+      hordeFor(slot),
     );
   });
 
@@ -299,28 +307,33 @@ function syncFortificationControl() {
   if (selectedRadio) selectedRadio.checked = true;
 }
 
-function buildRosters(creatures) {
-  const townCreatures = creatures.filter(function usable(creature) {
-    return creature.town !== "neutral";
-  });
+function buildRosters(creaturesByFaction) {
+  for (const [faction, creatureRoots] of Object.entries(creaturesByFaction)) {
+    if (!Array.isArray(creatureRoots)) {
+      throw new Error("Creature faction " + faction + " is not an array");
+    }
+    if (faction === "neutral") continue;
 
-  for (const creature of townCreatures) {
-    if (!state.rosters.has(creature.town)) state.rosters.set(creature.town, new Map());
-    const roster = state.rosters.get(creature.town);
-    if (!roster.has(creature.level)) roster.set(creature.level, []);
-    roster.get(creature.level).push(creature);
+    state.rosters.set(
+      faction,
+      creatureRoots.map(function dwelling(rootCreature) {
+        return {
+          tier: rootCreature.level,
+          creatures: creatureUpgradeChain(rootCreature),
+        };
+      }),
+    );
   }
 
   for (const [town, roster] of state.rosters) {
     for (let tier = 1; tier <= 7; tier += 1) {
-      const creaturesForTier = roster.get(tier) || [];
-      const hasBasic = creaturesForTier.some(function basic(creature) {
-        return creature.upgrade_stage === 0;
+      const tierSlots = roster.filter(function atTier(slot) {
+        return slot.tier === tier;
       });
-      const hasUpgrade = creaturesForTier.some(function upgraded(creature) {
-        return creature.upgrade_stage === 1;
+      const hasCompleteDwelling = tierSlots.some(function complete(slot) {
+        return slot.creatures.length >= 2;
       });
-      if (!hasBasic || !hasUpgrade) {
+      if (!hasCompleteDwelling) {
         state.rosters.delete(town);
         break;
       }
@@ -328,10 +341,7 @@ function buildRosters(creatures) {
   }
 }
 
-function indexSharedBuildings(data) {
-  for (const building of data.horde_buildings || []) {
-    state.hordeBuildings.set(building.town + ":" + building.creature_level, building);
-  }
+function indexFortificationBuildings(data) {
   for (const building of data.fortification_buildings || []) {
     state.fortificationBuildings.set(building.id, building);
   }
@@ -388,8 +398,8 @@ function renderCards(slots) {
     const tier = slotData.tier;
     const selection = state.selections[slotIndex];
     const creature = creatureFor(slotData, selection);
-    const stage = creature?.upgrade_stage ?? -1;
-    const horde = hordeFor(tier);
+    const stage = selection;
+    const horde = hordeFor(slotData);
     const followingSelection = nextSelection(slotData, selection);
     const followingCreature = creatureFor(slotData, followingSelection);
     const slot = document.createElement("div");
@@ -418,7 +428,7 @@ function renderCards(slots) {
     );
 
     const detailCreature = creature || basicCreature;
-    const details = renderCardDetails(detailCreature, tier, slotIndex);
+    const details = renderCardDetails(detailCreature, slotData, slotIndex);
 
     cycleButton.innerHTML =
       '<span class="card-top">' +
@@ -531,8 +541,8 @@ function renderResults(slots) {
     const creature = creatureFor(slotData, selection);
     if (!creature) return;
 
-    const activeHorde = state.hordeEnabled[slotIndex] ? hordeFor(tier) : null;
-    const production = productionFor(creature.growth, tier, slotIndex);
+    const activeHorde = state.hordeEnabled[slotIndex] ? hordeFor(slotData) : null;
+    const production = productionFor(creature.growth, slotData, slotIndex);
     const weeklyCost = multiplyCost(creature.cost, production);
     addCost(totalsByResource, weeklyCost);
 
@@ -540,7 +550,7 @@ function renderResults(slots) {
       "Tier " +
       tier +
       " · " +
-      stateName(creature.upgrade_stage) +
+      stateName(selection) +
       (activeHorde ? " · " + activeHorde.name : "");
     rows.push(renderResultRow(creature.name, detail, production, creature.cost, weeklyCost));
   });
@@ -720,11 +730,15 @@ elements.resetButton.addEventListener("click", function resetScheme() {
 });
 
 function initializePlanner(data) {
-  if (!Array.isArray(data.creatures)) {
-    throw new Error("Creature data is missing its creatures array");
+  if (
+    !data.creatures ||
+    typeof data.creatures !== "object" ||
+    Array.isArray(data.creatures)
+  ) {
+    throw new Error("Creature data is missing its faction groups");
   }
+  indexFortificationBuildings(data);
   buildRosters(data.creatures);
-  indexSharedBuildings(data);
   const restored = restorePlannerState(readPersistedPlannerState());
   if (!restored) applyInitialPlannerState();
   renderTownOptions();

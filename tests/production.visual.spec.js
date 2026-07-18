@@ -1,6 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+const creatureData = require("../creatures.json");
 
 const standaloneUrl = pathToFileURL(
   path.resolve(__dirname, "..", "index.html"),
@@ -14,6 +15,60 @@ const viewports = [
   { name: "three-column", width: 900, height: 900 },
   { name: "split-two-column", width: 1100, height: 900 },
 ];
+
+test("creature data is grouped by faction", () => {
+  expect(Object.keys(creatureData)).toEqual(["fortification_buildings", "creatures"]);
+  expect(Object.keys(creatureData.creatures)).toEqual([
+    "castle", "rampart", "tower", "inferno", "necropolis", "dungeon",
+    "stronghold", "fortress", "conflux", "cove", "factory", "bulwark",
+    "neutral",
+  ]);
+
+  let creatureCount = 0;
+  for (const creatureRoots of Object.values(creatureData.creatures)) {
+    expect(Array.isArray(creatureRoots)).toBe(true);
+    for (const root of creatureRoots) {
+      let creature = root;
+      while (creature) {
+        expect(creature).not.toHaveProperty("town");
+        expect(Object.keys(creature).every((key) => [
+          "name", "level", "growth", "cost", "horde_building", "upgraded_creature",
+        ].includes(key))).toBe(true);
+        creatureCount += 1;
+        creature = creature.upgraded_creature;
+      }
+    }
+  }
+  expect(creatureCount).toBe(189);
+});
+
+test("Horde buildings are embedded on dwelling roots", () => {
+  expect(creatureData).not.toHaveProperty("horde_buildings");
+  expect(creatureData).not.toHaveProperty("horde_building_count");
+
+  let hordeBuildingCount = 0;
+  for (const creatureRoots of Object.values(creatureData.creatures)) {
+    for (const root of creatureRoots) {
+      if (root.horde_building) {
+        expect(root.horde_building).toEqual(
+          expect.objectContaining({
+            name: expect.any(String),
+            cost: expect.any(Object),
+            growth_bonus: expect.any(Number),
+          }),
+        );
+        hordeBuildingCount += 1;
+      }
+
+      let upgrade = root.upgraded_creature;
+      while (upgrade) {
+        expect(upgrade).not.toHaveProperty("horde_building");
+        upgrade = upgrade.upgraded_creature;
+      }
+    }
+  }
+  expect(hordeBuildingCount).toBe(16);
+});
 
 for (const viewport of viewports) {
   test(`production planner fits at ${viewport.width}px`, async ({ page }) => {
@@ -362,6 +417,26 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(count).toHaveAttribute("placeholder", "0");
   await expect(firstSlot.locator(".production-detail strong")).toHaveText("22");
   await expect(externalResults).toBeHidden();
+});
+
+test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
+  await page.goto("/production.html");
+
+  const griffinSlot = page.locator(".unit-slot").nth(2);
+  await griffinSlot.locator(".unit-card-cycle").click();
+  await griffinSlot.locator(".unit-card-cycle").click();
+  await expect(griffinSlot.locator(".creature-name")).toHaveText("Royal Griffin");
+  await expect(griffinSlot.locator(".unit-card")).toHaveAttribute("data-stage", "1");
+  await griffinSlot.locator(".horde-toggle").click();
+  await expect(griffinSlot.locator(".production-detail strong")).toHaveText("10");
+
+  await page.locator("#town-select").selectOption("cove");
+  const pirateSlot = page.locator(".unit-slot").nth(2);
+  for (const name of ["Pirate", "Corsair", "Sea Dog"]) {
+    await pirateSlot.locator(".unit-card-cycle").click();
+    await expect(pirateSlot.locator(".creature-name")).toHaveText(name);
+  }
+  await expect(pirateSlot.locator(".unit-card")).toHaveAttribute("data-stage", "2");
 });
 
 for (const [surface, url] of [

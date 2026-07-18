@@ -6,6 +6,12 @@ creatures. Cove's tier 3 also cycles through its Sea Dog second upgrade.
 Relevant tiers show an optional Horde-building toggle. Horde growth is added
 before Fort, Citadel, and Castle modifiers are applied to recruitment costs.
 
+`creatures.json` contains only the fields used by the planner and groups
+dwelling roots by faction, including a `neutral` group. A creature has an
+`upgraded_creature` link when another form follows. A dwelling root contains a
+`horde_building` object when one applies; its nested upgrades share that
+building. The fuller source dataset is preserved in `creatures_big.json`.
+
 Start its local server:
 
 ```bash

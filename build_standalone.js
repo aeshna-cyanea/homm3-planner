@@ -28,6 +28,40 @@ function replaceOnce(document, marker, replacement) {
   return document.replace(marker, replacement);
 }
 
+function validateCreatureNodes(creatureGroups) {
+  let creatureCount = 0;
+
+  for (const [faction, roots] of Object.entries(creatureGroups)) {
+    if (!Array.isArray(roots)) {
+      throw new Error("Creature faction " + faction + " is not an array");
+    }
+
+    for (const root of roots) {
+      let creature = root;
+      while (creature) {
+        if (
+          creature.horde_building !== undefined &&
+          (typeof creature.horde_building !== "object" ||
+            Array.isArray(creature.horde_building))
+        ) {
+          throw new Error(creature.name + " has an invalid horde_building");
+        }
+
+        creatureCount += 1;
+        const upgrade = creature.upgraded_creature;
+        if (upgrade != null && (typeof upgrade !== "object" || Array.isArray(upgrade))) {
+          throw new Error(creature.name + " has an invalid upgraded_creature");
+        }
+        creature = upgrade || null;
+      }
+    }
+  }
+
+  if (creatureCount === 0) {
+    throw new Error("creatures.json does not contain any creatures");
+  }
+}
+
 function buildDocument() {
   let html = readSource("production.html");
   const css = readSource("production.css").trimEnd();
@@ -40,10 +74,13 @@ function buildDocument() {
     throw new Error("creatures.json is invalid: " + error.message);
   }
 
-  const creatures = Array.isArray(creatureData.creatures) ? creatureData.creatures : [];
-  if (creatureData.creature_count !== creatures.length) {
-    throw new Error("creatures.json creature_count does not match its data");
-  }
+  const creatureGroups =
+    creatureData.creatures &&
+    typeof creatureData.creatures === "object" &&
+    !Array.isArray(creatureData.creatures)
+      ? creatureData.creatures
+      : {};
+  validateCreatureNodes(creatureGroups);
   if (css.toLowerCase().includes("</style")) {
     throw new Error("production.css contains a closing style tag");
   }
