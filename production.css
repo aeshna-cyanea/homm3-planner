@@ -163,7 +163,8 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
 }
 
 .planner-inputs {
-  flex: 1 1 35rem;
+  /* 34.5rem for three cards, plus the scheme panel's padding and borders. */
+  flex: 1 1 37.875rem;
   container-name: planner-inputs;
   container-type: inline-size;
 }
@@ -694,7 +695,8 @@ select:focus-visible {
 
 [hidden] { display: none !important; }
 
-@container planner-layout (min-width: 60.75rem) {
+/* 37.875rem inputs + 24.375rem results + their 1.375rem gap. */
+@container planner-layout (min-width: 63.625rem) {
   .results-column {
     flex: 0 0 24.375rem;
     position: sticky;

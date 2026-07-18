@@ -250,6 +250,23 @@ test("card columns respond to scheme width rather than viewport width", async ({
   expect(wideFirst.height).toBeGreaterThan(splitFirst.height);
 });
 
+test("recruitment wraps before the scheme drops below three columns", async ({ page }) => {
+  await page.goto("/production.html");
+
+  await page.setViewportSize({ width: 1050, height: 700 });
+  const wrappedInputs = await page.locator(".planner-inputs").boundingBox();
+  const wrappedResults = await page.locator(".results-column").boundingBox();
+  expect(wrappedResults.y).toBeGreaterThan(wrappedInputs.y + wrappedInputs.height);
+
+  await page.setViewportSize({ width: 1060, height: 700 });
+  const splitInputs = await page.locator(".planner-inputs").boundingBox();
+  const splitResults = await page.locator(".results-column").boundingBox();
+  const firstCard = await page.locator(".unit-slot").first().boundingBox();
+  const thirdCard = await page.locator(".unit-slot").nth(2).boundingBox();
+  expect(splitResults.y).toBe(splitInputs.y);
+  expect(thirdCard.y).toBe(firstCard.y);
+});
+
 test("external dwellings add to base growth and reset independently", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/production.html");
