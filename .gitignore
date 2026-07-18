@@ -3,4 +3,4 @@ __pycache__/
 node_modules/
 playwright-report/
 test-results/
-production-standalone.html
+index.html

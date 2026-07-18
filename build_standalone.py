@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
-DEFAULT_OUTPUT = PROJECT_DIR / "production-standalone.html"
+DEFAULT_OUTPUT = PROJECT_DIR / "index.html"
 STYLESHEET_TAG = '<link rel="stylesheet" href="production.css">'
 SCRIPT_TAG = '<script src="production.js" defer></script>'
 

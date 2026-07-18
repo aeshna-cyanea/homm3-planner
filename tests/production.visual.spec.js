@@ -3,7 +3,7 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 
 const standaloneUrl = pathToFileURL(
-  path.resolve(__dirname, "..", "production-standalone.html"),
+  path.resolve(__dirname, "..", "index.html"),
 ).href;
 
 const viewports = [

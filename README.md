@@ -1,51 +1,3 @@
-# Window Mirror
-
-A small KDE/KWin viewer that displays a snapshot of the first open window whose
-title contains `vcmi`. It refreshes when opened, whenever it regains focus,
-when the **Refresh** button is clicked, or when **F5** is pressed.
-
-## Requirements (Arch Linux)
-
-```bash
-sudo pacman -S python-pyqt6 python-dbus python-gobject
-```
-
-The viewer asks KWin for its window list directly, so it can locate matching
-XWayland or native Wayland windows by title.
-
-## Install
-
-Run this once:
-
-```bash
-./install.sh
-```
-
-The installer creates a venv with a **copied** Python interpreter and installs
-the KDE desktop entry that grants that specific executable access to KWin's
-restricted screenshot interface. A normal symlink-based venv is not sufficient
-for this permission check.
-
-## Run
-
-```bash
-./run.sh
-```
-
-You can also launch **Window Mirror** from KDE's application menu. Running
-`vcmi_viewer.py` directly with the system Python will not have screenshot
-permission.
-
-For a command-line capture test:
-
-```bash
-./run.sh --capture-once /tmp/vcmi.png
-```
-
-The image is captured on demand rather than streamed continuously. It uses
-KWin's compositor screenshot interface to capture accelerated rendering
-directly, without activating, raising, or otherwise disturbing the VCMI window.
-
 ## HotA production planner
 
 The static planner reads `creatures.json` and calculates one week of production
@@ -71,8 +23,8 @@ creature data:
 ./build_standalone.py
 ```
 
-The ignored, generated `production-standalone.html` contains all styles, logic,
-and HotA data. It can be opened directly or shared as one offline file.
+The generated `index.html` contains all styles, logic, and HotA creature
+data.
 
 To regenerate it automatically before each commit, enable the repository's
 tracked Git hooks once after cloning:
