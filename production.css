@@ -174,7 +174,7 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
 
 .control-panel {
   display: grid;
-  grid-template-columns: minmax(13.75rem, 0.7fr) minmax(28.125rem, 1.3fr);
+  grid-template-columns: max-content minmax(28.125rem, 1fr);
   align-items: start;
   gap: 1.75rem;
   margin-top: 0;
@@ -208,6 +208,12 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); }
   row-gap: 0.5625rem;
 }
 
+.town-control {
+  max-width: 100%;
+  align-self: stretch;
+  justify-self: start;
+}
+
 .town-control > span,
 .fortification-label {
   height: 0.875rem;
@@ -234,6 +240,8 @@ select:focus-visible {
   margin: 0;
   padding: 0;
   border: 0;
+  container-name: fortification-control;
+  container-type: inline-size;
 }
 
 .radio-group {
@@ -264,7 +272,12 @@ select:focus-visible {
   background: #24211e;
 }
 
-.radio-group strong { font-size: 0.9rem; }
+select,
+.radio-group strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
 .radio-group small {
   display: flex;
   flex-wrap: wrap;
@@ -274,7 +287,9 @@ select:focus-visible {
   font-size: 0.68rem;
 }
 .fortification-growth,
-.fortification-cost { white-space: nowrap; }
+.fortification-cost {
+  white-space: nowrap;
+}
 .fortification-cost {
   display: inline-flex;
   align-items: center;
@@ -701,6 +716,11 @@ select:focus-visible {
 
 @container planner-inputs (max-width: 46.375rem) {
   .control-panel { grid-template-columns: minmax(0, 1fr); gap: 1.125rem; }
+  .town-control { justify-self: stretch; }
+}
+
+@container fortification-control (max-width: 32.5rem) {
+  .radio-group { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* Three 11rem cards plus two 0.75rem gaps need 34.5rem. */
@@ -727,7 +747,6 @@ select:focus-visible {
 @media (max-width: 32.5rem) {
   .page-header,
   .section-heading { align-items: flex-start; flex-direction: column; }
-  .radio-group { grid-template-columns: minmax(0, 1fr); }
   .scheme-section,
   .results-section { padding: 1.1875rem; }
   .results-table th:nth-child(3),

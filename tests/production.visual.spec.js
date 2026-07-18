@@ -189,6 +189,23 @@ for (const viewport of viewports) {
   });
 }
 
+test("fortification details stay inside their cards at 528px", async ({ page }) => {
+  await page.setViewportSize({ width: 528, height: 900 });
+  await page.goto("/production.html");
+  await expect(page.locator("#town-select")).toBeEnabled();
+
+  const cards = await page.locator(".radio-group input + span").evaluateAll((elements) =>
+    elements.map((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    })),
+  );
+
+  expect(cards).toEqual(
+    cards.map((card) => ({ ...card, scrollWidth: card.clientWidth })),
+  );
+});
+
 test("recruitment column follows desktop scrolling only", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 600 });
   await page.goto("/production.html");
