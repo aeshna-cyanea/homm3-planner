@@ -1,0 +1,4967 @@
+{
+  "schema_version": 3,
+  "ruleset": "heroes_iii_horn_of_the_abyss",
+  "source_url": "https://heroes.thelazy.net/index.php/List_of_creatures",
+  "horde_building_source_url": "https://heroes.thelazy.net/index.php/Horde_building",
+  "creature_count": 189,
+  "fortification_building_count": 2,
+  "fortification_buildings": [
+    {
+      "id": "citadel",
+      "name": "Citadel",
+      "applies_to": "all_towns",
+      "cost": {
+        "gold": 2500,
+        "ore": 5
+      },
+      "growth_multiplier": 1.5,
+      "growth_rounding": "floor"
+    },
+    {
+      "id": "castle",
+      "name": "Castle",
+      "applies_to": "all_towns",
+      "cost": {
+        "gold": 5000,
+        "wood": 10,
+        "ore": 10
+      },
+      "growth_multiplier": 2,
+      "growth_rounding": "exact"
+    }
+  ],
+  "horde_building_count": 16,
+  "horde_buildings": [
+    {
+      "id": "griffin_bastion",
+      "name": "Griffin Bastion",
+      "town": "castle",
+      "creature_level": 3,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "griffin",
+        "royal_griffin"
+      ],
+      "growth_bonus": 3,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Griffin_Bastion"
+    },
+    {
+      "id": "miners_guild",
+      "name": "Miners' Guild",
+      "town": "rampart",
+      "creature_level": 2,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "dwarf",
+        "battle_dwarf"
+      ],
+      "growth_bonus": 4,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Miners%27_Guild"
+    },
+    {
+      "id": "dendroid_saplings",
+      "name": "Dendroid Saplings",
+      "town": "rampart",
+      "creature_level": 5,
+      "cost": {
+        "gold": 2000
+      },
+      "creature_ids": [
+        "dendroid_guard",
+        "dendroid_soldier"
+      ],
+      "growth_bonus": 2,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dendroid_Saplings"
+    },
+    {
+      "id": "sculptor_s_wings",
+      "name": "Sculptor's Wings",
+      "town": "tower",
+      "creature_level": 2,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "stone_gargoyle",
+        "obsidian_gargoyle"
+      ],
+      "growth_bonus": 4,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sculptor%27s_Wings"
+    },
+    {
+      "id": "birthing_pool",
+      "name": "Birthing Pool",
+      "town": "inferno",
+      "creature_level": 1,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "imp",
+        "familiar"
+      ],
+      "growth_bonus": 8,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Birthing_Pool"
+    },
+    {
+      "id": "cages",
+      "name": "Cages",
+      "town": "inferno",
+      "creature_level": 3,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "hell_hound",
+        "cerberus"
+      ],
+      "growth_bonus": 3,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Cages"
+    },
+    {
+      "id": "unearthed_graves",
+      "name": "Unearthed Graves",
+      "town": "necropolis",
+      "creature_level": 1,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "skeleton",
+        "skeleton_warrior"
+      ],
+      "growth_bonus": 6,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Unearthed_Graves"
+    },
+    {
+      "id": "mushroom_rings",
+      "name": "Mushroom Rings",
+      "town": "dungeon",
+      "creature_level": 1,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "troglodyte",
+        "infernal_troglodyte"
+      ],
+      "growth_bonus": 7,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mushroom_Rings"
+    },
+    {
+      "id": "mess_hall",
+      "name": "Mess Hall",
+      "town": "stronghold",
+      "creature_level": 1,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "goblin",
+        "hobgoblin"
+      ],
+      "growth_bonus": 8,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mess_Hall"
+    },
+    {
+      "id": "captain_s_quarters",
+      "name": "Captain's Quarters",
+      "town": "fortress",
+      "creature_level": 1,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "gnoll",
+        "gnoll_marauder"
+      ],
+      "growth_bonus": 6,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Captain%27s_Quarters"
+    },
+    {
+      "id": "garden_of_life",
+      "name": "Garden of Life",
+      "town": "conflux",
+      "creature_level": 1,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "pixie",
+        "sprite"
+      ],
+      "growth_bonus": 10,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Garden_of_Life"
+    },
+    {
+      "id": "vault_of_ashes",
+      "name": "Vault of Ashes",
+      "town": "conflux",
+      "creature_level": 7,
+      "cost": {
+        "mercury": 5,
+        "gold": 5000
+      },
+      "creature_ids": [
+        "firebird",
+        "phoenix"
+      ],
+      "growth_bonus": 1,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Vault_of_Ashes"
+    },
+    {
+      "id": "pub",
+      "name": "Pub",
+      "town": "cove",
+      "creature_level": 2,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "crew_mate",
+        "seaman"
+      ],
+      "growth_bonus": 4,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pub"
+    },
+    {
+      "id": "roost",
+      "name": "Roost",
+      "town": "cove",
+      "creature_level": 4,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "stormbird",
+        "ayssid"
+      ],
+      "growth_bonus": 3,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Roost"
+    },
+    {
+      "id": "pen",
+      "name": "Pen",
+      "town": "factory",
+      "creature_level": 3,
+      "cost": {
+        "gold": 1000
+      },
+      "creature_ids": [
+        "armadillo",
+        "bellwether_armadillo"
+      ],
+      "growth_bonus": 3,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pen"
+    },
+    {
+      "id": "hay_bins",
+      "name": "Hay Bins",
+      "town": "bulwark",
+      "creature_level": 6,
+      "cost": {
+        "gold": 2000
+      },
+      "creature_ids": [
+        "mammoth",
+        "war_mammoth"
+      ],
+      "growth_bonus": 1,
+      "wiki_url": "https://heroes.thelazy.net/index.php/Hay_Bins"
+    }
+  ],
+  "creatures": [
+    {
+      "id": "pikeman",
+      "name": "Pikeman",
+      "town": "castle",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 4,
+      "defense": 5,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 10,
+      "speed": 4,
+      "growth": 14,
+      "horde": null,
+      "ai_value": 80,
+      "cost": {
+        "gold": 60
+      },
+      "special": "Immune to Jousting",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pikeman"
+    },
+    {
+      "id": "halberdier",
+      "name": "Halberdier",
+      "town": "castle",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 5,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 10,
+      "speed": 5,
+      "growth": 14,
+      "horde": null,
+      "ai_value": 115,
+      "cost": {
+        "gold": 75
+      },
+      "special": "Immune to Jousting",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Halberdier"
+    },
+    {
+      "id": "archer",
+      "name": "Archer",
+      "town": "castle",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 3,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 10,
+      "speed": 4,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 126,
+      "cost": {
+        "gold": 100
+      },
+      "special": "Ranged (12 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Archer"
+    },
+    {
+      "id": "marksman",
+      "name": "Marksman",
+      "town": "castle",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 3,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 10,
+      "speed": 6,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 184,
+      "cost": {
+        "gold": 150
+      },
+      "special": "Ranged (24 shots), Double attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Marksman"
+    },
+    {
+      "id": "griffin",
+      "name": "Griffin",
+      "town": "castle",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 8,
+      "defense": 8,
+      "damage": {
+        "min": 3,
+        "max": 6
+      },
+      "health": 25,
+      "speed": 6,
+      "growth": 7,
+      "horde": {
+        "building_id": "griffin_bastion",
+        "growth_bonus": 3,
+        "growth_with_horde": 10
+      },
+      "ai_value": 351,
+      "cost": {
+        "gold": 200
+      },
+      "special": "Flying, Two retaliations",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Griffin"
+    },
+    {
+      "id": "royal_griffin",
+      "name": "Royal Griffin",
+      "town": "castle",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 9,
+      "damage": {
+        "min": 3,
+        "max": 6
+      },
+      "health": 25,
+      "speed": 9,
+      "growth": 7,
+      "horde": {
+        "building_id": "griffin_bastion",
+        "growth_bonus": 3,
+        "growth_with_horde": 10
+      },
+      "ai_value": 448,
+      "cost": {
+        "gold": 240
+      },
+      "special": "Flying, Unlimited retaliations",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Royal_Griffin"
+    },
+    {
+      "id": "swordsman",
+      "name": "Swordsman",
+      "town": "castle",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 12,
+      "damage": {
+        "min": 6,
+        "max": 9
+      },
+      "health": 35,
+      "speed": 5,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 445,
+      "cost": {
+        "gold": 300
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Swordsman"
+    },
+    {
+      "id": "crusader",
+      "name": "Crusader",
+      "town": "castle",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 12,
+      "damage": {
+        "min": 7,
+        "max": 10
+      },
+      "health": 35,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 588,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Double attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Crusader"
+    },
+    {
+      "id": "monk",
+      "name": "Monk",
+      "town": "castle",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 7,
+      "damage": {
+        "min": 10,
+        "max": 12
+      },
+      "health": 30,
+      "speed": 5,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 582,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Ranged (12 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Monk"
+    },
+    {
+      "id": "zealot",
+      "name": "Zealot",
+      "town": "castle",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 10,
+      "damage": {
+        "min": 10,
+        "max": 12
+      },
+      "health": 30,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 750,
+      "cost": {
+        "gold": 450
+      },
+      "special": "Ranged (24 shots), No melee penalty",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Zealot"
+    },
+    {
+      "id": "cavalier",
+      "name": "Cavalier",
+      "town": "castle",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 15,
+      "defense": 15,
+      "damage": {
+        "min": 15,
+        "max": 25
+      },
+      "health": 100,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1946,
+      "cost": {
+        "gold": 1000
+      },
+      "special": "Jousting",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Cavalier"
+    },
+    {
+      "id": "champion",
+      "name": "Champion",
+      "town": "castle",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 16,
+      "defense": 16,
+      "damage": {
+        "min": 20,
+        "max": 25
+      },
+      "health": 100,
+      "speed": 9,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2100,
+      "cost": {
+        "gold": 1200
+      },
+      "special": "Jousting",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Champion"
+    },
+    {
+      "id": "angel",
+      "name": "Angel",
+      "town": "castle",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 20,
+      "defense": 20,
+      "damage": {
+        "min": 50,
+        "max": 50
+      },
+      "health": 200,
+      "speed": 12,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 5019,
+      "cost": {
+        "gold": 3000,
+        "gem": 1
+      },
+      "special": "Flying, Hates Devils, Morale +1",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Angel"
+    },
+    {
+      "id": "archangel",
+      "name": "Archangel",
+      "town": "castle",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 30,
+      "defense": 30,
+      "damage": {
+        "min": 50,
+        "max": 50
+      },
+      "health": 250,
+      "speed": 18,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 8776,
+      "cost": {
+        "gold": 5000,
+        "gem": 3
+      },
+      "special": "Flying, Hates Devils, Resurrection, Morale +1",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Archangel"
+    },
+    {
+      "id": "centaur",
+      "name": "Centaur",
+      "town": "rampart",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 5,
+      "defense": 3,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 8,
+      "speed": 6,
+      "growth": 14,
+      "horde": null,
+      "ai_value": 100,
+      "cost": {
+        "gold": 70
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Centaur"
+    },
+    {
+      "id": "centaur_captain",
+      "name": "Centaur Captain",
+      "town": "rampart",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 3,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 10,
+      "speed": 8,
+      "growth": 14,
+      "horde": null,
+      "ai_value": 138,
+      "cost": {
+        "gold": 90
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Centaur_Captain"
+    },
+    {
+      "id": "dwarf",
+      "name": "Dwarf",
+      "town": "rampart",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 7,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 20,
+      "speed": 3,
+      "growth": 8,
+      "horde": {
+        "building_id": "miners_guild",
+        "growth_bonus": 4,
+        "growth_with_horde": 12
+      },
+      "ai_value": 138,
+      "cost": {
+        "gold": 120
+      },
+      "special": "Resistance (+20%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dwarf"
+    },
+    {
+      "id": "battle_dwarf",
+      "name": "Battle Dwarf",
+      "town": "rampart",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 7,
+      "defense": 7,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 20,
+      "speed": 5,
+      "growth": 8,
+      "horde": {
+        "building_id": "miners_guild",
+        "growth_bonus": 4,
+        "growth_with_horde": 12
+      },
+      "ai_value": 209,
+      "cost": {
+        "gold": 150
+      },
+      "special": "Resistance (+40%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Battle_Dwarf"
+    },
+    {
+      "id": "wood_elf",
+      "name": "Wood Elf",
+      "town": "rampart",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 5,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 15,
+      "speed": 6,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 234,
+      "cost": {
+        "gold": 200
+      },
+      "special": "Ranged (24 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wood_Elf"
+    },
+    {
+      "id": "grand_elf",
+      "name": "Grand Elf",
+      "town": "rampart",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 5,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 15,
+      "speed": 7,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 331,
+      "cost": {
+        "gold": 225
+      },
+      "special": "Ranged (24 shots), Double attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Grand_Elf"
+    },
+    {
+      "id": "pegasus",
+      "name": "Pegasus",
+      "town": "rampart",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 8,
+      "damage": {
+        "min": 5,
+        "max": 9
+      },
+      "health": 30,
+      "speed": 8,
+      "growth": 5,
+      "horde": null,
+      "ai_value": 518,
+      "cost": {
+        "gold": 250
+      },
+      "special": "Flying, Magic damper",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pegasus"
+    },
+    {
+      "id": "silver_pegasus",
+      "name": "Silver Pegasus",
+      "town": "rampart",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 10,
+      "damage": {
+        "min": 5,
+        "max": 9
+      },
+      "health": 30,
+      "speed": 12,
+      "growth": 5,
+      "horde": null,
+      "ai_value": 532,
+      "cost": {
+        "gold": 275
+      },
+      "special": "Flying, Magic damper",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Silver_Pegasus"
+    },
+    {
+      "id": "dendroid_guard",
+      "name": "Dendroid Guard",
+      "town": "rampart",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 12,
+      "damage": {
+        "min": 10,
+        "max": 14
+      },
+      "health": 55,
+      "speed": 3,
+      "growth": 3,
+      "horde": {
+        "building_id": "dendroid_saplings",
+        "growth_bonus": 2,
+        "growth_with_horde": 5
+      },
+      "ai_value": 517,
+      "cost": {
+        "gold": 350
+      },
+      "special": "Binding",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dendroid_Guard"
+    },
+    {
+      "id": "dendroid_soldier",
+      "name": "Dendroid Soldier",
+      "town": "rampart",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 12,
+      "damage": {
+        "min": 10,
+        "max": 14
+      },
+      "health": 65,
+      "speed": 4,
+      "growth": 3,
+      "horde": {
+        "building_id": "dendroid_saplings",
+        "growth_bonus": 2,
+        "growth_with_horde": 5
+      },
+      "ai_value": 803,
+      "cost": {
+        "gold": 425
+      },
+      "special": "Binding",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dendroid_Soldier"
+    },
+    {
+      "id": "unicorn",
+      "name": "Unicorn",
+      "town": "rampart",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 15,
+      "defense": 14,
+      "damage": {
+        "min": 18,
+        "max": 22
+      },
+      "health": 90,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1806,
+      "cost": {
+        "gold": 850
+      },
+      "special": "Blinding attack, Aura of Resistance (+20%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Unicorn"
+    },
+    {
+      "id": "war_unicorn",
+      "name": "War Unicorn",
+      "town": "rampart",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 15,
+      "defense": 14,
+      "damage": {
+        "min": 18,
+        "max": 22
+      },
+      "health": 110,
+      "speed": 9,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2030,
+      "cost": {
+        "gold": 950
+      },
+      "special": "Blinding attack, Aura of Resistance (+20%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/War_Unicorn"
+    },
+    {
+      "id": "green_dragon",
+      "name": "Green Dragon",
+      "town": "rampart",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 18,
+      "defense": 18,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 180,
+      "speed": 10,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 4872,
+      "cost": {
+        "gold": 2400,
+        "crystal": 1
+      },
+      "special": "Dragon, Flying, Breath attack, 1-3 lvl spells immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Green_Dragon"
+    },
+    {
+      "id": "gold_dragon",
+      "name": "Gold Dragon",
+      "town": "rampart",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 27,
+      "defense": 27,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 250,
+      "speed": 16,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 8613,
+      "cost": {
+        "gold": 4000,
+        "crystal": 2
+      },
+      "special": "Dragon, Flying, Breath attack, 1-4 lvl spells immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gold_Dragon"
+    },
+    {
+      "id": "gremlin",
+      "name": "Gremlin",
+      "town": "tower",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 3,
+      "defense": 3,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 4,
+      "speed": 4,
+      "growth": 16,
+      "horde": null,
+      "ai_value": 44,
+      "cost": {
+        "gold": 30
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gremlin"
+    },
+    {
+      "id": "master_gremlin",
+      "name": "Master Gremlin",
+      "town": "tower",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 4,
+      "defense": 4,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 4,
+      "speed": 5,
+      "growth": 16,
+      "horde": null,
+      "ai_value": 66,
+      "cost": {
+        "gold": 40
+      },
+      "special": "Ranged (8 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Master_Gremlin"
+    },
+    {
+      "id": "stone_gargoyle",
+      "name": "Stone Gargoyle",
+      "town": "tower",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 6,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 16,
+      "speed": 6,
+      "growth": 9,
+      "horde": {
+        "building_id": "sculptor_s_wings",
+        "growth_bonus": 4,
+        "growth_with_horde": 13
+      },
+      "ai_value": 165,
+      "cost": {
+        "gold": 130
+      },
+      "special": "Bloodless, Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Stone_Gargoyle"
+    },
+    {
+      "id": "obsidian_gargoyle",
+      "name": "Obsidian Gargoyle",
+      "town": "tower",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 7,
+      "defense": 7,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 16,
+      "speed": 9,
+      "growth": 9,
+      "horde": {
+        "building_id": "sculptor_s_wings",
+        "growth_bonus": 4,
+        "growth_with_horde": 13
+      },
+      "ai_value": 201,
+      "cost": {
+        "gold": 160
+      },
+      "special": "Bloodless, Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Obsidian_Gargoyle"
+    },
+    {
+      "id": "stone_golem",
+      "name": "Stone Golem",
+      "town": "tower",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 10,
+      "damage": {
+        "min": 4,
+        "max": 5
+      },
+      "health": 30,
+      "speed": 3,
+      "growth": 6,
+      "horde": null,
+      "ai_value": 250,
+      "cost": {
+        "gold": 150
+      },
+      "special": "Unliving, Spell damage resistance +50%",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Stone_Golem"
+    },
+    {
+      "id": "iron_golem",
+      "name": "Iron Golem",
+      "town": "tower",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 10,
+      "damage": {
+        "min": 4,
+        "max": 5
+      },
+      "health": 35,
+      "speed": 5,
+      "growth": 6,
+      "horde": null,
+      "ai_value": 412,
+      "cost": {
+        "gold": 200
+      },
+      "special": "Unliving, Spell damage resistance +75%",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Iron_Golem"
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "town": "tower",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 11,
+      "defense": 8,
+      "damage": {
+        "min": 7,
+        "max": 9
+      },
+      "health": 25,
+      "speed": 5,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 570,
+      "cost": {
+        "gold": 350
+      },
+      "special": "Ranged (24 shots), No melee penalty, No obstacle penalty, Magic channeler",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mage"
+    },
+    {
+      "id": "arch_mage",
+      "name": "Arch Mage",
+      "town": "tower",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 9,
+      "damage": {
+        "min": 7,
+        "max": 9
+      },
+      "health": 30,
+      "speed": 7,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 680,
+      "cost": {
+        "gold": 450
+      },
+      "special": "Ranged (24 shots), No melee penalty, No obstacle penalty, Magic channeler",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Arch_Mage"
+    },
+    {
+      "id": "genie",
+      "name": "Genie",
+      "town": "tower",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 12,
+      "damage": {
+        "min": 13,
+        "max": 16
+      },
+      "health": 40,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 884,
+      "cost": {
+        "gold": 550
+      },
+      "special": "Flying, Hates Efreet and Efreet Sultans",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Genie"
+    },
+    {
+      "id": "master_genie",
+      "name": "Master Genie",
+      "town": "tower",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 12,
+      "damage": {
+        "min": 13,
+        "max": 16
+      },
+      "health": 40,
+      "speed": 11,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 942,
+      "cost": {
+        "gold": 600
+      },
+      "special": "Flying, Spellcaster, Hates Efreet and Efreet Sultans",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Master_Genie"
+    },
+    {
+      "id": "naga",
+      "name": "Naga",
+      "town": "tower",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 16,
+      "defense": 13,
+      "damage": {
+        "min": 20,
+        "max": 20
+      },
+      "health": 110,
+      "speed": 5,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2016,
+      "cost": {
+        "gold": 1100
+      },
+      "special": "No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Naga"
+    },
+    {
+      "id": "naga_queen",
+      "name": "Naga Queen",
+      "town": "tower",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 16,
+      "defense": 13,
+      "damage": {
+        "min": 30,
+        "max": 30
+      },
+      "health": 110,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2840,
+      "cost": {
+        "gold": 1600
+      },
+      "special": "No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Naga_Queen"
+    },
+    {
+      "id": "giant",
+      "name": "Giant",
+      "town": "tower",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 19,
+      "defense": 16,
+      "damage": {
+        "min": 40,
+        "max": 60
+      },
+      "health": 150,
+      "speed": 7,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 3718,
+      "cost": {
+        "gold": 2000,
+        "gem": 1
+      },
+      "special": "Mind spells immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Giant"
+    },
+    {
+      "id": "titan",
+      "name": "Titan",
+      "town": "tower",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 24,
+      "defense": 24,
+      "damage": {
+        "min": 40,
+        "max": 60
+      },
+      "health": 300,
+      "speed": 11,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 7500,
+      "cost": {
+        "gold": 5000,
+        "gem": 2
+      },
+      "special": "Ranged (24 shots), No melee penalty, Mind spells immunity, Hates Black Dragons",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Titan"
+    },
+    {
+      "id": "imp",
+      "name": "Imp",
+      "town": "inferno",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 2,
+      "defense": 3,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 4,
+      "speed": 5,
+      "growth": 15,
+      "horde": {
+        "building_id": "birthing_pool",
+        "growth_bonus": 8,
+        "growth_with_horde": 23
+      },
+      "ai_value": 50,
+      "cost": {
+        "gold": 50
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Imp"
+    },
+    {
+      "id": "familiar",
+      "name": "Familiar",
+      "town": "inferno",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 4,
+      "defense": 4,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 4,
+      "speed": 7,
+      "growth": 15,
+      "horde": {
+        "building_id": "birthing_pool",
+        "growth_bonus": 8,
+        "growth_with_horde": 23
+      },
+      "ai_value": 60,
+      "cost": {
+        "gold": 60
+      },
+      "special": "Magic channel",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Familiar"
+    },
+    {
+      "id": "gog",
+      "name": "Gog",
+      "town": "inferno",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 4,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 13,
+      "speed": 4,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 159,
+      "cost": {
+        "gold": 125
+      },
+      "special": "Ranged (12 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gog"
+    },
+    {
+      "id": "magog",
+      "name": "Magog",
+      "town": "inferno",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 7,
+      "defense": 4,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 13,
+      "speed": 6,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 240,
+      "cost": {
+        "gold": 175
+      },
+      "special": "Ranged (24 shots), Fireball attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Magog"
+    },
+    {
+      "id": "hell_hound",
+      "name": "Hell Hound",
+      "town": "inferno",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 6,
+      "damage": {
+        "min": 2,
+        "max": 7
+      },
+      "health": 25,
+      "speed": 7,
+      "growth": 5,
+      "horde": {
+        "building_id": "cages",
+        "growth_bonus": 3,
+        "growth_with_horde": 8
+      },
+      "ai_value": 357,
+      "cost": {
+        "gold": 200
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Hell_Hound"
+    },
+    {
+      "id": "cerberus",
+      "name": "Cerberus",
+      "town": "inferno",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 10,
+      "defense": 8,
+      "damage": {
+        "min": 2,
+        "max": 7
+      },
+      "health": 25,
+      "speed": 8,
+      "growth": 5,
+      "horde": {
+        "building_id": "cages",
+        "growth_bonus": 3,
+        "growth_with_horde": 8
+      },
+      "ai_value": 392,
+      "cost": {
+        "gold": 250
+      },
+      "special": "No enemy retaliation, 3-headed attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Cerberus"
+    },
+    {
+      "id": "demon",
+      "name": "Demon",
+      "town": "inferno",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 10,
+      "damage": {
+        "min": 7,
+        "max": 9
+      },
+      "health": 35,
+      "speed": 5,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 445,
+      "cost": {
+        "gold": 250
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Demon"
+    },
+    {
+      "id": "horned_demon",
+      "name": "Horned Demon",
+      "town": "inferno",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 10,
+      "defense": 10,
+      "damage": {
+        "min": 7,
+        "max": 9
+      },
+      "health": 40,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 480,
+      "cost": {
+        "gold": 270
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Horned_Demon"
+    },
+    {
+      "id": "pit_fiend",
+      "name": "Pit Fiend",
+      "town": "inferno",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 13,
+      "damage": {
+        "min": 13,
+        "max": 17
+      },
+      "health": 45,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 765,
+      "cost": {
+        "gold": 500
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pit_Fiend"
+    },
+    {
+      "id": "pit_lord",
+      "name": "Pit Lord",
+      "town": "inferno",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 13,
+      "defense": 13,
+      "damage": {
+        "min": 13,
+        "max": 17
+      },
+      "health": 45,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1224,
+      "cost": {
+        "gold": 700
+      },
+      "special": "Summon demons",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pit_Lord"
+    },
+    {
+      "id": "efreeti",
+      "name": "Efreeti",
+      "town": "inferno",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 16,
+      "defense": 12,
+      "damage": {
+        "min": 16,
+        "max": 24
+      },
+      "health": 90,
+      "speed": 9,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1670,
+      "cost": {
+        "gold": 900
+      },
+      "special": "Flying, Fire immunity, Hates Genies",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Efreeti"
+    },
+    {
+      "id": "efreet_sultan",
+      "name": "Efreet Sultan",
+      "town": "inferno",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 16,
+      "defense": 14,
+      "damage": {
+        "min": 16,
+        "max": 24
+      },
+      "health": 90,
+      "speed": 13,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2343,
+      "cost": {
+        "gold": 1100
+      },
+      "special": "Flying, Natural Fire Shield, Fire immunity, Hates Genies",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Efreet_Sultan"
+    },
+    {
+      "id": "devil",
+      "name": "Devil",
+      "town": "inferno",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 19,
+      "defense": 21,
+      "damage": {
+        "min": 30,
+        "max": 40
+      },
+      "health": 160,
+      "speed": 11,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 5101,
+      "cost": {
+        "gold": 2700,
+        "mercury": 1
+      },
+      "special": "Teleporting, No enemy retaliation, Luck -1, Hates Angels",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Devil"
+    },
+    {
+      "id": "arch_devil",
+      "name": "Arch Devil",
+      "town": "inferno",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 26,
+      "defense": 28,
+      "damage": {
+        "min": 30,
+        "max": 40
+      },
+      "health": 200,
+      "speed": 17,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 7115,
+      "cost": {
+        "gold": 4500,
+        "mercury": 2
+      },
+      "special": "Teleporting, No enemy retaliation, Luck - 2, Hates Angels",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Arch_Devil"
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "town": "necropolis",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 5,
+      "defense": 4,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 6,
+      "speed": 4,
+      "growth": 12,
+      "horde": {
+        "building_id": "unearthed_graves",
+        "growth_bonus": 6,
+        "growth_with_horde": 18
+      },
+      "ai_value": 60,
+      "cost": {
+        "gold": 60
+      },
+      "special": "Undead",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Skeleton"
+    },
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "town": "necropolis",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 6,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 6,
+      "speed": 5,
+      "growth": 12,
+      "horde": {
+        "building_id": "unearthed_graves",
+        "growth_bonus": 6,
+        "growth_with_horde": 18
+      },
+      "ai_value": 85,
+      "cost": {
+        "gold": 70
+      },
+      "special": "Undead",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Skeleton_Warrior"
+    },
+    {
+      "id": "walking_dead",
+      "name": "Walking Dead",
+      "town": "necropolis",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 5,
+      "defense": 5,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 15,
+      "speed": 3,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 98,
+      "cost": {
+        "gold": 100
+      },
+      "special": "Undead",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Walking_Dead"
+    },
+    {
+      "id": "zombie",
+      "name": "Zombie",
+      "town": "necropolis",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 5,
+      "defense": 5,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 20,
+      "speed": 4,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 128,
+      "cost": {
+        "gold": 125
+      },
+      "special": "Undead, Disease",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Zombie"
+    },
+    {
+      "id": "wight",
+      "name": "Wight",
+      "town": "necropolis",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 7,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 18,
+      "speed": 5,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 252,
+      "cost": {
+        "gold": 200
+      },
+      "special": "Undead, Flying, Regeneration",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wight"
+    },
+    {
+      "id": "wraith",
+      "name": "Wraith",
+      "town": "necropolis",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 7,
+      "defense": 7,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 18,
+      "speed": 7,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 315,
+      "cost": {
+        "gold": 230
+      },
+      "special": "Undead, Flying, Regeneration, Mana drain",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wraith"
+    },
+    {
+      "id": "vampire",
+      "name": "Vampire",
+      "town": "necropolis",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 9,
+      "damage": {
+        "min": 5,
+        "max": 8
+      },
+      "health": 30,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 555,
+      "cost": {
+        "gold": 360
+      },
+      "special": "Undead, Flying, No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Vampire"
+    },
+    {
+      "id": "vampire_lord",
+      "name": "Vampire Lord",
+      "town": "necropolis",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 10,
+      "defense": 10,
+      "damage": {
+        "min": 5,
+        "max": 8
+      },
+      "health": 40,
+      "speed": 9,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 783,
+      "cost": {
+        "gold": 500
+      },
+      "special": "Undead, Flying, No enemy retaliation, Life drain",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Vampire_Lord"
+    },
+    {
+      "id": "lich",
+      "name": "Lich",
+      "town": "necropolis",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 10,
+      "damage": {
+        "min": 11,
+        "max": 13
+      },
+      "health": 30,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 848,
+      "cost": {
+        "gold": 550
+      },
+      "special": "Ranged (12 shots), Undead, Death cloud",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Lich"
+    },
+    {
+      "id": "power_lich",
+      "name": "Power Lich",
+      "town": "necropolis",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 13,
+      "defense": 10,
+      "damage": {
+        "min": 11,
+        "max": 15
+      },
+      "health": 40,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1079,
+      "cost": {
+        "gold": 600
+      },
+      "special": "Ranged (24 shots), Undead, Death cloud",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Power_Lich"
+    },
+    {
+      "id": "black_knight",
+      "name": "Black Knight",
+      "town": "necropolis",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 16,
+      "defense": 16,
+      "damage": {
+        "min": 15,
+        "max": 30
+      },
+      "health": 120,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2087,
+      "cost": {
+        "gold": 1200
+      },
+      "special": "Undead, Curse",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Black_Knight"
+    },
+    {
+      "id": "dread_knight",
+      "name": "Dread Knight",
+      "town": "necropolis",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 18,
+      "defense": 18,
+      "damage": {
+        "min": 15,
+        "max": 30
+      },
+      "health": 120,
+      "speed": 9,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2382,
+      "cost": {
+        "gold": 1500
+      },
+      "special": "Undead, Curse, Death blow",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dread_Knight"
+    },
+    {
+      "id": "bone_dragon",
+      "name": "Bone Dragon",
+      "town": "necropolis",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 17,
+      "defense": 15,
+      "damage": {
+        "min": 25,
+        "max": 50
+      },
+      "health": 150,
+      "speed": 9,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 3388,
+      "cost": {
+        "gold": 1800
+      },
+      "special": "Dragon, Undead, Flying, Morale -1",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Bone_Dragon"
+    },
+    {
+      "id": "ghost_dragon",
+      "name": "Ghost Dragon",
+      "town": "necropolis",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 19,
+      "defense": 17,
+      "damage": {
+        "min": 25,
+        "max": 50
+      },
+      "health": 200,
+      "speed": 14,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 4696,
+      "cost": {
+        "gold": 3000,
+        "mercury": 1
+      },
+      "special": "Dragon, Undead, Flying, Morale -1, Aging",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Ghost_Dragon"
+    },
+    {
+      "id": "troglodyte",
+      "name": "Troglodyte",
+      "town": "dungeon",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 4,
+      "defense": 3,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 5,
+      "speed": 4,
+      "growth": 14,
+      "horde": {
+        "building_id": "mushroom_rings",
+        "growth_bonus": 7,
+        "growth_with_horde": 21
+      },
+      "ai_value": 59,
+      "cost": {
+        "gold": 50
+      },
+      "special": "Immune to Blinding and Stone gaze",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Troglodyte"
+    },
+    {
+      "id": "infernal_troglodyte",
+      "name": "Infernal Troglodyte",
+      "town": "dungeon",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 5,
+      "defense": 4,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 6,
+      "speed": 5,
+      "growth": 14,
+      "horde": {
+        "building_id": "mushroom_rings",
+        "growth_bonus": 7,
+        "growth_with_horde": 21
+      },
+      "ai_value": 84,
+      "cost": {
+        "gold": 65
+      },
+      "special": "Immune to Blinding and Stone gaze",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Infernal_Troglodyte"
+    },
+    {
+      "id": "harpy",
+      "name": "Harpy",
+      "town": "dungeon",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 5,
+      "damage": {
+        "min": 1,
+        "max": 4
+      },
+      "health": 14,
+      "speed": 6,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 154,
+      "cost": {
+        "gold": 130
+      },
+      "special": "Flying, Strike and return",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Harpy"
+    },
+    {
+      "id": "harpy_hag",
+      "name": "Harpy Hag",
+      "town": "dungeon",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 6,
+      "damage": {
+        "min": 1,
+        "max": 4
+      },
+      "health": 14,
+      "speed": 9,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 238,
+      "cost": {
+        "gold": 170
+      },
+      "special": "Flying, Strike and return, No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Harpy_Hag"
+    },
+    {
+      "id": "beholder",
+      "name": "Beholder",
+      "town": "dungeon",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 7,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 22,
+      "speed": 5,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 336,
+      "cost": {
+        "gold": 250
+      },
+      "special": "Ranged (12 shots), No melee penalty",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Beholder"
+    },
+    {
+      "id": "evil_eye",
+      "name": "Evil Eye",
+      "town": "dungeon",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 10,
+      "defense": 8,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 22,
+      "speed": 7,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 367,
+      "cost": {
+        "gold": 280
+      },
+      "special": "Ranged (24 shots), No melee penalty",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Evil_Eye"
+    },
+    {
+      "id": "medusa",
+      "name": "Medusa",
+      "town": "dungeon",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 9,
+      "damage": {
+        "min": 6,
+        "max": 8
+      },
+      "health": 25,
+      "speed": 5,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 517,
+      "cost": {
+        "gold": 300
+      },
+      "special": "Ranged (4 shots), No melee penalty, Petrifying attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Medusa"
+    },
+    {
+      "id": "medusa_queen",
+      "name": "Medusa Queen",
+      "town": "dungeon",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 10,
+      "defense": 10,
+      "damage": {
+        "min": 6,
+        "max": 8
+      },
+      "health": 30,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 577,
+      "cost": {
+        "gold": 330
+      },
+      "special": "Ranged (8 shots), No melee penalty, Petrifying attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Medusa_Queen"
+    },
+    {
+      "id": "minotaur",
+      "name": "Minotaur",
+      "town": "dungeon",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 14,
+      "defense": 12,
+      "damage": {
+        "min": 12,
+        "max": 20
+      },
+      "health": 50,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 835,
+      "cost": {
+        "gold": 500
+      },
+      "special": "Positive Morale",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Minotaur"
+    },
+    {
+      "id": "minotaur_king",
+      "name": "Minotaur King",
+      "town": "dungeon",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 15,
+      "defense": 15,
+      "damage": {
+        "min": 12,
+        "max": 20
+      },
+      "health": 50,
+      "speed": 8,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1068,
+      "cost": {
+        "gold": 575
+      },
+      "special": "Positive Morale",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Minotaur_King"
+    },
+    {
+      "id": "manticore",
+      "name": "Manticore",
+      "town": "dungeon",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 15,
+      "defense": 13,
+      "damage": {
+        "min": 14,
+        "max": 20
+      },
+      "health": 80,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1547,
+      "cost": {
+        "gold": 850
+      },
+      "special": "Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Manticore"
+    },
+    {
+      "id": "scorpicore",
+      "name": "Scorpicore",
+      "town": "dungeon",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 16,
+      "defense": 14,
+      "damage": {
+        "min": 14,
+        "max": 20
+      },
+      "health": 80,
+      "speed": 11,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1589,
+      "cost": {
+        "gold": 1050
+      },
+      "special": "Flying, Paralyzing venom",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Scorpicore"
+    },
+    {
+      "id": "red_dragon",
+      "name": "Red Dragon",
+      "town": "dungeon",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 19,
+      "defense": 19,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 180,
+      "speed": 11,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 4702,
+      "cost": {
+        "gold": 2500,
+        "sulfur": 1
+      },
+      "special": "Dragon, Flying, Breath attack, 1-3 lvl spells immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Red_Dragon"
+    },
+    {
+      "id": "black_dragon",
+      "name": "Black Dragon",
+      "town": "dungeon",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 25,
+      "defense": 25,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 300,
+      "speed": 15,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 8721,
+      "cost": {
+        "gold": 4000,
+        "sulfur": 2
+      },
+      "special": "Dragon, Flying, Breath attack, Magic immunity, Hates Titans",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Black_Dragon"
+    },
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "town": "stronghold",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 4,
+      "defense": 2,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 5,
+      "speed": 5,
+      "growth": 15,
+      "horde": {
+        "building_id": "mess_hall",
+        "growth_bonus": 8,
+        "growth_with_horde": 23
+      },
+      "ai_value": 60,
+      "cost": {
+        "gold": 40
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Goblin"
+    },
+    {
+      "id": "hobgoblin",
+      "name": "Hobgoblin",
+      "town": "stronghold",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 5,
+      "defense": 3,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 5,
+      "speed": 7,
+      "growth": 15,
+      "horde": {
+        "building_id": "mess_hall",
+        "growth_bonus": 8,
+        "growth_with_horde": 23
+      },
+      "ai_value": 78,
+      "cost": {
+        "gold": 50
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Hobgoblin"
+    },
+    {
+      "id": "wolf_rider",
+      "name": "Wolf Rider",
+      "town": "stronghold",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 5,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 10,
+      "speed": 6,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 130,
+      "cost": {
+        "gold": 100
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wolf_Rider"
+    },
+    {
+      "id": "wolf_raider",
+      "name": "Wolf Raider",
+      "town": "stronghold",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 8,
+      "defense": 5,
+      "damage": {
+        "min": 3,
+        "max": 4
+      },
+      "health": 10,
+      "speed": 8,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 203,
+      "cost": {
+        "gold": 140
+      },
+      "special": "Double attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wolf_Raider"
+    },
+    {
+      "id": "orc",
+      "name": "Orc",
+      "town": "stronghold",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 8,
+      "defense": 4,
+      "damage": {
+        "min": 2,
+        "max": 5
+      },
+      "health": 15,
+      "speed": 4,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 192,
+      "cost": {
+        "gold": 150
+      },
+      "special": "Ranged (12 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Orc"
+    },
+    {
+      "id": "orc_chieftain",
+      "name": "Orc Chieftain",
+      "town": "stronghold",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 8,
+      "defense": 4,
+      "damage": {
+        "min": 2,
+        "max": 5
+      },
+      "health": 20,
+      "speed": 5,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 240,
+      "cost": {
+        "gold": 165
+      },
+      "special": "Ranged (24 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Orc_Chieftain"
+    },
+    {
+      "id": "ogre",
+      "name": "Ogre",
+      "town": "stronghold",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 7,
+      "damage": {
+        "min": 6,
+        "max": 12
+      },
+      "health": 40,
+      "speed": 4,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 416,
+      "cost": {
+        "gold": 300
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Ogre"
+    },
+    {
+      "id": "ogre_mage",
+      "name": "Ogre Mage",
+      "town": "stronghold",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 13,
+      "defense": 7,
+      "damage": {
+        "min": 6,
+        "max": 12
+      },
+      "health": 60,
+      "speed": 5,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 672,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Spellcaster (Bloodlust)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Ogre_Mage"
+    },
+    {
+      "id": "roc",
+      "name": "Roc",
+      "town": "stronghold",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 11,
+      "damage": {
+        "min": 11,
+        "max": 15
+      },
+      "health": 60,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1027,
+      "cost": {
+        "gold": 600
+      },
+      "special": "Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Roc"
+    },
+    {
+      "id": "thunderbird",
+      "name": "Thunderbird",
+      "town": "stronghold",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 13,
+      "defense": 11,
+      "damage": {
+        "min": 11,
+        "max": 15
+      },
+      "health": 60,
+      "speed": 11,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1106,
+      "cost": {
+        "gold": 700
+      },
+      "special": "Flying, Lightning strike",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Thunderbird"
+    },
+    {
+      "id": "cyclops",
+      "name": "Cyclops",
+      "town": "stronghold",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 15,
+      "defense": 12,
+      "damage": {
+        "min": 16,
+        "max": 20
+      },
+      "health": 70,
+      "speed": 6,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1266,
+      "cost": {
+        "gold": 750
+      },
+      "special": "Ranged (16 shots), Can attack siege walls",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Cyclops"
+    },
+    {
+      "id": "cyclops_king",
+      "name": "Cyclops King",
+      "town": "stronghold",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 17,
+      "defense": 13,
+      "damage": {
+        "min": 16,
+        "max": 20
+      },
+      "health": 70,
+      "speed": 8,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1443,
+      "cost": {
+        "gold": 1100
+      },
+      "special": "Ranged (24 shots), Can attack siege walls",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Cyclops_King"
+    },
+    {
+      "id": "behemoth",
+      "name": "Behemoth",
+      "town": "stronghold",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 17,
+      "defense": 17,
+      "damage": {
+        "min": 30,
+        "max": 50
+      },
+      "health": 160,
+      "speed": 6,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 3162,
+      "cost": {
+        "gold": 1500
+      },
+      "special": "Ignores 40% of enemy defense value",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Behemoth"
+    },
+    {
+      "id": "ancient_behemoth",
+      "name": "Ancient Behemoth",
+      "town": "stronghold",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 19,
+      "defense": 19,
+      "damage": {
+        "min": 30,
+        "max": 50
+      },
+      "health": 300,
+      "speed": 9,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 6168,
+      "cost": {
+        "gold": 3000,
+        "crystal": 1
+      },
+      "special": "Ignores 80% of enemy defense value",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Ancient_Behemoth"
+    },
+    {
+      "id": "gnoll",
+      "name": "Gnoll",
+      "town": "fortress",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 3,
+      "defense": 5,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 6,
+      "speed": 4,
+      "growth": 12,
+      "horde": {
+        "building_id": "captain_s_quarters",
+        "growth_bonus": 6,
+        "growth_with_horde": 18
+      },
+      "ai_value": 56,
+      "cost": {
+        "gold": 50
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gnoll"
+    },
+    {
+      "id": "gnoll_marauder",
+      "name": "Gnoll Marauder",
+      "town": "fortress",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 4,
+      "defense": 6,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 6,
+      "speed": 5,
+      "growth": 12,
+      "horde": {
+        "building_id": "captain_s_quarters",
+        "growth_bonus": 6,
+        "growth_with_horde": 18
+      },
+      "ai_value": 90,
+      "cost": {
+        "gold": 70
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gnoll_Marauder"
+    },
+    {
+      "id": "lizardman",
+      "name": "Lizardman",
+      "town": "fortress",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 5,
+      "defense": 6,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 14,
+      "speed": 4,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 126,
+      "cost": {
+        "gold": 110
+      },
+      "special": "Ranged (12 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Lizardman"
+    },
+    {
+      "id": "lizard_warrior",
+      "name": "Lizard Warrior",
+      "town": "fortress",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 8,
+      "damage": {
+        "min": 2,
+        "max": 5
+      },
+      "health": 15,
+      "speed": 5,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 156,
+      "cost": {
+        "gold": 140
+      },
+      "special": "Ranged (24 shots)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Lizard_Warrior"
+    },
+    {
+      "id": "serpent_fly",
+      "name": "Serpent Fly",
+      "town": "fortress",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 9,
+      "damage": {
+        "min": 2,
+        "max": 5
+      },
+      "health": 20,
+      "speed": 9,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 268,
+      "cost": {
+        "gold": 220
+      },
+      "special": "Flying, Dispels beneficial spells",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Serpent_Fly"
+    },
+    {
+      "id": "dragon_fly",
+      "name": "Dragon Fly",
+      "town": "fortress",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 8,
+      "defense": 10,
+      "damage": {
+        "min": 2,
+        "max": 5
+      },
+      "health": 20,
+      "speed": 13,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 312,
+      "cost": {
+        "gold": 240
+      },
+      "special": "Flying, Dispels beneficial spells, Weakness",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dragon_Fly"
+    },
+    {
+      "id": "basilisk",
+      "name": "Basilisk",
+      "town": "fortress",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 11,
+      "defense": 11,
+      "damage": {
+        "min": 6,
+        "max": 10
+      },
+      "health": 35,
+      "speed": 5,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 552,
+      "cost": {
+        "gold": 325
+      },
+      "special": "Petrifying attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Basilisk"
+    },
+    {
+      "id": "greater_basilisk",
+      "name": "Greater Basilisk",
+      "town": "fortress",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 12,
+      "damage": {
+        "min": 6,
+        "max": 10
+      },
+      "health": 40,
+      "speed": 7,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 714,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Petrifying attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Greater_Basilisk"
+    },
+    {
+      "id": "gorgon",
+      "name": "Gorgon",
+      "town": "fortress",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 14,
+      "damage": {
+        "min": 12,
+        "max": 16
+      },
+      "health": 70,
+      "speed": 5,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 890,
+      "cost": {
+        "gold": 525
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gorgon"
+    },
+    {
+      "id": "mighty_gorgon",
+      "name": "Mighty Gorgon",
+      "town": "fortress",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 11,
+      "defense": 16,
+      "damage": {
+        "min": 12,
+        "max": 16
+      },
+      "health": 70,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1028,
+      "cost": {
+        "gold": 600
+      },
+      "special": "Death stare (10% chance per unit)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mighty_Gorgon"
+    },
+    {
+      "id": "wyvern",
+      "name": "Wyvern",
+      "town": "fortress",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 14,
+      "defense": 14,
+      "damage": {
+        "min": 14,
+        "max": 18
+      },
+      "health": 70,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1350,
+      "cost": {
+        "gold": 800
+      },
+      "special": "Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wyvern"
+    },
+    {
+      "id": "wyvern_monarch",
+      "name": "Wyvern Monarch",
+      "town": "fortress",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 14,
+      "defense": 14,
+      "damage": {
+        "min": 18,
+        "max": 22
+      },
+      "health": 70,
+      "speed": 11,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1518,
+      "cost": {
+        "gold": 1100
+      },
+      "special": "Flying, Poisonous",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Wyvern_Monarch"
+    },
+    {
+      "id": "hydra",
+      "name": "Hydra",
+      "town": "fortress",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 16,
+      "defense": 18,
+      "damage": {
+        "min": 25,
+        "max": 45
+      },
+      "health": 175,
+      "speed": 5,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 4120,
+      "cost": {
+        "gold": 2200
+      },
+      "special": "No enemy retaliation, Attacks all adjacent enemies",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Hydra"
+    },
+    {
+      "id": "chaos_hydra",
+      "name": "Chaos Hydra",
+      "town": "fortress",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 18,
+      "defense": 20,
+      "damage": {
+        "min": 25,
+        "max": 45
+      },
+      "health": 250,
+      "speed": 7,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 5931,
+      "cost": {
+        "gold": 3500,
+        "sulfur": 1
+      },
+      "special": "No enemy retaliation, Attacks all adjacent enemies",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Chaos_Hydra"
+    },
+    {
+      "id": "pixie",
+      "name": "Pixie",
+      "town": "conflux",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 2,
+      "defense": 2,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 3,
+      "speed": 7,
+      "growth": 20,
+      "horde": {
+        "building_id": "garden_of_life",
+        "growth_bonus": 10,
+        "growth_with_horde": 30
+      },
+      "ai_value": 55,
+      "cost": {
+        "gold": 25
+      },
+      "special": "Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pixie"
+    },
+    {
+      "id": "sprite",
+      "name": "Sprite",
+      "town": "conflux",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 2,
+      "defense": 2,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 3,
+      "speed": 9,
+      "growth": 20,
+      "horde": {
+        "building_id": "garden_of_life",
+        "growth_bonus": 10,
+        "growth_with_horde": 30
+      },
+      "ai_value": 95,
+      "cost": {
+        "gold": 30
+      },
+      "special": "Flying, No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sprite"
+    },
+    {
+      "id": "air_elemental",
+      "name": "Air Elemental",
+      "town": "conflux",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 9,
+      "damage": {
+        "min": 2,
+        "max": 8
+      },
+      "health": 25,
+      "speed": 7,
+      "growth": 6,
+      "horde": null,
+      "ai_value": 356,
+      "cost": {
+        "gold": 250
+      },
+      "special": "Elemental, Immune to Meteor Shower, Vulnerable to Lightning Bolt, Chain Lightning, Titan's Lightning Bolt and Armageddon, +100% to basic damage to Earth and Magma Elementals",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Air_Elemental"
+    },
+    {
+      "id": "storm_elemental",
+      "name": "Storm Elemental",
+      "town": "conflux",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 9,
+      "damage": {
+        "min": 2,
+        "max": 8
+      },
+      "health": 25,
+      "speed": 8,
+      "growth": 6,
+      "horde": null,
+      "ai_value": 486,
+      "cost": {
+        "gold": 275
+      },
+      "special": "Ranged (24 shots), Elemental, Immune to Meteor Shower, Vulnerable to Lightning Bolt, Chain Lightning, Titan's Lightning Bolt and Armageddon, +100% to basic damage to Earth and Magma Elementals, Spellcaster (Protection from Air)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Storm_Elemental"
+    },
+    {
+      "id": "water_elemental",
+      "name": "Water Elemental",
+      "town": "conflux",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 8,
+      "defense": 10,
+      "damage": {
+        "min": 3,
+        "max": 7
+      },
+      "health": 30,
+      "speed": 5,
+      "growth": 6,
+      "horde": null,
+      "ai_value": 315,
+      "cost": {
+        "gold": 300
+      },
+      "special": "Elemental, Immune to Ice Bolt and Frost Ring, Vulnerable to Fireball, Inferno and Armageddon, +100% to basic damage to Fire and Energy Elementals",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Water_Elemental"
+    },
+    {
+      "id": "ice_elemental",
+      "name": "Ice Elemental",
+      "town": "conflux",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 8,
+      "defense": 10,
+      "damage": {
+        "min": 3,
+        "max": 7
+      },
+      "health": 30,
+      "speed": 6,
+      "growth": 6,
+      "horde": null,
+      "ai_value": 380,
+      "cost": {
+        "gold": 375
+      },
+      "special": "Ranged (24 shots), Elemental, Immune to Ice Bolt and Frost Ring, Vulnerable to Fireball, Inferno and Armageddon, +100% to basic damage to Fire and Energy Elementals, Spellcaster (Protection from Water)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Ice_Elemental"
+    },
+    {
+      "id": "fire_elemental",
+      "name": "Fire Elemental",
+      "town": "conflux",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 8,
+      "damage": {
+        "min": 4,
+        "max": 6
+      },
+      "health": 35,
+      "speed": 6,
+      "growth": 5,
+      "horde": null,
+      "ai_value": 345,
+      "cost": {
+        "gold": 350
+      },
+      "special": "Elemental, Fire immunity, Vulnerable to Ice Bolt and Frost Ring, +100% to basic damage to Water and Ice Elementals",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Fire_Elemental"
+    },
+    {
+      "id": "energy_elemental",
+      "name": "Energy Elemental",
+      "town": "conflux",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 8,
+      "damage": {
+        "min": 4,
+        "max": 6
+      },
+      "health": 35,
+      "speed": 8,
+      "growth": 5,
+      "horde": null,
+      "ai_value": 470,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Elemental, Flying, Fire immunity, Vulnerable to Ice Bolt and Frost Ring, +100% to basic damage to Water and Ice Elementals, Spellcaster (Protection from Fire)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Energy_Elemental"
+    },
+    {
+      "id": "earth_elemental",
+      "name": "Earth Elemental",
+      "town": "conflux",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 10,
+      "damage": {
+        "min": 4,
+        "max": 8
+      },
+      "health": 40,
+      "speed": 4,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 330,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Elemental, Immune to Lightning Bolt, Chain Lightning, Titan's Lightning Bolt and Armageddon, Vulnerable to Meteor Shower, +100% to basic damage to Air and Storm Elementals",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Earth_Elemental"
+    },
+    {
+      "id": "magma_elemental",
+      "name": "Magma Elemental",
+      "town": "conflux",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 11,
+      "defense": 11,
+      "damage": {
+        "min": 6,
+        "max": 10
+      },
+      "health": 40,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 490,
+      "cost": {
+        "gold": 500
+      },
+      "special": "Elemental, Immune to Lightning Bolt, Chain Lightning, Titan's Lightning Bolt and Armageddon, Vulnerable to Meteor Shower, +100% to basic damage to Air and Storm Elementals, Spellcaster (Protection from Earth)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Magma_Elemental"
+    },
+    {
+      "id": "psychic_elemental",
+      "name": "Psychic Elemental",
+      "town": "conflux",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 15,
+      "defense": 13,
+      "damage": {
+        "min": 10,
+        "max": 20
+      },
+      "health": 75,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1669,
+      "cost": {
+        "gold": 950
+      },
+      "special": "Elemental, No enemy retaliation, Attacks all adjacent enemies, -50% damage to creatures with Mind spells immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Psychic_Elemental"
+    },
+    {
+      "id": "magic_elemental",
+      "name": "Magic Elemental",
+      "town": "conflux",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 15,
+      "defense": 13,
+      "damage": {
+        "min": 15,
+        "max": 25
+      },
+      "health": 80,
+      "speed": 9,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2012,
+      "cost": {
+        "gold": 1200
+      },
+      "special": "Elemental, No enemy retaliation, Attacks all adjacent enemies, Magic immunity, -50% damage to creatures with Magic immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Magic_Elemental"
+    },
+    {
+      "id": "firebird",
+      "name": "Firebird",
+      "town": "conflux",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 18,
+      "defense": 18,
+      "damage": {
+        "min": 30,
+        "max": 40
+      },
+      "health": 150,
+      "speed": 15,
+      "growth": 1,
+      "horde": {
+        "building_id": "vault_of_ashes",
+        "growth_bonus": 1,
+        "growth_with_horde": 2
+      },
+      "ai_value": 4336,
+      "cost": {
+        "gold": 2000
+      },
+      "special": "Flying, Breath attack, 50% Fire resistance",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Firebird"
+    },
+    {
+      "id": "phoenix",
+      "name": "Phoenix",
+      "town": "conflux",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 21,
+      "defense": 18,
+      "damage": {
+        "min": 30,
+        "max": 40
+      },
+      "health": 200,
+      "speed": 21,
+      "growth": 1,
+      "horde": {
+        "building_id": "vault_of_ashes",
+        "growth_bonus": 1,
+        "growth_with_horde": 2
+      },
+      "ai_value": 6721,
+      "cost": {
+        "gold": 3000,
+        "mercury": 1
+      },
+      "special": "Flying, Breath attack, Fire immunity, Rebirth",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Phoenix"
+    },
+    {
+      "id": "nymph",
+      "name": "Nymph",
+      "town": "cove",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 5,
+      "defense": 2,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 4,
+      "speed": 6,
+      "growth": 16,
+      "horde": null,
+      "ai_value": 57,
+      "cost": {
+        "gold": 35
+      },
+      "special": "Teleporting, Immune to Ice Bolt and Frost Ring",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Nymph"
+    },
+    {
+      "id": "oceanid",
+      "name": "Oceanid",
+      "town": "cove",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 2,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 4,
+      "speed": 8,
+      "growth": 16,
+      "horde": null,
+      "ai_value": 75,
+      "cost": {
+        "gold": 45
+      },
+      "special": "Teleporting, Immune to Ice Bolt and Frost Ring",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Oceanid"
+    },
+    {
+      "id": "crew_mate",
+      "name": "Crew Mate",
+      "town": "cove",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 4,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 15,
+      "speed": 5,
+      "growth": 9,
+      "horde": {
+        "building_id": "pub",
+        "growth_bonus": 4,
+        "growth_with_horde": 13
+      },
+      "ai_value": 155,
+      "cost": {
+        "gold": 110
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Crew_Mate"
+    },
+    {
+      "id": "seaman",
+      "name": "Seaman",
+      "town": "cove",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 8,
+      "defense": 6,
+      "damage": {
+        "min": 3,
+        "max": 4
+      },
+      "health": 15,
+      "speed": 6,
+      "growth": 9,
+      "horde": {
+        "building_id": "pub",
+        "growth_bonus": 4,
+        "growth_with_horde": 13
+      },
+      "ai_value": 174,
+      "cost": {
+        "gold": 140
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Seaman"
+    },
+    {
+      "id": "pirate",
+      "name": "Pirate",
+      "town": "cove",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 8,
+      "defense": 6,
+      "damage": {
+        "min": 3,
+        "max": 7
+      },
+      "health": 15,
+      "speed": 6,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 312,
+      "cost": {
+        "gold": 225
+      },
+      "special": "Ranged (4 shots), No melee penalty",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Pirate"
+    },
+    {
+      "id": "corsair",
+      "name": "Corsair",
+      "town": "cove",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 10,
+      "defense": 8,
+      "damage": {
+        "min": 3,
+        "max": 7
+      },
+      "health": 15,
+      "speed": 7,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 407,
+      "cost": {
+        "gold": 275
+      },
+      "special": "Ranged (4 shots), No melee penalty, No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Corsair"
+    },
+    {
+      "id": "sea_dog",
+      "name": "Sea Dog",
+      "town": "cove",
+      "level": 3,
+      "upgrade_stage": 2,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 11,
+      "damage": {
+        "min": 3,
+        "max": 7
+      },
+      "health": 15,
+      "speed": 8,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 602,
+      "cost": {
+        "gold": 375
+      },
+      "special": "Ranged (12 shots), No melee penalty, No enemy retaliation, Accurate shot",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Dog"
+    },
+    {
+      "id": "stormbird",
+      "name": "Stormbird",
+      "town": "cove",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 8,
+      "damage": {
+        "min": 6,
+        "max": 9
+      },
+      "health": 30,
+      "speed": 9,
+      "growth": 4,
+      "horde": {
+        "building_id": "roost",
+        "growth_bonus": 3,
+        "growth_with_horde": 7
+      },
+      "ai_value": 502,
+      "cost": {
+        "gold": 275
+      },
+      "special": "Flying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Stormbird"
+    },
+    {
+      "id": "ayssid",
+      "name": "Ayssid",
+      "town": "cove",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 11,
+      "defense": 8,
+      "damage": {
+        "min": 6,
+        "max": 10
+      },
+      "health": 30,
+      "speed": 11,
+      "growth": 4,
+      "horde": {
+        "building_id": "roost",
+        "growth_bonus": 3,
+        "growth_with_horde": 7
+      },
+      "ai_value": 645,
+      "cost": {
+        "gold": 325
+      },
+      "special": "Flying, Ferocity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Ayssid"
+    },
+    {
+      "id": "sea_witch",
+      "name": "Sea Witch",
+      "town": "cove",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 7,
+      "damage": {
+        "min": 10,
+        "max": 14
+      },
+      "health": 35,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 790,
+      "cost": {
+        "gold": 515
+      },
+      "special": "Ranged (12 shots), Spellcaster (after shot, Weakness / Disrupting Ray)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Witch"
+    },
+    {
+      "id": "sorceress",
+      "name": "Sorceress",
+      "town": "cove",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 9,
+      "damage": {
+        "min": 10,
+        "max": 16
+      },
+      "health": 35,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 852,
+      "cost": {
+        "gold": 565
+      },
+      "special": "Ranged (12 shots), Spellcaster (after shot, Weakness / Disrupting Ray)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sorceress"
+    },
+    {
+      "id": "nix",
+      "name": "Nix",
+      "town": "cove",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 16,
+      "damage": {
+        "min": 18,
+        "max": 22
+      },
+      "health": 80,
+      "speed": 6,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1415,
+      "cost": {
+        "gold": 1000
+      },
+      "special": "Ignores 30% of enemy attack value",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Nix"
+    },
+    {
+      "id": "nix_warrior",
+      "name": "Nix Warrior",
+      "town": "cove",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 14,
+      "defense": 17,
+      "damage": {
+        "min": 18,
+        "max": 22
+      },
+      "health": 90,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 2116,
+      "cost": {
+        "gold": 1300
+      },
+      "special": "Ignores 60% of enemy attack value",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Nix_Warrior"
+    },
+    {
+      "id": "sea_serpent",
+      "name": "Sea Serpent",
+      "town": "cove",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 22,
+      "defense": 16,
+      "damage": {
+        "min": 30,
+        "max": 55
+      },
+      "health": 180,
+      "speed": 9,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 3953,
+      "cost": {
+        "gold": 2200,
+        "sulfur": 1
+      },
+      "special": "Poisonous",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Serpent"
+    },
+    {
+      "id": "haspid",
+      "name": "Haspid",
+      "town": "cove",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 29,
+      "defense": 20,
+      "damage": {
+        "min": 30,
+        "max": 55
+      },
+      "health": 300,
+      "speed": 12,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 7220,
+      "cost": {
+        "gold": 4000,
+        "sulfur": 2
+      },
+      "special": "Poisonous, Revenge",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Haspid"
+    },
+    {
+      "id": "halfling",
+      "name": "Halfling",
+      "town": "factory",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 4,
+      "defense": 2,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "health": 4,
+      "speed": 5,
+      "growth": 15,
+      "horde": null,
+      "ai_value": 75,
+      "cost": {
+        "gold": 40
+      },
+      "special": "Ranged (24 shots), Positive Luck",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Halfling_(Factory)"
+    },
+    {
+      "id": "halfling_grenadier",
+      "name": "Halfling Grenadier",
+      "town": "factory",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 5,
+      "defense": 2,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 4,
+      "speed": 6,
+      "growth": 15,
+      "horde": null,
+      "ai_value": 95,
+      "cost": {
+        "gold": 60
+      },
+      "special": "Ranged (24 shots), Positive Luck, Ranged attack ignores 20% of enemy's defense skill",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Halfling_Grenadier"
+    },
+    {
+      "id": "mechanic",
+      "name": "Mechanic",
+      "town": "factory",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 5,
+      "damage": {
+        "min": 3,
+        "max": 4
+      },
+      "health": 14,
+      "speed": 6,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 186,
+      "cost": {
+        "gold": 140
+      },
+      "special": "Breath attack, Repairing (10 HP per unit)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mechanic"
+    },
+    {
+      "id": "engineer",
+      "name": "Engineer",
+      "town": "factory",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 7,
+      "defense": 5,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 16,
+      "speed": 7,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 278,
+      "cost": {
+        "gold": 170
+      },
+      "special": "Breath attack, Repairing (20 HP per unit)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Engineer"
+    },
+    {
+      "id": "armadillo",
+      "name": "Armadillo",
+      "town": "factory",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 5,
+      "defense": 10,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 25,
+      "speed": 4,
+      "growth": 6,
+      "horde": {
+        "building_id": "pen",
+        "growth_bonus": 3,
+        "growth_with_horde": 9
+      },
+      "ai_value": 198,
+      "cost": {
+        "gold": 200
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Armadillo"
+    },
+    {
+      "id": "bellwether_armadillo",
+      "name": "Bellwether Armadillo",
+      "town": "factory",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 6,
+      "defense": 11,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 25,
+      "speed": 6,
+      "growth": 6,
+      "horde": {
+        "building_id": "pen",
+        "growth_bonus": 3,
+        "growth_with_horde": 9
+      },
+      "ai_value": 256,
+      "cost": {
+        "gold": 230
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Bellwether_Armadillo"
+    },
+    {
+      "id": "automaton",
+      "name": "Automaton",
+      "town": "factory",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 10,
+      "damage": {
+        "min": 7,
+        "max": 7
+      },
+      "health": 30,
+      "speed": 8,
+      "growth": 5,
+      "horde": null,
+      "ai_value": 669,
+      "cost": {
+        "gold": 350
+      },
+      "special": "Mechanical, Detonation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Automaton"
+    },
+    {
+      "id": "sentinel_automaton",
+      "name": "Sentinel Automaton",
+      "town": "factory",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 10,
+      "damage": {
+        "min": 9,
+        "max": 9
+      },
+      "health": 30,
+      "speed": 9,
+      "growth": 5,
+      "horde": null,
+      "ai_value": 947,
+      "cost": {
+        "gold": 450
+      },
+      "special": "Mechanical, Detonation, No enemy retaliation",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sentinel_Automaton"
+    },
+    {
+      "id": "sandworm",
+      "name": "Sandworm",
+      "town": "factory",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 12,
+      "damage": {
+        "min": 12,
+        "max": 16
+      },
+      "health": 50,
+      "speed": 8,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 991,
+      "cost": {
+        "gold": 575
+      },
+      "special": "Burrowing, Immune to Blinding and Stone gaze",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sandworm"
+    },
+    {
+      "id": "olgoi_khorkhoi",
+      "name": "Olgoi-Khorkhoi",
+      "town": "factory",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 15,
+      "defense": 12,
+      "damage": {
+        "min": 12,
+        "max": 16
+      },
+      "health": 60,
+      "speed": 10,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1220,
+      "cost": {
+        "gold": 650
+      },
+      "special": "Burrowing, Immune to Blinding and Stone gaze, Devours corpses",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Olgoi-Khorkhoi"
+    },
+    {
+      "id": "gunslinger",
+      "name": "Gunslinger",
+      "town": "factory",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 17,
+      "defense": 12,
+      "damage": {
+        "min": 14,
+        "max": 24
+      },
+      "health": 45,
+      "speed": 7,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1351,
+      "cost": {
+        "gold": 800
+      },
+      "special": "Ranged (16 shots), Preemptive shot (once per round)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gunslinger"
+    },
+    {
+      "id": "bounty_hunter",
+      "name": "Bounty Hunter",
+      "town": "factory",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 18,
+      "defense": 14,
+      "damage": {
+        "min": 14,
+        "max": 24
+      },
+      "health": 45,
+      "speed": 8,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1454,
+      "cost": {
+        "gold": 1100
+      },
+      "special": "Ranged (24 shots), Preemptive shot (unlimited)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Bounty_Hunter"
+    },
+    {
+      "id": "couatl",
+      "name": "Couatl",
+      "town": "factory",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 17,
+      "defense": 17,
+      "damage": {
+        "min": 25,
+        "max": 45
+      },
+      "health": 160,
+      "speed": 11,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 3574,
+      "cost": {
+        "gold": 2000
+      },
+      "special": "Flying, Meditation (skiping a turn)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Couatl"
+    },
+    {
+      "id": "crimson_couatl",
+      "name": "Crimson Couatl",
+      "town": "factory",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 21,
+      "defense": 21,
+      "damage": {
+        "min": 25,
+        "max": 45
+      },
+      "health": 200,
+      "speed": 15,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 5341,
+      "cost": {
+        "gold": 3500,
+        "crystal": 1
+      },
+      "special": "Flying, Meditation (without skipping a turn)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Crimson_Couatl"
+    },
+    {
+      "id": "dreadnought",
+      "name": "Dreadnought",
+      "town": "factory",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 18,
+      "defense": 20,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 200,
+      "speed": 6,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 3879,
+      "cost": {
+        "gold": 2200,
+        "crystal": 1
+      },
+      "special": "Mechanical, Heat stroke",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Dreadnought"
+    },
+    {
+      "id": "juggernaut",
+      "name": "Juggernaut",
+      "town": "factory",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 23,
+      "defense": 23,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 300,
+      "speed": 7,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 6433,
+      "cost": {
+        "gold": 3500,
+        "crystal": 2
+      },
+      "special": "Mechanical, Heat stroke",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Juggernaut"
+    },
+    {
+      "id": "kobold",
+      "name": "Kobold",
+      "town": "bulwark",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 3,
+      "defense": 4,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 8,
+      "speed": 3,
+      "growth": 15,
+      "horde": null,
+      "ai_value": 54,
+      "cost": {
+        "gold": 40
+      },
+      "special": "Generates 1 Gold per unit per day",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Kobold"
+    },
+    {
+      "id": "kobold_foreman",
+      "name": "Kobold Foreman",
+      "town": "bulwark",
+      "level": 1,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 5,
+      "defense": 6,
+      "damage": {
+        "min": 1,
+        "max": 2
+      },
+      "health": 8,
+      "speed": 5,
+      "growth": 15,
+      "horde": null,
+      "ai_value": 84,
+      "cost": {
+        "gold": 60
+      },
+      "special": "Generates 1 Gold per unit per day",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Kobold_Foreman"
+    },
+    {
+      "id": "mountain_ram",
+      "name": "Mountain Ram",
+      "town": "bulwark",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 6,
+      "damage": {
+        "min": 3,
+        "max": 4
+      },
+      "health": 18,
+      "speed": 7,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 228,
+      "cost": {
+        "gold": 135
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mountain_Ram"
+    },
+    {
+      "id": "argali",
+      "name": "Argali",
+      "town": "bulwark",
+      "level": 2,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 8,
+      "defense": 6,
+      "damage": {
+        "min": 3,
+        "max": 4
+      },
+      "health": 18,
+      "speed": 8,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 250,
+      "cost": {
+        "gold": 170
+      },
+      "special": "Immune to Ice Bolt and Frost Ring, Adjacent enemies receive +20% Spell Damage",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Argali"
+    },
+    {
+      "id": "snow_elf",
+      "name": "Snow Elf",
+      "town": "bulwark",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 8,
+      "damage": {
+        "min": 4,
+        "max": 6
+      },
+      "health": 21,
+      "speed": 6,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 370,
+      "cost": {
+        "gold": 230
+      },
+      "special": "Ranged (4 shots), No melee penalty",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Snow_Elf"
+    },
+    {
+      "id": "steel_elf",
+      "name": "Steel Elf",
+      "town": "bulwark",
+      "level": 3,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 9,
+      "defense": 10,
+      "damage": {
+        "min": 4,
+        "max": 6
+      },
+      "health": 24,
+      "speed": 7,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 526,
+      "cost": {
+        "gold": 260
+      },
+      "special": "Ranged (8 shots), No melee penalty, May shoot while adjacent to enemy creatures",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Steel_Elf"
+    },
+    {
+      "id": "yeti",
+      "name": "Yeti",
+      "town": "bulwark",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 8,
+      "damage": {
+        "min": 7,
+        "max": 9
+      },
+      "health": 40,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 504,
+      "cost": {
+        "gold": 325
+      },
+      "special": "Recovers from negative effects in one round of combat",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Yeti"
+    },
+    {
+      "id": "yeti_runemaster",
+      "name": "Yeti Runemaster",
+      "town": "bulwark",
+      "level": 4,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 11,
+      "defense": 9,
+      "damage": {
+        "min": 7,
+        "max": 9
+      },
+      "health": 45,
+      "speed": 7,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 751,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Recovers from negative effects in one round of combat, Possesses Runes",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Yeti_Runemaster"
+    },
+    {
+      "id": "shaman",
+      "name": "Shaman",
+      "town": "bulwark",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 11,
+      "defense": 8,
+      "damage": {
+        "min": 11,
+        "max": 13
+      },
+      "health": 35,
+      "speed": 5,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 685,
+      "cost": {
+        "gold": 450
+      },
+      "special": "Ranged (12 shots), Spellcaster (Air Shield)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Shaman"
+    },
+    {
+      "id": "great_shaman",
+      "name": "Great Shaman",
+      "town": "bulwark",
+      "level": 5,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 12,
+      "defense": 11,
+      "damage": {
+        "min": 11,
+        "max": 13
+      },
+      "health": 35,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 818,
+      "cost": {
+        "gold": 600
+      },
+      "special": "Ranged (24 shots), Spellcaster (Air Shield), Freezing Shot",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Great_Shaman"
+    },
+    {
+      "id": "mammoth",
+      "name": "Mammoth",
+      "town": "bulwark",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 16,
+      "damage": {
+        "min": 14,
+        "max": 20
+      },
+      "health": 120,
+      "speed": 5,
+      "growth": 2,
+      "horde": {
+        "building_id": "hay_bins",
+        "growth_bonus": 1,
+        "growth_with_horde": 3
+      },
+      "ai_value": 1359,
+      "cost": {
+        "gold": 850
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mammoth"
+    },
+    {
+      "id": "war_mammoth",
+      "name": "War Mammoth",
+      "town": "bulwark",
+      "level": 6,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 14,
+      "defense": 18,
+      "damage": {
+        "min": 14,
+        "max": 20
+      },
+      "health": 135,
+      "speed": 6,
+      "growth": 2,
+      "horde": {
+        "building_id": "hay_bins",
+        "growth_bonus": 1,
+        "growth_with_horde": 3
+      },
+      "ai_value": 1601,
+      "cost": {
+        "gold": 1000
+      },
+      "special": "Receives +100% Defense while defending in combat.",
+      "wiki_url": "https://heroes.thelazy.net/index.php/War_Mammoth"
+    },
+    {
+      "id": "jotunn",
+      "name": "Jotunn",
+      "town": "bulwark",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 18,
+      "defense": 18,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 165,
+      "speed": 8,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 4180,
+      "cost": {
+        "gold": 2000
+      },
+      "special": "Teleports allies (once per combat), -1 enemy flying units' Speed",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Jotunn"
+    },
+    {
+      "id": "jotunn_warlord",
+      "name": "Jotunn Warlord",
+      "town": "bulwark",
+      "level": 7,
+      "upgrade_stage": 1,
+      "upgraded": true,
+      "attack": 20,
+      "defense": 20,
+      "damage": {
+        "min": 40,
+        "max": 50
+      },
+      "health": 300,
+      "speed": 10,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 6694,
+      "cost": {
+        "gold": 3500,
+        "gem": 1
+      },
+      "special": "Teleports allies (unlimited), -2 enemy flying units' Speed",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Jotunn_Warlord"
+    },
+    {
+      "id": "peasant",
+      "name": "Peasant",
+      "town": "neutral",
+      "level": 1,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 1,
+      "defense": 1,
+      "damage": {
+        "min": 1,
+        "max": 1
+      },
+      "health": 1,
+      "speed": 3,
+      "growth": 25,
+      "horde": null,
+      "ai_value": 15,
+      "cost": {
+        "gold": 10
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Peasant"
+    },
+    {
+      "id": "boar",
+      "name": "Boar",
+      "town": "neutral",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 6,
+      "defense": 5,
+      "damage": {
+        "min": 2,
+        "max": 3
+      },
+      "health": 15,
+      "speed": 6,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 145,
+      "cost": {
+        "gold": 150
+      },
+      "special": "",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Boar"
+    },
+    {
+      "id": "rogue",
+      "name": "Rogue",
+      "town": "neutral",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 8,
+      "defense": 3,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "health": 10,
+      "speed": 6,
+      "growth": 8,
+      "horde": null,
+      "ai_value": 135,
+      "cost": {
+        "gold": 100
+      },
+      "special": "Spying",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Rogue"
+    },
+    {
+      "id": "leprechaun",
+      "name": "Leprechaun",
+      "town": "neutral",
+      "level": 2,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 8,
+      "defense": 5,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 15,
+      "speed": 5,
+      "growth": 9,
+      "horde": null,
+      "ai_value": 208,
+      "cost": {
+        "gold": 100
+      },
+      "special": "Doubles friendly units Luck chance, Spellcaster (Fortune)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Leprechaun"
+    },
+    {
+      "id": "mummy",
+      "name": "Mummy",
+      "town": "neutral",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 7,
+      "defense": 7,
+      "damage": {
+        "min": 3,
+        "max": 5
+      },
+      "health": 30,
+      "speed": 5,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 270,
+      "cost": {
+        "gold": 300
+      },
+      "special": "Undead, Curse",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Mummy"
+    },
+    {
+      "id": "nomad",
+      "name": "Nomad",
+      "town": "neutral",
+      "level": 3,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 9,
+      "defense": 8,
+      "damage": {
+        "min": 2,
+        "max": 6
+      },
+      "health": 30,
+      "speed": 7,
+      "growth": 7,
+      "horde": null,
+      "ai_value": 345,
+      "cost": {
+        "gold": 200
+      },
+      "special": "Sandwalker",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Nomad"
+    },
+    {
+      "id": "sharpshooter",
+      "name": "Sharpshooter",
+      "town": "neutral",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 10,
+      "damage": {
+        "min": 8,
+        "max": 10
+      },
+      "health": 15,
+      "speed": 9,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 585,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Ranged (32 shots), No range and obstacle penalty",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Sharpshooter"
+    },
+    {
+      "id": "satyr",
+      "name": "Satyr",
+      "town": "neutral",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 11,
+      "damage": {
+        "min": 6,
+        "max": 10
+      },
+      "health": 35,
+      "speed": 7,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 518,
+      "cost": {
+        "gold": 300
+      },
+      "special": "Spellcaster (Mirth)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Satyr"
+    },
+    {
+      "id": "steel_golem",
+      "name": "Steel Golem",
+      "town": "neutral",
+      "level": 4,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 10,
+      "defense": 11,
+      "damage": {
+        "min": 6,
+        "max": 8
+      },
+      "health": 45,
+      "speed": 6,
+      "growth": 4,
+      "horde": null,
+      "ai_value": 597,
+      "cost": {
+        "gold": 400
+      },
+      "special": "Unliving, Spell damage resistance (+80%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Steel_Golem"
+    },
+    {
+      "id": "troll",
+      "name": "Troll",
+      "town": "neutral",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 14,
+      "defense": 7,
+      "damage": {
+        "min": 10,
+        "max": 15
+      },
+      "health": 40,
+      "speed": 7,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 1024,
+      "cost": {
+        "gold": 500
+      },
+      "special": "Regeneration",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Troll"
+    },
+    {
+      "id": "gold_golem",
+      "name": "Gold Golem",
+      "town": "neutral",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 11,
+      "defense": 12,
+      "damage": {
+        "min": 8,
+        "max": 10
+      },
+      "health": 50,
+      "speed": 5,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 600,
+      "cost": {
+        "gold": 500
+      },
+      "special": "Unliving, Spell damage resistance (+85%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Gold_Golem"
+    },
+    {
+      "id": "fangarm",
+      "name": "Fangarm",
+      "town": "neutral",
+      "level": 5,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 12,
+      "defense": 12,
+      "damage": {
+        "min": 8,
+        "max": 12
+      },
+      "health": 50,
+      "speed": 6,
+      "growth": 3,
+      "horde": null,
+      "ai_value": 929,
+      "cost": {
+        "gold": 600
+      },
+      "special": "Flying, Mind spells immunity, Unlimited retaliations, Hypnotizing attack",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Fangarm"
+    },
+    {
+      "id": "diamond_golem",
+      "name": "Diamond Golem",
+      "town": "neutral",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 13,
+      "defense": 12,
+      "damage": {
+        "min": 10,
+        "max": 14
+      },
+      "health": 60,
+      "speed": 5,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 775,
+      "cost": {
+        "gold": 750
+      },
+      "special": "Unliving, Spell Damage Resistance (+95%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Diamond_Golem"
+    },
+    {
+      "id": "enchanter",
+      "name": "Enchanter",
+      "town": "neutral",
+      "level": 6,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 17,
+      "defense": 12,
+      "damage": {
+        "min": 14,
+        "max": 14
+      },
+      "health": 30,
+      "speed": 9,
+      "growth": 2,
+      "horde": null,
+      "ai_value": 1210,
+      "cost": {
+        "gold": 750
+      },
+      "special": "Ranged (32 shots), No melee and obstacle penalty, Spellcaster",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Enchanter"
+    },
+    {
+      "id": "faerie_dragon",
+      "name": "Faerie Dragon",
+      "town": "neutral",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 20,
+      "defense": 20,
+      "damage": {
+        "min": 20,
+        "max": 30
+      },
+      "health": 500,
+      "speed": 15,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 30501,
+      "cost": {
+        "gold": 10000,
+        "gem": 8
+      },
+      "special": "Dragon, Flying, Spellcaster, Natural Magic Mirror",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Faerie_Dragon"
+    },
+    {
+      "id": "rust_dragon",
+      "name": "Rust Dragon",
+      "town": "neutral",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 30,
+      "defense": 30,
+      "damage": {
+        "min": 50,
+        "max": 50
+      },
+      "health": 750,
+      "speed": 17,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 26433,
+      "cost": {
+        "gold": 15000,
+        "sulfur": 14
+      },
+      "special": "Dragon, Flying, Breath attack, Acid breath",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Rust_Dragon"
+    },
+    {
+      "id": "crystal_dragon",
+      "name": "Crystal Dragon",
+      "town": "neutral",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 40,
+      "defense": 40,
+      "damage": {
+        "min": 60,
+        "max": 75
+      },
+      "health": 800,
+      "speed": 16,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 39338,
+      "cost": {
+        "gold": 20000,
+        "crystal": 10
+      },
+      "special": "Dragon, Crystal generation, Magic resistance (+20%)",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Crystal_Dragon"
+    },
+    {
+      "id": "azure_dragon",
+      "name": "Azure Dragon",
+      "town": "neutral",
+      "level": 7,
+      "upgrade_stage": 0,
+      "upgraded": false,
+      "attack": 50,
+      "defense": 50,
+      "damage": {
+        "min": 70,
+        "max": 80
+      },
+      "health": 1000,
+      "speed": 19,
+      "growth": 1,
+      "horde": null,
+      "ai_value": 78845,
+      "cost": {
+        "gold": 30000,
+        "mercury": 20
+      },
+      "special": "Dragon, Flying, Breath attack, Fear, Fearless, 1-3 lvl spells immunity",
+      "wiki_url": "https://heroes.thelazy.net/index.php/Azure_Dragon"
+    }
+  ]
+}
