@@ -507,6 +507,52 @@ test("external dwelling cards fill at most four columns", async ({ page }) => {
   expect(boxes[0].width).toBeCloseTo(boxes[3].width, 0);
 });
 
+test("creature search adds and increments external dwellings", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/production.html");
+
+  const externalGrid = page.locator("#external-dwelling-grid");
+  let searchInput = externalGrid.locator(".ts-control input");
+  await searchInput.fill("Familiar");
+  await expect(page.locator(".external-dwelling-dropdown .option")).toHaveCount(0);
+  await expect(page.locator(".external-dwelling-dropdown .no-results")).toBeVisible();
+  await searchInput.fill("Imp");
+  const impOption = page
+    .locator(".external-dwelling-dropdown .option")
+    .filter({ hasText: "Imp" });
+  await expect(impOption).toBeVisible();
+  await expect(impOption).toContainText("Tier 1");
+  await expect(page.locator(".external-dwelling-dropdown")).toHaveScreenshot(
+    "external-dwelling-search-dropdown.png",
+    { animations: "disabled" },
+  );
+  await impOption.click();
+
+  const impCard = externalGrid.locator('.external-dwelling-card[data-creature-name="Imp"]');
+  await expect(impCard).toHaveCount(1);
+  await expect(impCard.locator(".external-card-count-input")).toHaveValue("1");
+
+  searchInput = externalGrid.locator(".ts-control input");
+  await searchInput.fill("Imp");
+  await page
+    .locator(".external-dwelling-dropdown .option")
+    .filter({ hasText: "Imp" })
+    .click();
+  await expect(impCard).toHaveCount(1);
+  await expect(impCard.locator(".external-card-count-input")).toHaveValue("2");
+
+  searchInput = externalGrid.locator(".ts-control input");
+  await searchInput.fill("Azure Dragon");
+  const azureOption = page
+    .locator(".external-dwelling-dropdown .option")
+    .filter({ hasText: "Azure Dragon" });
+  await expect(azureOption).toBeVisible();
+  await azureOption.click();
+  await expect(
+    externalGrid.locator('.external-dwelling-card[data-creature-name="Azure Dragon"]'),
+  ).toHaveCount(1);
+});
+
 test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
   await page.goto("/production.html");
 
@@ -533,6 +579,7 @@ for (const [surface, url] of [
 ]) {
   test(`planner state persists across ${surface} reloads`, async ({ page }) => {
     await page.goto(url);
+    await expect(page.locator(".add-dwelling-card .ts-control input")).toBeVisible();
     await expect(page.locator("#town-select")).toBeEnabled();
     await expect(page.locator("#town-select")).toHaveValue("castle");
     await expect(page.locator(".unit-slot").first().locator(".creature-name")).toHaveText(

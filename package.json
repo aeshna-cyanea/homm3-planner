@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1"
+  },
+  "dependencies": {
+    "tom-select": "2.6.2"
   }
 }

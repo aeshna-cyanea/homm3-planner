@@ -33,6 +33,8 @@ const state = {
   fortificationBuildings: new Map(),
 };
 
+let externalDwellingSearch = null;
+
 const elements = {
   townSelect: document.querySelector("#town-select"),
   unitGrid: document.querySelector("#unit-grid"),
@@ -553,6 +555,10 @@ function renderCards(slots) {
 }
 
 function renderExternalDwellingCards() {
+  if (externalDwellingSearch) {
+    externalDwellingSearch.destroy();
+    externalDwellingSearch = null;
+  }
   elements.externalDwellingGrid.replaceChildren();
 
   for (const [creatureName, count] of state.externalDwellings) {
@@ -628,11 +634,94 @@ function renderExternalDwellingCards() {
     "</span>" +
     '<span class="creature-name">Add a dwelling</span>' +
     '<label class="sr-only" for="external-dwelling-search">Search creatures</label>' +
-    '<input class="external-dwelling-search" id="external-dwelling-search" type="search" placeholder="Creature name" autocomplete="off" aria-describedby="external-search-note">' +
-    '<small class="external-search-note" id="external-search-note">Search will be added next.</small>';
+    '<input class="external-dwelling-search-source" id="external-dwelling-search" type="search" placeholder="Creature name" autocomplete="off" aria-describedby="external-search-note">' +
+    '<small class="external-search-note" id="external-search-note">Select to add one dwelling.</small>';
   addCard.append(addBody);
   addSlot.append(addCard);
   elements.externalDwellingGrid.append(addSlot);
+  initializeExternalDwellingSearch();
+}
+
+function externalDwellingSearchData() {
+  const options = [];
+  const optgroups = new Map();
+
+  for (const [creatureName, dwelling] of state.dwellingCatalog) {
+    const factionName = TOWN_NAMES[dwelling.faction] || titleCase(dwelling.faction);
+    if (!optgroups.has(dwelling.faction)) {
+      optgroups.set(dwelling.faction, {
+        value: dwelling.faction,
+        label: factionName,
+      });
+    }
+    options.push({
+      value: creatureName,
+      text: creatureName,
+      faction: dwelling.faction,
+      tier: dwelling.slot.tier,
+    });
+  }
+
+  return {
+    options: options,
+    optgroups: Array.from(optgroups.values()),
+  };
+}
+
+function initializeExternalDwellingSearch() {
+  if (typeof window.TomSelect !== "function") {
+    throw new Error("Tom Select failed to load");
+  }
+
+  const searchData = externalDwellingSearchData();
+  externalDwellingSearch = new window.TomSelect("#external-dwelling-search", {
+    options: searchData.options,
+    optgroups: searchData.optgroups,
+    valueField: "value",
+    labelField: "text",
+    searchField: ["text"],
+    optgroupField: "faction",
+    lockOptgroupOrder: true,
+    maxItems: 1,
+    maxOptions: null,
+    create: false,
+    closeAfterSelect: true,
+    dropdownParent: "body",
+    dropdownClass: "ts-dropdown external-dwelling-dropdown",
+    render: {
+      option: function renderSearchOption(option, escape) {
+        return (
+          '<div class="external-search-option"><strong>' +
+          escape(option.text) +
+          "</strong><small>Tier " +
+          option.tier +
+          "</small></div>"
+        );
+      },
+      no_results: function renderNoSearchResults(search, escape) {
+        return (
+          '<div class="no-results">No creatures found for “' +
+          escape(search.input) +
+          "”</div>"
+        );
+      },
+    },
+    onInitialize: function labelSearchInput() {
+      this.control_input.setAttribute("aria-label", "Search creatures");
+      this.control_input.setAttribute("aria-describedby", "external-search-note");
+    },
+    onChange: function addSearchedDwelling(creatureName) {
+      if (!creatureName) return;
+      setExternalDwellingCount(
+        creatureName,
+        externalDwellingCount(creatureName) + 1,
+      );
+      const selectedSearch = this;
+      queueMicrotask(function renderSelectedDwelling() {
+        if (externalDwellingSearch === selectedSearch) render();
+      });
+    },
+  });
 }
 
 function renderResultRow(name, detail, production, unitCost, weeklyCost) {
