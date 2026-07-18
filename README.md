@@ -20,7 +20,7 @@ Regenerate the standalone planner after changing the HTML, CSS, JavaScript, or
 creature data:
 
 ```bash
-./build_standalone.py
+npm run build:standalone
 ```
 
 The generated `index.html` contains all styles, logic, and HotA creature

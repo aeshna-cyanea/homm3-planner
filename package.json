@@ -2,10 +2,10 @@
   "name": "hota-production-planner",
   "private": true,
   "scripts": {
-    "build:standalone": "./build_standalone.py",
-    "pretest:visual": "./build_standalone.py",
+    "build:standalone": "node build_standalone.js",
+    "pretest:visual": "npm run build:standalone",
     "test:visual": "playwright test",
-    "pretest:visual:update": "./build_standalone.py",
+    "pretest:visual:update": "npm run build:standalone",
     "test:visual:update": "playwright test --update-snapshots",
     "test:visual:report": "playwright show-report"
   },

@@ -1,4 +1,3 @@
-- rewrite bundle python script to js or ts
 - add dwelling building costs and tech requirements into creatures data
 - show a small warning flag on the card when enabling production with unmet reqs
 - show creature dwelling costs when unproduced (add data into creatures.json)

@@ -3,4 +3,4 @@ set -eu
 
 repository_root=$(git rev-parse --show-toplevel)
 cd "$repository_root"
-./build_standalone.py
+node build_standalone.js
