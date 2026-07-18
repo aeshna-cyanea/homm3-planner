@@ -267,6 +267,25 @@ test("recruitment wraps before the scheme drops below three columns", async ({ p
   expect(thirdCard.y).toBe(firstCard.y);
 });
 
+test("wrapped creature names do not collide with dwelling controls", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.goto("/production.html");
+  await page.locator("#town-select").selectOption("factory");
+
+  await page.locator(".unit-card").first().click();
+  await page.locator(".unit-card").nth(6).click();
+  await page.locator(".unit-card").nth(6).click();
+
+  for (const slotIndex of [0, 6]) {
+    const slot = page.locator(".unit-slot").nth(slotIndex);
+    const name = await slot.locator(".creature-name").boundingBox();
+    const details = await slot.locator(".creature-details").boundingBox();
+    const controls = await slot.locator(".external-dwelling-control").boundingBox();
+    expect(name.height).toBeGreaterThan(24);
+    expect(details.y + details.height).toBeLessThanOrEqual(controls.y);
+  }
+});
+
 test("external dwellings add to base growth and reset independently", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/production.html");
