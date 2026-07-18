@@ -412,7 +412,7 @@ function renderCards() {
         tier +
         ": " +
         creatureName +
-        (creature ? "" : ", not produced") +
+        (creature ? ", " + stateName(stage).toLowerCase() : ", not produced") +
         ". Click for " +
         nextName +
         ".",
@@ -426,9 +426,9 @@ function renderCards() {
       '<span class="tier-label">Tier ' +
       tier +
       "</span>" +
-      '<span class="state-label">' +
+      '<span class="state-label" aria-hidden="true" title="' +
       stateName(stage) +
-      "</span>" +
+      '"></span>' +
       "</span>" +
       '<span class="creature-name">' +
       creatureName +

@@ -361,7 +361,10 @@ for (const [surface, url] of [
     await expect(page.locator(".unit-slot").first().locator(".creature-name")).toHaveText(
       "Pikeman",
     );
-    await expect(page.locator(".unit-slot").nth(1).locator(".state-label")).toHaveText("None");
+    await expect(page.locator(".unit-slot").nth(1).locator(".unit-card")).toHaveAttribute(
+      "data-stage",
+      "-1",
+    );
     await page.locator('label:has(input[name="fortification"][value="castle"])').click();
 
     const thirdSlot = page.locator(".unit-slot").nth(2);
