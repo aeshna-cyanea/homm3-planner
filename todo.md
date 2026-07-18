@@ -1,0 +1,8 @@
+- rewrite bundle python script to js or ts
+- add dwelling building costs and tech requirements into creatures data
+- show a small warning flag on the card when enabling production with unmet reqs
+- show creature dwelling costs when unproduced (add data into creatures.json)
+	- right clicking the state button advances the to an extra intermediate state that adds the dwelling cost to the weekly recruitment as an indented row under the creature entry
+		- add a button to advance all 'to-build' dwellings to their regular state
+- serve creature icons and/or full pictures (saved in repo, but not bundled)
+	- bundle them once to test. if icons are less than 1mb ship it!
