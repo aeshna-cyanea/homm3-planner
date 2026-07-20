@@ -1,11 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const path = require("node:path");
-const { pathToFileURL } = require("node:url");
 const creatureData = require("../creatures.json");
-
-const standaloneUrl = pathToFileURL(
-  path.resolve(__dirname, "..", "index.html"),
-).href;
 
 const viewports = [
   { name: "small-phone", width: 320, height: 800 },
@@ -70,10 +64,69 @@ test("Horde buildings are embedded on dwelling roots", () => {
   expect(hordeBuildingCount).toBe(16);
 });
 
+test("PWA app shell reloads while offline", async ({ page, context }) => {
+  await page.goto("/");
+  await expect(page.locator("#town-select")).toBeEnabled();
+
+  const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
+  expect(manifestHref).toBe("manifest.webmanifest");
+
+  const manifestResponse = await page.request.get("/manifest.webmanifest");
+  expect(manifestResponse.ok()).toBe(true);
+  const manifest = await manifestResponse.json();
+  expect(manifest).toEqual(
+    expect.objectContaining({
+      id: "./",
+      name: "HotA Production Planner",
+      start_url: "./index.html",
+      display: "standalone",
+    }),
+  );
+  expect(manifest.icons).toEqual([
+    {
+      src: "./icons/android-chrome-192x192.png",
+      sizes: "192x192",
+      type: "image/png",
+      purpose: "any",
+    },
+    {
+      src: "./icons/android-chrome-512x512.png",
+      sizes: "512x512",
+      type: "image/png",
+      purpose: "any",
+    },
+    {
+      src: "./icons/castle.svg",
+      sizes: "any",
+      type: "image/svg+xml",
+      purpose: "any",
+    },
+  ]);
+
+  await page.waitForFunction(function appIsControlledByServiceWorker() {
+    return Boolean(navigator.serviceWorker?.controller);
+  });
+
+  await context.setOffline(true);
+  try {
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(page.locator("#town-select")).toBeEnabled();
+    await expect(page.locator("#external-dwelling-search")).toBeVisible();
+    const cachedIconStatus = await page.evaluate(function fetchCachedIcon() {
+      return fetch("./icons/android-chrome-512x512.png").then(function getStatus(response) {
+        return response.status;
+      });
+    });
+    expect(cachedIconStatus).toBe(200);
+  } finally {
+    await context.setOffline(false);
+  }
+});
+
 for (const viewport of viewports) {
   test(`production planner fits at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    await page.goto("/production.html");
+    await page.goto("/index.html");
     await expect(page.locator("#town-select")).toBeEnabled();
     await expect(page.locator("#town-selection")).toBeVisible();
 
@@ -262,7 +315,7 @@ for (const viewport of viewports) {
 
 test("fortification details stay inside their cards at 528px", async ({ page }) => {
   await page.setViewportSize({ width: 528, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   await expect(page.locator("#town-select")).toBeEnabled();
 
   const cards = await page.locator(".radio-group input + span").evaluateAll((elements) =>
@@ -279,7 +332,7 @@ test("fortification details stay inside their cards at 528px", async ({ page }) 
 
 test("recruitment column follows desktop scrolling only", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 600 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   await expect(page.locator("#town-select")).toBeEnabled();
 
   const resultsColumn = page.locator(".results-column");
@@ -297,7 +350,7 @@ test("recruitment column follows desktop scrolling only", async ({ page }) => {
 
 test("Factory centers its final pair in the three-column layout", async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   await page.locator("#town-select").selectOption("factory");
 
   const grid = await page.locator("#unit-grid").boundingBox();
@@ -312,7 +365,7 @@ test("Factory centers its final pair in the three-column layout", async ({ page 
 
 test("card columns respond to scheme width rather than viewport width", async ({ page }) => {
   await page.setViewportSize({ width: 1010, height: 700 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   const singleColumnScheme = await page.locator(".scheme-section").first().boundingBox();
   const singleFirst = await page.locator(".unit-slot").first().boundingBox();
   const singleFourth = await page.locator(".unit-slot").nth(3).boundingBox();
@@ -334,7 +387,7 @@ test("card columns respond to scheme width rather than viewport width", async ({
 });
 
 test("recruitment wraps before the scheme drops below three columns", async ({ page }) => {
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   await page.setViewportSize({ width: 1050, height: 700 });
   const wrappedInputs = await page.locator(".planner-inputs").boundingBox();
@@ -352,7 +405,7 @@ test("recruitment wraps before the scheme drops below three columns", async ({ p
 
 test("wrapped creature names do not collide with dwelling controls", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   await page.locator("#town-select").selectOption("factory");
 
   await page.locator(".unit-card-cycle").first().click();
@@ -371,7 +424,7 @@ test("wrapped creature names do not collide with dwelling controls", async ({ pa
 
 test("external dwellings add to base growth and reset independently", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   await page.locator("#town-select").selectOption("inferno");
 
   const firstSlot = page.locator(".unit-slot").first();
@@ -421,7 +474,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
 
 test("external dwelling cards stay synchronized across towns", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   const externalGrid = page.locator("#external-dwelling-grid");
   await expect(externalGrid.locator(".external-dwelling-card")).toHaveCount(0);
@@ -483,7 +536,7 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
 
 test("external dwelling cards fill at most four columns", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   for (let slotIndex = 0; slotIndex < 5; slotIndex += 1) {
     await page
@@ -509,7 +562,7 @@ test("external dwelling cards fill at most four columns", async ({ page }) => {
 
 test("creature search adds and increments external dwellings", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   const externalGrid = page.locator("#external-dwelling-grid");
   let searchInput = externalGrid.locator("#external-dwelling-search");
@@ -553,7 +606,7 @@ test("creature search adds and increments external dwellings", async ({ page }) 
 });
 
 test("slash focuses creature search without hijacking text entry", async ({ page }) => {
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   const searchInput = page.locator("#external-dwelling-search");
   await page.keyboard.press("/");
@@ -568,7 +621,7 @@ test("creature search opens above and reverses when space below is limited", asy
   page,
 }) => {
   await page.setViewportSize({ width: 600, height: 500 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   const externalGrid = page.locator("#external-dwelling-grid");
   const searchInput = externalGrid.locator("#external-dwelling-search");
@@ -622,7 +675,7 @@ test("creature search opens above and reverses when space below is limited", asy
 });
 
 test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   const griffinSlot = page.locator(".unit-slot").nth(2);
   await griffinSlot.locator(".unit-card-cycle").click();
@@ -641,87 +694,82 @@ test("nested upgrade chains drive stages and share Horde buildings", async ({ pa
   await expect(pirateSlot.locator(".unit-card")).toHaveAttribute("data-stage", "2");
 });
 
-for (const [surface, url] of [
-  ["hosted page", "/production.html"],
-  ["standalone file URL", standaloneUrl],
-]) {
-  test(`planner state persists across ${surface} reloads`, async ({ page }) => {
-    await page.goto(url);
-    await expect(page.locator(".add-dwelling-card #external-dwelling-search")).toBeVisible();
-    await expect(page.locator("#town-select")).toBeEnabled();
-    await expect(page.locator("#town-select")).toHaveValue("castle");
-    await expect(page.locator(".unit-slot").first().locator(".creature-name")).toHaveText(
-      "Pikeman",
-    );
-    await expect(page.locator(".unit-slot").nth(1).locator(".unit-card")).toHaveAttribute(
-      "data-stage",
-      "-1",
-    );
-    await page.locator('label:has(input[name="fortification"][value="castle"])').click();
+test("planner state persists across reloads", async ({ page }) => {
+  await page.goto("/index.html");
+  await expect(page.locator(".add-dwelling-card #external-dwelling-search")).toBeVisible();
+  await expect(page.locator("#town-select")).toBeEnabled();
+  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator(".unit-slot").first().locator(".creature-name")).toHaveText(
+    "Pikeman",
+  );
+  await expect(page.locator(".unit-slot").nth(1).locator(".unit-card")).toHaveAttribute(
+    "data-stage",
+    "-1",
+  );
+  await page.locator('label:has(input[name="fortification"][value="castle"])').click();
 
-    const thirdSlot = page.locator(".unit-slot").nth(2);
-    await thirdSlot.locator(".unit-card-cycle").click();
-    await thirdSlot.locator('[data-external-action="increment"]').click();
-    await thirdSlot.locator('[data-external-action="increment"]').click();
-    await thirdSlot.locator(".horde-toggle").click();
+  const thirdSlot = page.locator(".unit-slot").nth(2);
+  await thirdSlot.locator(".unit-card-cycle").click();
+  await thirdSlot.locator('[data-external-action="increment"]').click();
+  await thirdSlot.locator('[data-external-action="increment"]').click();
+  await thirdSlot.locator(".horde-toggle").click();
 
-    await expect(thirdSlot.locator(".creature-name")).toHaveText("Griffin");
-    await expect(thirdSlot.locator(".external-dwelling-input")).toHaveValue("2");
-    await expect(thirdSlot.locator(".horde-checkbox")).toBeChecked();
-    await page.locator("#save-state").click();
+  await expect(thirdSlot.locator(".creature-name")).toHaveText("Griffin");
+  await expect(thirdSlot.locator(".external-dwelling-input")).toHaveValue("2");
+  await expect(thirdSlot.locator(".horde-checkbox")).toBeChecked();
+  await page.locator("#save-state").click();
 
-    const savedState = await page.evaluate(() =>
-      JSON.parse(localStorage.getItem("hota-production-planner-state")),
-    );
-    expect(savedState.town).toBe("castle");
-    expect(savedState.fortification).toBe("castle");
-    expect(savedState.externalDwellings).toEqual([
-      { basicCreature: "Griffin", count: 2 },
-    ]);
+  const savedState = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hota-production-planner-state")),
+  );
+  expect(savedState.town).toBe("castle");
+  expect(savedState.fortification).toBe("castle");
+  expect(savedState.externalDwellings).toEqual([
+    { basicCreature: "Griffin", count: 2 },
+  ]);
 
-    await page.reload();
-    await expect(page.locator("#town-select")).toHaveValue("castle");
-    await expect(
-      page.locator('input[name="fortification"][value="castle"]'),
-    ).toBeChecked();
-    await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
-      "Griffin",
-    );
-    await expect(
-      page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
-    ).toHaveValue("2");
-    await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
-    await expect(page.locator("#external-results-section")).toBeVisible();
-    await expect(
-      page.locator("#external-dwelling-grid .external-dwelling-card"),
-    ).toHaveAttribute("data-count", "2");
+  await page.reload();
+  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(
+    page.locator('input[name="fortification"][value="castle"]'),
+  ).toBeChecked();
+  await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
+    "Griffin",
+  );
+  await expect(
+    page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
+  ).toHaveValue("2");
+  await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
+  await expect(page.locator("#external-results-section")).toBeVisible();
+  await expect(
+    page.locator("#external-dwelling-grid .external-dwelling-card"),
+  ).toHaveAttribute("data-count", "2");
 
-    await page.locator('label:has(input[name="fortification"][value="fort"])').click();
-    await page.locator(".unit-slot").nth(2).locator(".unit-card-cycle").click();
-    await page.locator(".unit-slot").nth(2).locator('[data-external-action="increment"]').click();
-    await page.locator("#reset-scheme").click();
-    await expect(page.locator("#town-select")).toHaveValue("castle");
-    await expect(page.locator('input[name="fortification"][value="castle"]')).toBeChecked();
-    await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
-      "Griffin",
-    );
-    await expect(
-      page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
-    ).toHaveValue("2");
-    await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
+  await page.locator('label:has(input[name="fortification"][value="fort"])').click();
+  await page.locator(".unit-slot").nth(2).locator(".unit-card-cycle").click();
+  await page.locator(".unit-slot").nth(2).locator('[data-external-action="increment"]').click();
+  await page.locator("#reset-scheme").click();
+  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator('input[name="fortification"][value="castle"]')).toBeChecked();
+  await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
+    "Griffin",
+  );
+  await expect(
+    page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
+  ).toHaveValue("2");
+  await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
 
-    await page.reload();
-    await expect(page.locator("#town-select")).toHaveValue("castle");
-    await expect(page.locator('input[name="fortification"][value="castle"]')).toBeChecked();
-    await expect(
-      page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
-    ).toHaveValue("2");
-  });
-}
+  await page.reload();
+  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator('input[name="fortification"][value="castle"]')).toBeChecked();
+  await expect(
+    page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
+  ).toHaveValue("2");
+});
 
 test("multi-resource creature costs have visible separators", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/production.html");
+  await page.goto("/index.html");
   await page.locator("#town-select").selectOption("factory");
 
   const dreadnoughtCard = page.locator(".unit-card").nth(7);
@@ -739,7 +787,7 @@ test("multi-resource creature costs have visible separators", async ({ page }) =
 });
 
 test("all resource costs use embedded wiki icons", async ({ page }) => {
-  await page.goto("/production.html");
+  await page.goto("/index.html");
 
   for (const resource of ["gold", "wood", "ore"]) {
     await expect(page.locator(`.fortification-control .resource-icon-${resource}`).first()).toBeVisible();

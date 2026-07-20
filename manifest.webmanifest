@@ -1,0 +1,31 @@
+{
+  "id": "./",
+  "name": "HotA Production Planner",
+  "short_name": "HotA Production",
+  "description": "Plan weekly Heroes of Might and Magic III: Horn of the Abyss creature production and recruitment costs.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#151313",
+  "theme_color": "#151313",
+  "icons": [
+    {
+      "src": "./icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/castle.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1120,6 +1120,18 @@ function showLoadError(error, context) {
   elements.loadError.textContent = context + ": " + error.message;
 }
 
+function registerOfflineApp() {
+  if (!window.isSecureContext || !("serviceWorker" in navigator)) return;
+
+  window.addEventListener("load", function registerServiceWorker() {
+    navigator.serviceWorker.register("./service-worker.js").catch(function reportError(error) {
+      console.warn("Could not enable offline mode:", error);
+    });
+  });
+}
+
+registerOfflineApp();
+
 const embeddedData = document.querySelector("#creature-data");
 if (embeddedData) {
   try {

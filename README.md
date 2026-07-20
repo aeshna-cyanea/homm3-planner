@@ -27,28 +27,15 @@ Start its local server:
 ./serve_production.sh
 ```
 
-Then open <http://127.0.0.1:8000/production.html>.
+Then open <http://127.0.0.1:8000/>.
 
-### Offline single-file build
+### Offline PWA
 
-Regenerate the standalone planner after changing the HTML, CSS, JavaScript, or
-creature data:
-
-```bash
-npm run build:standalone
-```
-
-The generated `index.html` contains all styles, logic, HotA creature data, and
-the pinned autoComplete.js search dependency.
-
-To regenerate it automatically before each commit, enable the repository's
-tracked Git hooks once after cloning:
-
-```bash
-git config core.hooksPath .githooks
-```
-
-The visual-test commands also build the standalone file automatically.
+After the hosted planner has loaded once, its interface, creature data, and
+search dependency are cached for use without a network connection. Service
+workers require HTTPS, except that browsers also allow them on local development
+origins such as `127.0.0.1`. The manifest includes 192px, 512px, and scalable
+app icons for installation across browser and operating-system surfaces.
 
 ### Visual regression tests
 

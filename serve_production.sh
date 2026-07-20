@@ -9,5 +9,5 @@ if [ ! -f node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js ]; 
   exit 1
 fi
 
-echo "Production planner: http://127.0.0.1:8000/production.html"
+echo "Production planner: http://127.0.0.1:8000/"
 exec python3 -m http.server 8000 --bind 127.0.0.1
