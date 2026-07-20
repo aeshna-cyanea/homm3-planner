@@ -1,5 +1,5 @@
 const { test, expect } = require("@playwright/test");
-const creatureData = require("../creatures.json");
+const creatureData = require("../public/creatures.json");
 
 const viewports = [
   { name: "small-phone", width: 320, height: 800 },

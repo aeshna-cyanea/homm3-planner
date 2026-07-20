@@ -1,4 +1,5 @@
-"use strict";
+import AutoComplete from "@tarekraafat/autocomplete.js";
+import "./production.css";
 
 const STORAGE_KEY = "hota-production-planner-state";
 const FORTIFICATION_LEVELS = new Set(["fort", "citadel", "castle"]);
@@ -658,10 +659,6 @@ function externalDwellingSearchData() {
 }
 
 function initializeExternalDwellingSearch() {
-  if (typeof window.autoComplete !== "function") {
-    throw new Error("autoComplete.js failed to load");
-  }
-
   const searchInput = document.querySelector("#external-dwelling-search");
   const searchData = externalDwellingSearchData();
   let resultsOpenAbove = false;
@@ -701,7 +698,7 @@ function initializeExternalDwellingSearch() {
     }
   }
 
-  externalDwellingSearch = new window.autoComplete({
+  externalDwellingSearch = new AutoComplete({
     selector: function selectExternalDwellingSearch() {
       return searchInput;
     },
@@ -1119,18 +1116,6 @@ function showLoadError(error, context) {
   elements.loadError.hidden = false;
   elements.loadError.textContent = context + ": " + error.message;
 }
-
-function registerOfflineApp() {
-  if (!window.isSecureContext || !("serviceWorker" in navigator)) return;
-
-  window.addEventListener("load", function registerServiceWorker() {
-    navigator.serviceWorker.register("./service-worker.js").catch(function reportError(error) {
-      console.warn("Could not enable offline mode:", error);
-    });
-  });
-}
-
-registerOfflineApp();
 
 const embeddedData = document.querySelector("#creature-data");
 if (embeddedData) {
