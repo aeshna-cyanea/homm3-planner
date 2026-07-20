@@ -1,7 +1,7 @@
 "use strict";
 
 const CACHE_PREFIX = "hota-production-planner-";
-const CACHE_NAME = CACHE_PREFIX + "v2";
+const CACHE_NAME = CACHE_PREFIX + "v3";
 const APP_SHELL = [
   "./index.html",
   "./production.css",
@@ -11,7 +11,7 @@ const APP_SHELL = [
   "./icons/android-chrome-192x192.png",
   "./icons/android-chrome-512x512.png",
   "./icons/castle.svg",
-  "./node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js",
+  "./lib/autoComplete.min.js",
 ];
 
 self.addEventListener("install", function cacheAppShell(event) {

@@ -2,17 +2,18 @@
   "name": "hota-production-planner",
   "private": true,
   "scripts": {
-    "dev": "http-server . -a 127.0.0.1 -p 8000 -c-1",
-    "serve:test": "http-server . -a 127.0.0.1 -p 4173 -c-1 -s",
+    "build": "node build_site.js",
+    "dev": "npm run build && http-server dist -a 127.0.0.1 -p 8000 -c-1",
+    "serve:test": "http-server dist -a 127.0.0.1 -p 4173 -c-1 -s",
+    "pretest:visual": "npm run build",
     "test:visual": "playwright test",
+    "pretest:visual:update": "npm run build",
     "test:visual:update": "playwright test --update-snapshots",
     "test:visual:report": "playwright show-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "@tarekraafat/autocomplete.js": "10.2.10",
     "http-server": "^14.1.1"
-  },
-  "dependencies": {
-    "@tarekraafat/autocomplete.js": "10.2.10"
   }
 }

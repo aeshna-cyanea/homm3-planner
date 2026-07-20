@@ -29,6 +29,15 @@ npm run dev
 
 Then open <http://127.0.0.1:8000/>.
 
+`npm run build` creates an ignored `dist/` deployment artifact containing the
+app and the pinned autoComplete.js browser build from `node_modules`. The
+generated dependency and its Apache 2.0 license are therefore deployed without
+being committed to the repository.
+
+Pushes to `main` run `.github/workflows/deploy-pages.yml`, which installs the
+locked dependencies, builds `dist/`, and deploys that artifact. In the GitHub
+repository settings, configure Pages to use **GitHub Actions** as its source.
+
 ### Offline PWA
 
 After the hosted planner has loaded once, its interface, creature data, and
@@ -39,10 +48,11 @@ app icons for installation across browser and operating-system surfaces.
 
 ### Visual regression tests
 
-The test harness starts the same Node static server on port 4173. It
-automatically uses Google Chrome when installed at a standard Linux path. Set
-`PLAYWRIGHT_CHROME_PATH` for another location. If no system Chrome is available,
-install Playwright's browser with `npx playwright install chromium`.
+The test command first builds `dist/`, then starts the same Node static server on
+port 4173. It automatically uses Google Chrome when installed at a standard
+Linux path. Set `PLAYWRIGHT_CHROME_PATH` for another location. If no system
+Chrome is available, install Playwright's browser with
+`npx playwright install chromium`.
 
 Run the responsive layout checks and compare the page with its saved screenshots:
 
