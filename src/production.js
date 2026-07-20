@@ -5,7 +5,6 @@ import "./production.css";
 const STORAGE_KEY = "hota-production-planner-state";
 const FORTIFICATION_LEVELS = new Set(["fort", "citadel", "castle"]);
 const RESOURCE_ORDER = ["gold", "wood", "ore", "mercury", "sulfur", "crystal", "gem"];
-const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
 const TOWN_ORDER = [
   "castle", "rampart", "tower", "inferno", "necropolis", "dungeon",
   "stronghold", "fortress", "conflux", "cove", "factory", "bulwark",
@@ -23,6 +22,12 @@ const TOWN_NAMES = {
   cove: "Cove",
   factory: "Factory",
   bulwark: "Bulwark",
+};
+const STAGE_NAMES = {
+  [-1]: "None",
+  0: "Basic",
+  1: "Upgraded",
+  2: "Second upgrade",
 };
 const state = {
   town: "castle",
@@ -58,6 +63,7 @@ const elements = {
   castleDetail: document.querySelector("#castle-detail"),
 };
 
+const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
 function formatNumber(value) {
   return NUMBER_FORMATTER.format(value);
 }
@@ -68,14 +74,6 @@ function titleCase(value) {
     .replace(/\b\w/g, function capitalize(letter) {
       return letter.toUpperCase();
     });
-}
-
-function stateName(stage) {
-  if (stage < 0) return "None";
-  if (stage === 0) return "Basic";
-  if (stage === 1) return "Upgraded";
-  if (stage === 2) return "Second upgrade";
-  return "Upgrade " + stage;
 }
 
 function resourceSort(left, right) {
@@ -466,7 +464,7 @@ function renderCards(slots) {
         tier +
         ": " +
         creatureName +
-        (creature ? ", " + stateName(stage).toLowerCase() : ", not produced") +
+        (creature ? ", " + STAGE_NAMES[stage].toLowerCase() : ", not produced") +
         ". Click for " +
         nextName +
         ".",
@@ -481,7 +479,7 @@ function renderCards(slots) {
       tier +
       "</span>" +
       '<span class="state-label" aria-hidden="true" title="' +
-      stateName(stage) +
+      STAGE_NAMES[stage] +
       '"></span>' +
       "</span>" +
       '<span class="creature-name">' +
@@ -781,7 +779,7 @@ function renderResults(slots) {
       "Tier " +
       tier +
       " · " +
-      stateName(selection) +
+      STAGE_NAMES[selection] +
       (activeHorde ? " · " + activeHorde.name : "");
     rows.push(renderResultRow(creature.name, detail, production, creature.cost, weeklyCost));
   });
