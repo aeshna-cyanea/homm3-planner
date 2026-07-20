@@ -24,7 +24,7 @@ npm install
 Start its local server:
 
 ```bash
-./serve_production.sh
+npm run dev
 ```
 
 Then open <http://127.0.0.1:8000/>.
@@ -39,10 +39,10 @@ app icons for installation across browser and operating-system surfaces.
 
 ### Visual regression tests
 
-The test harness automatically uses Google Chrome when it is installed at a
-standard Linux path. Set `PLAYWRIGHT_CHROME_PATH` for another location. If no
-system Chrome is available, install Playwright's browser with
-`npx playwright install chromium`.
+The test harness starts the same Node static server on port 4173. It
+automatically uses Google Chrome when installed at a standard Linux path. Set
+`PLAYWRIGHT_CHROME_PATH` for another location. If no system Chrome is available,
+install Playwright's browser with `npx playwright install chromium`.
 
 Run the responsive layout checks and compare the page with its saved screenshots:
 

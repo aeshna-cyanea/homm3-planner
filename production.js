@@ -1151,7 +1151,7 @@ if (embeddedData) {
     .catch(function showFetchError(error) {
       showLoadError(
         error,
-        "Could not load creatures.json. Run ./serve_production.sh and open the local URL it prints",
+        "Could not load creatures.json. Run npm run dev and open the local URL it prints",
       );
     });
 }
