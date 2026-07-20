@@ -429,7 +429,7 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
   await expect(externalGrid.locator(".add-dwelling-card")).toContainText("Add a dwelling");
   await expect(externalGrid.locator("#external-dwelling-search")).toHaveAttribute(
     "placeholder",
-    "Creature name",
+    "press / to search",
   );
 
   await page.locator("#town-select").selectOption("inferno");
@@ -550,6 +550,18 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   await expect(
     externalGrid.locator('.external-dwelling-card[data-creature-name="Azure Dragon"]'),
   ).toHaveCount(1);
+});
+
+test("slash focuses creature search without hijacking text entry", async ({ page }) => {
+  await page.goto("/production.html");
+
+  const searchInput = page.locator("#external-dwelling-search");
+  await page.keyboard.press("/");
+  await expect(searchInput).toBeFocused();
+
+  await searchInput.fill("Imp");
+  await searchInput.press("/");
+  await expect(searchInput).toHaveValue("Imp/");
 });
 
 test("creature search opens above and reverses when space below is limited", async ({

@@ -634,7 +634,7 @@ function renderExternalDwellingCards() {
     "</span>" +
     '<span class="creature-name">Add a dwelling</span>' +
     '<label class="sr-only" for="external-dwelling-search">Search creatures</label>' +
-    '<input class="external-dwelling-search-source" id="external-dwelling-search" type="search" placeholder="Creature name" autocomplete="off" aria-describedby="external-search-note">' +
+    '<input class="external-dwelling-search-source" id="external-dwelling-search" type="search" placeholder="press / to search" autocomplete="off" aria-describedby="external-search-note">' +
     '<small class="external-search-note" id="external-search-note">Select to add one dwelling.</small>';
   addCard.append(addBody);
   addSlot.append(addCard);
@@ -1009,6 +1009,33 @@ elements.externalDwellingGrid.addEventListener("change", function setExternalCar
   const count = Math.max(1, normalizedExternalCount(event.target.value));
   setExternalDwellingCount(card.dataset.creatureName, count);
   render();
+});
+
+document.addEventListener("keydown", function focusExternalDwellingSearch(event) {
+  if (
+    event.key !== "/" ||
+    event.defaultPrevented ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  const target = event.target;
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement ||
+    target?.isContentEditable
+  ) {
+    return;
+  }
+
+  const searchInput = document.querySelector("#external-dwelling-search");
+  if (!searchInput || searchInput.disabled) return;
+  event.preventDefault();
+  searchInput.focus();
 });
 
 elements.townSelect.addEventListener("change", function changeTown() {
