@@ -661,7 +661,7 @@ function externalDwellingSearchData() {
 function initializeExternalDwellingSearch() {
   const searchInput = document.querySelector("#external-dwelling-search");
   const searchData = externalDwellingSearchData();
-  let resultsOpenAbove = false;
+  let resultsOpenAbove = null;
 
   function positionExternalDwellingResults() {
     const inputBounds = searchInput.getBoundingClientRect();
@@ -671,20 +671,22 @@ function initializeExternalDwellingSearch() {
 
     resultsList.style.maxHeight = "";
     const listHeight = resultsList.getBoundingClientRect().height;
-    const opensAbove = inputBounds.bottom + gap + listHeight > viewportHeight;
+    const directionWasUnset = resultsOpenAbove === null;
+    if (directionWasUnset) {
+      resultsOpenAbove = inputBounds.bottom + gap + listHeight > viewportHeight;
+    }
+    const opensAbove = resultsOpenAbove;
     const availableHeight = opensAbove
       ? inputBounds.top - gap
       : viewportHeight - inputBounds.bottom - gap;
-    const directionChanged = resultsOpenAbove !== opensAbove;
 
-    resultsOpenAbove = opensAbove;
     resultsList.classList.toggle("is-above", opensAbove);
     if (listHeight > availableHeight) {
       resultsList.style.maxHeight = Math.max(0, Math.floor(availableHeight)) + "px";
     }
     resultsList.scrollTop = opensAbove ? resultsList.scrollHeight : 0;
 
-    if (directionChanged) {
+    if (directionWasUnset && opensAbove) {
       const positionedSearch = externalDwellingSearch;
       queueMicrotask(function sortPositionedResults() {
         if (
@@ -800,6 +802,9 @@ function initializeExternalDwellingSearch() {
           }
         },
         open: positionExternalDwellingResults,
+        close: function unlockSearchResultDirection() {
+          resultsOpenAbove = null;
+        },
         selection: function addSearchedDwelling(event) {
           const creatureName = event.detail.selection?.value?.name;
           if (!creatureName) return;

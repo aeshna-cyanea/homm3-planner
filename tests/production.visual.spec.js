@@ -674,6 +674,39 @@ test("creature search opens above and reverses when space below is limited", asy
   await expect(addedCard).not.toHaveAttribute("data-creature-name", topmostResultName);
 });
 
+test("creature search keeps its opening side while result height changes", async ({ page }) => {
+  await page.setViewportSize({ width: 600, height: 500 });
+  await page.goto("/index.html");
+
+  const searchInput = page.locator("#external-dwelling-search");
+  const dropdown = page.locator(".external-dwelling-dropdown");
+  await searchInput.evaluate((input) => {
+    const bounds = input.getBoundingClientRect();
+    window.scrollBy(0, bounds.bottom - (window.innerHeight - 120));
+  });
+
+  await searchInput.fill("Green Dragon");
+  await expect(dropdown).not.toHaveClass(/is-above/);
+  await searchInput.fill("Dragon");
+  await expect(dropdown).not.toHaveClass(/is-above/);
+
+  let inputBox = await searchInput.boundingBox();
+  let dropdownBox = await dropdown.boundingBox();
+  expect(dropdownBox.y).toBeGreaterThan(inputBox.y + inputBox.height);
+  expect(dropdownBox.y + dropdownBox.height).toBeLessThanOrEqual(500);
+
+  await searchInput.press("Escape");
+  await expect(dropdown).toBeHidden();
+  await searchInput.fill("Dragon");
+  await expect(dropdown).toHaveClass(/is-above/);
+  await searchInput.fill("Green Dragon");
+  await expect(dropdown).toHaveClass(/is-above/);
+
+  inputBox = await searchInput.boundingBox();
+  dropdownBox = await dropdown.boundingBox();
+  expect(dropdownBox.y + dropdownBox.height).toBeLessThan(inputBox.y);
+});
+
 test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
   await page.goto("/index.html");
 
