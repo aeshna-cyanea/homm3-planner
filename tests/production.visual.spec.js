@@ -533,8 +533,9 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   await expect(impCard.locator(".external-card-count-input")).toHaveValue("1");
 
   searchInput = externalGrid.locator("#external-dwelling-search");
+  await searchInput.press("Enter");
+  await expect(impCard.locator(".external-card-count-input")).toHaveValue("1");
   await searchInput.fill("Imp");
-  await searchInput.press("ArrowDown");
   await searchInput.press("Enter");
   await expect(impCard).toHaveCount(1);
   await expect(impCard.locator(".external-card-count-input")).toHaveValue("2");

@@ -717,6 +717,39 @@ function initializeExternalDwellingSearch() {
     },
     events: {
       input: {
+        keydown: function selectFirstSearchResult(event) {
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            externalDwellingSearch.next();
+            return;
+          }
+          if (event.key === "ArrowUp") {
+            event.preventDefault();
+            externalDwellingSearch.previous();
+            return;
+          
+          if (event.key === "Escape") {
+            searchInput.value = "";
+            searchInput.dispatchEvent(
+              new CustomEvent("clear", {
+                bubbles: true,
+                cancelable: true,
+                detail: externalDwellingSearch.feedback,
+              }),
+            );
+            externalDwellingSearch.close();
+            return;
+          }
+          if (event.key !== "Enter" || event.isComposing) return;
+          event.preventDefault();
+          if (
+            searchInput.value.trim() &&
+            externalDwellingSearch.isOpen &&
+            externalDwellingSearch.feedback?.results?.length
+          ) {
+            externalDwellingSearch.select(0);
+          }
+        },
         selection: function addSearchedDwelling(event) {
           const creatureName = event.detail.selection?.value?.name;
           if (!creatureName) return;
