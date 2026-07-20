@@ -552,6 +552,45 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   ).toHaveCount(1);
 });
 
+test("creature search opens above and reverses when space below is limited", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 600, height: 500 });
+  await page.goto("/production.html");
+
+  const externalGrid = page.locator("#external-dwelling-grid");
+  const searchInput = externalGrid.locator("#external-dwelling-search");
+  await searchInput.evaluate((input) => {
+    const bounds = input.getBoundingClientRect();
+    window.scrollBy(0, bounds.bottom - (window.innerHeight - 16));
+  });
+  await searchInput.fill("Dragon");
+
+  const dropdown = page.locator(".external-dwelling-dropdown");
+  const results = dropdown.locator(".external-search-result");
+  await expect(dropdown).toHaveClass(/is-above/);
+  expect(await results.count()).toBeGreaterThan(1);
+
+  const inputBox = await searchInput.boundingBox();
+  const dropdownBox = await dropdown.boundingBox();
+  expect(dropdownBox.y).toBeGreaterThanOrEqual(0);
+  expect(dropdownBox.y + dropdownBox.height).toBeLessThan(inputBox.y);
+
+  const firstResultBox = await results.first().boundingBox();
+  const lastResultBox = await results.last().boundingBox();
+  expect(firstResultBox.y).toBeGreaterThan(lastResultBox.y);
+  expect(firstResultBox.y).toBeGreaterThanOrEqual(dropdownBox.y);
+  expect(firstResultBox.y + firstResultBox.height).toBeLessThanOrEqual(
+    dropdownBox.y + dropdownBox.height,
+  );
+
+  const firstResultName = await results.first().locator("strong").innerText();
+  await searchInput.press("Enter");
+  await expect(
+    externalGrid.locator(".external-dwelling-card").filter({ hasText: firstResultName }),
+  ).toHaveCount(1);
+});
+
 test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
   await page.goto("/production.html");
 

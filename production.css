@@ -613,7 +613,7 @@ select { font-size: 1rem; }
   left: 0;
   box-sizing: border-box;
   max-height: 17rem;
-  margin: 0.25rem 0 0;
+  margin: 0.5rem 0 0;
   padding: 0.25rem;
   overflow-y: auto;
   color: var(--ink);
@@ -625,6 +625,14 @@ select { font-size: 1rem; }
   font-size: 0.78rem;
   list-style: none;
   transition: none;
+}
+
+.external-dwelling-dropdown.is-above {
+  top: auto;
+  bottom: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  margin: 0 0 0.5rem;
 }
 
 .autoComplete_wrapper > .external-dwelling-dropdown[hidden],

@@ -727,7 +727,7 @@ function initializeExternalDwellingSearch() {
             event.preventDefault();
             externalDwellingSearch.previous();
             return;
-          
+          }
           if (event.key === "Escape") {
             searchInput.value = "";
             searchInput.dispatchEvent(
@@ -748,6 +748,25 @@ function initializeExternalDwellingSearch() {
             externalDwellingSearch.feedback?.results?.length
           ) {
             externalDwellingSearch.select(0);
+          }
+        },
+        open: function positionExternalDwellingResults() {
+          const inputBounds = searchInput.getBoundingClientRect();
+          const resultsList = externalDwellingSearch.list;
+          const viewportHeight =
+            window.innerHeight || document.documentElement.clientHeight;
+          const gap = 8;
+
+          resultsList.style.maxHeight = "";
+          const listHeight = resultsList.getBoundingClientRect().height;
+          const opensAbove = inputBounds.bottom + gap + listHeight > viewportHeight;
+          const availableHeight = opensAbove
+            ? inputBounds.top - gap
+            : viewportHeight - inputBounds.bottom - gap;
+
+          resultsList.classList.toggle("is-above", opensAbove);
+          if (listHeight > availableHeight) {
+            resultsList.style.maxHeight = Math.max(0, Math.floor(availableHeight)) + "px";
           }
         },
         selection: function addSearchedDwelling(event) {
