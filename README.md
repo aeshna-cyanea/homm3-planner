@@ -64,3 +64,13 @@ npm run test:visual
 
 After an intentional visual change, refresh the screenshot baselines with
 `npm run test:visual:update` and inspect the updated images before committing them.
+
+
+### Third-party credits
+
+The app icon uses the [Twemoji “European Castle”](https://github.com/twitter/twemoji/blob/master/assets/svg/1f3f0.svg)
+graphic, copyright 2019 Twitter, Inc. and other contributors, licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Creature search uses [autoComplete.js](https://github.com/TarekRaafat/autoComplete.js),
+licensed under the [Apache License 2.0](https://github.com/TarekRaafat/autoComplete.js/blob/master/LICENSE).
