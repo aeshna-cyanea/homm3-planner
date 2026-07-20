@@ -5,7 +5,7 @@
   "description": "Plan weekly Heroes of Might and Magic III: Horn of the Abyss creature production and recruitment costs.",
   "start_url": "./index.html",
   "scope": "./",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#151313",
   "theme_color": "#151313",
   "icons": [

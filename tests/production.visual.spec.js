@@ -79,7 +79,7 @@ test("PWA app shell reloads while offline", async ({ page, context }) => {
       id: "./",
       name: "HotA Production Planner",
       start_url: "./index.html",
-      display: "standalone",
+      display: "browser",
     }),
   );
   expect(manifest.icons).toEqual([
