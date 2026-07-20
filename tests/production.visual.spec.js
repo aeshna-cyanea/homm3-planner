@@ -672,6 +672,15 @@ test("creature search opens above and reverses when space below is limited", asy
   const addedCard = externalGrid.locator(".external-dwelling-card");
   await expect(addedCard).toHaveAttribute("data-creature-name", nearestResultName);
   await expect(addedCard).not.toHaveAttribute("data-creature-name", topmostResultName);
+
+  await searchInput.evaluate((input) => {
+    const bounds = input.getBoundingClientRect();
+    window.scrollBy(0, bounds.bottom - (window.innerHeight - 16));
+  });
+  await searchInput.fill("Dragon");
+  await expect(dropdown).toHaveClass(/is-above/);
+  await results.last().click();
+  await expect(addedCard.locator(".external-card-count-input")).toHaveValue("2");
 });
 
 test("creature search keeps its opening side while result height changes", async ({ page }) => {
