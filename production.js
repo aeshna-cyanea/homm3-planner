@@ -664,6 +664,43 @@ function initializeExternalDwellingSearch() {
 
   const searchInput = document.querySelector("#external-dwelling-search");
   const searchData = externalDwellingSearchData();
+  let resultsOpenAbove = false;
+
+  function positionExternalDwellingResults() {
+    const inputBounds = searchInput.getBoundingClientRect();
+    const resultsList = externalDwellingSearch.list;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const gap = 8;
+
+    resultsList.style.maxHeight = "";
+    const listHeight = resultsList.getBoundingClientRect().height;
+    const opensAbove = inputBounds.bottom + gap + listHeight > viewportHeight;
+    const availableHeight = opensAbove
+      ? inputBounds.top - gap
+      : viewportHeight - inputBounds.bottom - gap;
+    const directionChanged = resultsOpenAbove !== opensAbove;
+
+    resultsOpenAbove = opensAbove;
+    resultsList.classList.toggle("is-above", opensAbove);
+    if (listHeight > availableHeight) {
+      resultsList.style.maxHeight = Math.max(0, Math.floor(availableHeight)) + "px";
+    }
+    resultsList.scrollTop = opensAbove ? resultsList.scrollHeight : 0;
+
+    if (directionChanged) {
+      const positionedSearch = externalDwellingSearch;
+      queueMicrotask(function sortPositionedResults() {
+        if (
+          externalDwellingSearch === positionedSearch &&
+          positionedSearch.isOpen &&
+          searchInput.value.trim()
+        ) {
+          positionedSearch.start();
+        }
+      });
+    }
+  }
+
   externalDwellingSearch = new window.autoComplete({
     selector: function selectExternalDwellingSearch() {
       return searchInput;
@@ -672,6 +709,9 @@ function initializeExternalDwellingSearch() {
       src: searchData,
       keys: ["name"],
       cache: true,
+      filter: function sortSearchResults(matches) {
+        return resultsOpenAbove ? matches.slice().reverse() : matches;
+      },
     },
     threshold: 1,
     resultsList: {
@@ -679,12 +719,14 @@ function initializeExternalDwellingSearch() {
       maxResults: searchData.length,
       noResults: true,
       element: function renderNoSearchResults(list, data) {
-        if (data.results.length > 0) return;
-        const message = document.createElement("p");
-        message.className = "no-results";
-        message.setAttribute("role", "status");
-        message.textContent = 'No creatures found for “' + data.query + '”';
-        list.append(message);
+        if (data.results.length === 0) {
+          const message = document.createElement("p");
+          message.className = "no-results";
+          message.setAttribute("role", "status");
+          message.textContent = 'No creatures found for “' + data.query + '”';
+          list.append(message);
+        }
+        if (externalDwellingSearch.isOpen) positionExternalDwellingResults();
       },
     },
     resultItem: {
@@ -720,7 +762,13 @@ function initializeExternalDwellingSearch() {
         keydown: function selectFirstSearchResult(event) {
           if (event.key === "ArrowDown") {
             event.preventDefault();
-            externalDwellingSearch.next();
+            if (resultsOpenAbove && externalDwellingSearch.cursor < 0) {
+              externalDwellingSearch.goTo(
+                externalDwellingSearch.feedback.results.length - 1,
+              );
+            } else {
+              externalDwellingSearch.next();
+            }
             return;
           }
           if (event.key === "ArrowUp") {
@@ -747,28 +795,14 @@ function initializeExternalDwellingSearch() {
             externalDwellingSearch.isOpen &&
             externalDwellingSearch.feedback?.results?.length
           ) {
-            externalDwellingSearch.select(0);
+            externalDwellingSearch.select(
+              resultsOpenAbove
+                ? externalDwellingSearch.feedback.results.length - 1
+                : 0,
+            );
           }
         },
-        open: function positionExternalDwellingResults() {
-          const inputBounds = searchInput.getBoundingClientRect();
-          const resultsList = externalDwellingSearch.list;
-          const viewportHeight =
-            window.innerHeight || document.documentElement.clientHeight;
-          const gap = 8;
-
-          resultsList.style.maxHeight = "";
-          const listHeight = resultsList.getBoundingClientRect().height;
-          const opensAbove = inputBounds.bottom + gap + listHeight > viewportHeight;
-          const availableHeight = opensAbove
-            ? inputBounds.top - gap
-            : viewportHeight - inputBounds.bottom - gap;
-
-          resultsList.classList.toggle("is-above", opensAbove);
-          if (listHeight > availableHeight) {
-            resultsList.style.maxHeight = Math.max(0, Math.floor(availableHeight)) + "px";
-          }
-        },
+        open: positionExternalDwellingResults,
         selection: function addSearchedDwelling(event) {
           const creatureName = event.detail.selection?.value?.name;
           if (!creatureName) return;

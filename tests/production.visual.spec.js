@@ -582,6 +582,7 @@ test("creature search opens above and reverses when space below is limited", asy
   const results = dropdown.locator(".external-search-result");
   await expect(dropdown).toHaveClass(/is-above/);
   expect(await results.count()).toBeGreaterThan(1);
+  await expect(results.last().locator("strong")).toHaveText("Green Dragon");
 
   const inputBox = await searchInput.boundingBox();
   const dropdownBox = await dropdown.boundingBox();
@@ -590,17 +591,34 @@ test("creature search opens above and reverses when space below is limited", asy
 
   const firstResultBox = await results.first().boundingBox();
   const lastResultBox = await results.last().boundingBox();
-  expect(firstResultBox.y).toBeGreaterThan(lastResultBox.y);
-  expect(firstResultBox.y).toBeGreaterThanOrEqual(dropdownBox.y);
-  expect(firstResultBox.y + firstResultBox.height).toBeLessThanOrEqual(
+  expect(firstResultBox.y).toBeLessThan(lastResultBox.y);
+  expect(lastResultBox.y).toBeGreaterThanOrEqual(dropdownBox.y);
+  expect(lastResultBox.y + lastResultBox.height).toBeLessThanOrEqual(
     dropdownBox.y + dropdownBox.height,
   );
 
-  const firstResultName = await results.first().locator("strong").innerText();
+  const visualResultNames = await results.evaluateAll((items) =>
+    items
+      .map((item) => ({
+        name: item.querySelector("strong").textContent,
+        top: item.getBoundingClientRect().top,
+      }))
+      .sort((left, right) => left.top - right.top)
+      .map((item) => item.name),
+  );
+  const topmostResultName = visualResultNames[0];
+  const nearestResultName = visualResultNames.at(-1);
+  expect(topmostResultName).toBe(await results.first().locator("strong").innerText());
+  expect(nearestResultName).toBe(await results.last().locator("strong").innerText());
+  expect(nearestResultName).toBe("Green Dragon");
+  expect(topmostResultName).not.toBe(nearestResultName);
+
+  await searchInput.press("ArrowDown");
+  await expect(results.last()).toHaveAttribute("aria-selected", "true");
   await searchInput.press("Enter");
-  await expect(
-    externalGrid.locator(".external-dwelling-card").filter({ hasText: firstResultName }),
-  ).toHaveCount(1);
+  const addedCard = externalGrid.locator(".external-dwelling-card");
+  await expect(addedCard).toHaveAttribute("data-creature-name", nearestResultName);
+  await expect(addedCard).not.toHaveAttribute("data-creature-name", topmostResultName);
 });
 
 test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
