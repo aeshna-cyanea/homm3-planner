@@ -6,11 +6,9 @@ const path = require("node:path");
 
 const PROJECT_DIR = __dirname;
 const DEFAULT_OUTPUT = path.join(PROJECT_DIR, "index.html");
-const TOM_SELECT_STYLESHEET_TAG =
-  '<link rel="stylesheet" href="node_modules/tom-select/dist/css/tom-select.min.css">';
 const STYLESHEET_TAG = '<link rel="stylesheet" href="production.css">';
-const TOM_SELECT_SCRIPT_TAG =
-  '<script src="node_modules/tom-select/dist/js/tom-select.base.min.js" defer></script>';
+const AUTO_COMPLETE_SCRIPT_TAG =
+  '<script src="node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js" defer></script>';
 const SCRIPT_TAG = '<script src="production.js" defer></script>';
 
 function readSource(name) {
@@ -68,12 +66,9 @@ function validateCreatureNodes(creatureGroups) {
 
 function buildDocument() {
   let html = readSource("production.html");
-  const tomSelectCss = readSource(
-    "node_modules/tom-select/dist/css/tom-select.min.css",
-  ).trimEnd();
   const css = readSource("production.css").trimEnd();
-  const tomSelectJavascript = readSource(
-    "node_modules/tom-select/dist/js/tom-select.base.min.js",
+  const autoCompleteJavascript = readSource(
+    "node_modules/@tarekraafat/autocomplete.js/dist/autoComplete.min.js",
   ).trimEnd();
   const javascript = readSource("production.js").trimEnd();
 
@@ -91,23 +86,22 @@ function buildDocument() {
       ? creatureData.creatures
       : {};
   validateCreatureNodes(creatureGroups);
-  if ((tomSelectCss + css).toLowerCase().includes("</style")) {
+  if (css.toLowerCase().includes("</style")) {
     throw new Error("A stylesheet contains a closing style tag");
   }
-  if ((tomSelectJavascript + javascript).toLowerCase().includes("</script")) {
+  if ((autoCompleteJavascript + javascript).toLowerCase().includes("</script")) {
     throw new Error("A JavaScript source contains a closing script tag");
   }
 
   // Escaping the slash keeps embedded JSON from ever closing its script element.
   const embeddedJson = JSON.stringify(creatureData).replaceAll("</", "<\\/");
 
-  html = replaceOnce(html, TOM_SELECT_STYLESHEET_TAG, "");
   html = replaceOnce(
     html,
     STYLESHEET_TAG,
-    "<style>\n" + tomSelectCss + "\n" + css + "\n  </style>",
+    "<style>\n" + css + "\n  </style>",
   );
-  html = replaceOnce(html, TOM_SELECT_SCRIPT_TAG, "");
+  html = replaceOnce(html, AUTO_COMPLETE_SCRIPT_TAG, "");
   html = replaceOnce(html, SCRIPT_TAG, "");
   html = replaceOnce(
     html,
@@ -116,7 +110,7 @@ function buildDocument() {
       embeddedJson +
       "\n  </script>\n" +
       "  <script>\n" +
-      tomSelectJavascript +
+      autoCompleteJavascript +
       "\n" +
       javascript +
       "\n  </script>\n" +

@@ -13,6 +13,6 @@
     "@playwright/test": "^1.61.1"
   },
   "dependencies": {
-    "tom-select": "2.6.2"
+    "@tarekraafat/autocomplete.js": "10.2.10"
   }
 }

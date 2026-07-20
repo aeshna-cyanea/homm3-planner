@@ -512,13 +512,13 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   await page.goto("/production.html");
 
   const externalGrid = page.locator("#external-dwelling-grid");
-  let searchInput = externalGrid.locator(".ts-control input");
+  let searchInput = externalGrid.locator("#external-dwelling-search");
   await searchInput.fill("Familiar");
-  await expect(page.locator(".external-dwelling-dropdown .option")).toHaveCount(0);
+  await expect(page.locator(".external-dwelling-dropdown .external-search-result")).toHaveCount(0);
   await expect(page.locator(".external-dwelling-dropdown .no-results")).toBeVisible();
   await searchInput.fill("Imp");
   const impOption = page
-    .locator(".external-dwelling-dropdown .option")
+    .locator(".external-dwelling-dropdown .external-search-result")
     .filter({ hasText: "Imp" });
   await expect(impOption).toBeVisible();
   await expect(impOption).toContainText("Tier 1");
@@ -532,19 +532,17 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   await expect(impCard).toHaveCount(1);
   await expect(impCard.locator(".external-card-count-input")).toHaveValue("1");
 
-  searchInput = externalGrid.locator(".ts-control input");
+  searchInput = externalGrid.locator("#external-dwelling-search");
   await searchInput.fill("Imp");
-  await page
-    .locator(".external-dwelling-dropdown .option")
-    .filter({ hasText: "Imp" })
-    .click();
+  await searchInput.press("ArrowDown");
+  await searchInput.press("Enter");
   await expect(impCard).toHaveCount(1);
   await expect(impCard.locator(".external-card-count-input")).toHaveValue("2");
 
-  searchInput = externalGrid.locator(".ts-control input");
+  searchInput = externalGrid.locator("#external-dwelling-search");
   await searchInput.fill("Azure Dragon");
   const azureOption = page
-    .locator(".external-dwelling-dropdown .option")
+    .locator(".external-dwelling-dropdown .external-search-result")
     .filter({ hasText: "Azure Dragon" });
   await expect(azureOption).toBeVisible();
   await azureOption.click();
@@ -579,7 +577,7 @@ for (const [surface, url] of [
 ]) {
   test(`planner state persists across ${surface} reloads`, async ({ page }) => {
     await page.goto(url);
-    await expect(page.locator(".add-dwelling-card .ts-control input")).toBeVisible();
+    await expect(page.locator(".add-dwelling-card #external-dwelling-search")).toBeVisible();
     await expect(page.locator("#town-select")).toBeEnabled();
     await expect(page.locator("#town-select")).toHaveValue("castle");
     await expect(page.locator(".unit-slot").first().locator(".creature-name")).toHaveText(

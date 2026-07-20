@@ -556,7 +556,7 @@ function renderCards(slots) {
 
 function renderExternalDwellingCards() {
   if (externalDwellingSearch) {
-    externalDwellingSearch.destroy();
+    externalDwellingSearch.unInit();
     externalDwellingSearch = null;
   }
   elements.externalDwellingGrid.replaceChildren();
@@ -644,82 +644,93 @@ function renderExternalDwellingCards() {
 
 function externalDwellingSearchData() {
   const options = [];
-  const optgroups = new Map();
 
   for (const [creatureName, dwelling] of state.dwellingCatalog) {
     const factionName = TOWN_NAMES[dwelling.faction] || titleCase(dwelling.faction);
-    if (!optgroups.has(dwelling.faction)) {
-      optgroups.set(dwelling.faction, {
-        value: dwelling.faction,
-        label: factionName,
-      });
-    }
     options.push({
-      value: creatureName,
-      text: creatureName,
-      faction: dwelling.faction,
+      name: creatureName,
+      faction: factionName,
       tier: dwelling.slot.tier,
     });
   }
 
-  return {
-    options: options,
-    optgroups: Array.from(optgroups.values()),
-  };
+  return options;
 }
 
 function initializeExternalDwellingSearch() {
-  if (typeof window.TomSelect !== "function") {
-    throw new Error("Tom Select failed to load");
+  if (typeof window.autoComplete !== "function") {
+    throw new Error("autoComplete.js failed to load");
   }
 
+  const searchInput = document.querySelector("#external-dwelling-search");
   const searchData = externalDwellingSearchData();
-  externalDwellingSearch = new window.TomSelect("#external-dwelling-search", {
-    options: searchData.options,
-    optgroups: searchData.optgroups,
-    valueField: "value",
-    labelField: "text",
-    searchField: ["text"],
-    optgroupField: "faction",
-    lockOptgroupOrder: true,
-    maxItems: 1,
-    maxOptions: null,
-    create: false,
-    closeAfterSelect: true,
-    dropdownParent: "body",
-    dropdownClass: "ts-dropdown external-dwelling-dropdown",
-    render: {
-      option: function renderSearchOption(option, escape) {
-        return (
-          '<div class="external-search-option"><strong>' +
-          escape(option.text) +
-          "</strong><small>Tier " +
-          option.tier +
-          "</small></div>"
-        );
-      },
-      no_results: function renderNoSearchResults(search, escape) {
-        return (
-          '<div class="no-results">No creatures found for “' +
-          escape(search.input) +
-          "”</div>"
-        );
+  externalDwellingSearch = new window.autoComplete({
+    selector: function selectExternalDwellingSearch() {
+      return searchInput;
+    },
+    data: {
+      src: searchData,
+      keys: ["name"],
+      cache: true,
+    },
+    threshold: 1,
+    resultsList: {
+      class: "external-dwelling-dropdown",
+      maxResults: searchData.length,
+      noResults: true,
+      element: function renderNoSearchResults(list, data) {
+        if (data.results.length > 0) return;
+        const message = document.createElement("p");
+        message.className = "no-results";
+        message.setAttribute("role", "status");
+        message.textContent = 'No creatures found for “' + data.query + '”';
+        list.append(message);
       },
     },
-    onInitialize: function labelSearchInput() {
-      this.control_input.setAttribute("aria-label", "Search creatures");
-      this.control_input.setAttribute("aria-describedby", "external-search-note");
+    resultItem: {
+      class: "external-search-result",
+      selected: "is-selected",
+      element: function renderSearchOption(item, result) {
+        const option = document.createElement("span");
+        const name = document.createElement("strong");
+        const detail = document.createElement("small");
+        const creatureName = result.value.name;
+        const query = searchInput.value.toLocaleLowerCase();
+        const matchIndex = creatureName.toLocaleLowerCase().indexOf(query);
+        option.className = "external-search-option";
+        if (query && matchIndex >= 0) {
+          const highlight = document.createElement("mark");
+          highlight.className = "external-search-highlight";
+          highlight.textContent = creatureName.slice(matchIndex, matchIndex + query.length);
+          name.append(
+            creatureName.slice(0, matchIndex),
+            highlight,
+            creatureName.slice(matchIndex + query.length),
+          );
+        } else {
+          name.textContent = creatureName;
+        }
+        detail.textContent = result.value.faction + " · Tier " + result.value.tier;
+        option.append(name, detail);
+        item.replaceChildren(option);
+      },
     },
-    onChange: function addSearchedDwelling(creatureName) {
-      if (!creatureName) return;
-      setExternalDwellingCount(
-        creatureName,
-        externalDwellingCount(creatureName) + 1,
-      );
-      const selectedSearch = this;
-      queueMicrotask(function renderSelectedDwelling() {
-        if (externalDwellingSearch === selectedSearch) render();
-      });
+    events: {
+      input: {
+        selection: function addSearchedDwelling(event) {
+          const creatureName = event.detail.selection?.value?.name;
+          if (!creatureName) return;
+          setExternalDwellingCount(
+            creatureName,
+            externalDwellingCount(creatureName) + 1,
+          );
+          searchInput.value = "";
+          const selectedSearch = externalDwellingSearch;
+          queueMicrotask(function renderSelectedDwelling() {
+            if (externalDwellingSearch === selectedSearch) render();
+          });
+        },
+      },
     },
   });
 }

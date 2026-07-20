@@ -39,7 +39,7 @@ npm run build:standalone
 ```
 
 The generated `index.html` contains all styles, logic, HotA creature data, and
-the pinned Tom Select search dependency.
+the pinned autoComplete.js search dependency.
 
 To regenerate it automatically before each commit, enable the repository's
 tracked Git hooks once after cloning:
