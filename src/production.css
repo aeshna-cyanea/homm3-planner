@@ -161,18 +161,19 @@ h2 {
 .results-column { flex: 1 1 24.375rem; }
 .results-column > .results-section:first-child { margin-top: 0; }
 
-.control-panel {
+.scheme-controls {
   display: grid;
-  grid-template-columns: max-content minmax(28.125rem, 1fr);
+  grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
   align-items: start;
   gap: 1.75rem;
-  padding: 1.375rem;
 }
 
 .scheme-section {
   container-name: creature-scheme;
   container-type: inline-size;
 }
+
+.production-scheme-section { margin-top: 0; }
 
 .town-control,
 .fortification-label {
@@ -219,45 +220,49 @@ select:focus-visible {
 
 .fortification-control {
   min-width: 0;
-  container-name: fortification-control;
-  container-type: inline-size;
 }
 
-.radio-group {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  min-width: 0;
-  gap: 0.5rem;
-}
-
-.radio-group label {
+.fortification-cycle-button {
   position: relative;
-  display: flex;
-  min-width: 0;
-  cursor: pointer;
-}
-.radio-group input { position: absolute; opacity: 0; pointer-events: none; }
-
-.radio-group input + span {
   display: grid;
-  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  width: var(--fortification-cycle-width, max-content);
+  max-width: 100%;
   min-width: 0;
   min-height: 4rem;
-  align-content: center;
-  padding: 0.375rem 0.75rem;
-  border: 1px solid var(--line);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--gold);
   border-radius: 0.5rem;
-  background: #24211e;
+  background: rgba(221, 182, 94, 0.13);
+  text-align: left;
+  cursor: pointer;
+}
+
+.fortification-cycle-button.is-measuring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: none;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.fortification-button-copy {
+  display: grid;
+  min-width: 0;
+  align-content: center;
 }
 
 select,
-.radio-group strong {
+.fortification-cycle-button strong {
   color: var(--ink);
   font-weight: 700;
 }
 select { font-size: 1rem; }
-.radio-group strong { font-size: 0.9rem; }
-.radio-group small {
+.fortification-cycle-button strong { font-size: 0.9rem; }
+.fortification-cycle-button small {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -273,11 +278,13 @@ select { font-size: 1rem; }
   display: inline-flex;
   align-items: center;
 }
-.radio-group input:checked + span {
-  border-color: var(--gold);
-  background: rgba(221, 182, 94, 0.13);
+
+.fortification-cycle-button:hover {
+  border-color: var(--gold-bright);
+  background: rgba(221, 182, 94, 0.18);
 }
-.radio-group input:focus-visible + span {
+
+.fortification-cycle-button:focus-visible {
   outline: 0.1875rem solid rgba(221, 182, 94, 0.28);
   outline-offset: 0.125rem;
 }
@@ -888,12 +895,7 @@ select { font-size: 1rem; }
 }
 
 @container planner-inputs (max-width: 46.375rem) {
-  .control-panel { grid-template-columns: minmax(0, 1fr); gap: 1.125rem; }
-  .town-control { justify-self: stretch; }
-}
-
-@container fortification-control (max-width: 32.5rem) {
-  .radio-group { grid-template-columns: minmax(0, 1fr); }
+  .scheme-controls { gap: 1.125rem; }
 }
 
 /* Three 11rem cards plus two 0.75rem gaps need 34.5rem. */
@@ -919,6 +921,8 @@ select { font-size: 1rem; }
   .section-heading { align-items: flex-start; flex-direction: column; }
   .scheme-section,
   .results-section { padding: 1.1875rem; }
+  .scheme-controls { grid-template-columns: minmax(0, 1fr); }
+  .town-control { justify-self: stretch; }
   .results-table th:nth-child(3),
   .results-table td:nth-child(3) { display: none; }
 }

@@ -1,9 +1,17 @@
 import AutoComplete from "@tarekraafat/autocomplete.js";
 import createAutoCompletePositionPlugin from "./autocomplete-position-plugin.js";
+import initializeServiceWorker from "./service-worker.js";
 import "./production.css";
 
+initializeServiceWorker();
+
 const STORAGE_KEY = "hota-production-planner-state";
-const FORTIFICATION_LEVELS = new Set(["fort", "citadel", "castle"]);
+const FORTIFICATION_LEVELS = ["fort", "citadel", "castle"];
+const FORTIFICATION_COPY = {
+  fort: { name: "Fort", growth: "Base growth" },
+  citadel: { name: "Citadel", growth: "1.5x growth, rounded down" },
+  castle: { name: "Castle", growth: "2x growth" },
+};
 const RESOURCE_ORDER = ["gold", "wood", "ore", "mercury", "sulfur", "crystal", "gem"];
 const TOWN_ORDER = [
   "castle", "rampart", "tower", "inferno", "necropolis", "dungeon",
@@ -44,6 +52,10 @@ let externalDwellingSearch = null;
 
 const elements = {
   townSelect: document.querySelector("#town-select"),
+  fortificationButton: document.querySelector("#fortification-cycle"),
+  fortificationName: document.querySelector("#fortification-name"),
+  fortificationDetail: document.querySelector("#fortification-detail"),
+  fortificationHint: document.querySelector("#fortification-cycle-hint"),
   unitGrid: document.querySelector("#unit-grid"),
   externalDwellingGrid: document.querySelector("#external-dwelling-grid"),
   saveButton: document.querySelector("#save-state"),
@@ -59,8 +71,6 @@ const elements = {
   externalResultContext: document.querySelector("#external-result-context"),
   externalResourceTotals: document.querySelector("#external-resource-totals"),
   loadError: document.querySelector("#load-error"),
-  citadelDetail: document.querySelector("#citadel-detail"),
-  castleDetail: document.querySelector("#castle-detail"),
 };
 
 const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
@@ -280,7 +290,7 @@ function restorePlannerState(savedState) {
   if (!savedState || !state.rosters.has(savedState.town)) return false;
 
   state.town = savedState.town;
-  state.fortification = FORTIFICATION_LEVELS.has(savedState.fortification)
+  state.fortification = FORTIFICATION_LEVELS.includes(savedState.fortification)
     ? savedState.fortification
     : "fort";
   state.externalDwellings.clear();
@@ -340,11 +350,55 @@ function restorePlannerState(savedState) {
   return true;
 }
 
-function syncFortificationControl() {
-  const selectedRadio = document.querySelector(
-    'input[name="fortification"][value="' + state.fortification + '"]',
+function fortificationDetail(level) {
+  const building = state.fortificationBuildings.get(level);
+  return (
+    '<span class="fortification-growth">' +
+    FORTIFICATION_COPY[level].growth +
+    "</span>" +
+    (building
+      ? '<span class="fortification-cost">' + formatCost(building.cost) + "</span>"
+      : "")
   );
-  if (selectedRadio) selectedRadio.checked = true;
+}
+
+function sizeFortificationControl() {
+  const measurement = document.createElement("button");
+  const copy = document.createElement("span");
+  const name = document.createElement("strong");
+  const detail = document.createElement("small");
+  let widestWidth = 0;
+
+  measurement.className = "fortification-cycle-button is-measuring";
+  copy.className = "fortification-button-copy";
+  copy.append(name, detail);
+  measurement.append(copy);
+  document.body.append(measurement);
+
+  for (const level of FORTIFICATION_LEVELS) {
+    name.textContent = FORTIFICATION_COPY[level].name;
+    detail.innerHTML = fortificationDetail(level);
+    widestWidth = Math.max(widestWidth, measurement.getBoundingClientRect().width);
+  }
+
+  measurement.remove();
+  elements.fortificationButton.style.setProperty(
+    "--fortification-cycle-width",
+    Math.ceil(widestWidth) + "px",
+  );
+}
+
+function syncFortificationControl() {
+  const levelIndex = FORTIFICATION_LEVELS.indexOf(state.fortification);
+  const nextLevel = FORTIFICATION_LEVELS[(levelIndex + 1) % FORTIFICATION_LEVELS.length];
+  const currentCopy = FORTIFICATION_COPY[state.fortification];
+  const nextCopy = FORTIFICATION_COPY[nextLevel];
+
+  elements.fortificationButton.dataset.fortification = state.fortification;
+  elements.fortificationButton.title = "Select " + nextCopy.name;
+  elements.fortificationName.textContent = currentCopy.name;
+  elements.fortificationDetail.innerHTML = fortificationDetail(state.fortification);
+  elements.fortificationHint.textContent = "Activate to select " + nextCopy.name + ".";
 }
 
 function buildRosters(creaturesByFaction) {
@@ -387,25 +441,6 @@ function buildRosters(creaturesByFaction) {
 function indexFortificationBuildings(data) {
   for (const building of data.fortification_buildings || []) {
     state.fortificationBuildings.set(building.id, building);
-  }
-}
-
-function renderFortificationDetails() {
-  const citadel = state.fortificationBuildings.get("citadel");
-  const castle = state.fortificationBuildings.get("castle");
-  if (citadel) {
-    elements.citadelDetail.innerHTML =
-      '<span class="fortification-growth">1.5x growth, rounded down </span>' +
-      '<span class="fortification-cost">' +
-      formatCost(citadel.cost) +
-      "</span>";
-  }
-  if (castle) {
-    elements.castleDetail.innerHTML =
-      '<span class="fortification-growth">2x growth </span>' +
-      '<span class="fortification-cost">' +
-      formatCost(castle.cost) +
-      "</span>";
   }
 }
 
@@ -996,11 +1031,12 @@ elements.townSelect.addEventListener("change", function changeTown() {
   render();
 });
 
-document.querySelectorAll('input[name="fortification"]').forEach(function register(radio) {
-  radio.addEventListener("change", function changeFortification() {
-    state.fortification = radio.value;
-    render();
-  });
+elements.fortificationButton.addEventListener("click", function cycleFortification() {
+  const currentIndex = FORTIFICATION_LEVELS.indexOf(state.fortification);
+  state.fortification =
+    FORTIFICATION_LEVELS[(currentIndex + 1) % FORTIFICATION_LEVELS.length];
+  syncFortificationControl();
+  render();
 });
 
 elements.saveButton.addEventListener("click", function savePlannerState() {
@@ -1028,8 +1064,8 @@ function initializePlanner(data) {
   const restored = restorePlannerState(readPersistedPlannerState());
   if (!restored) applyInitialPlannerState();
   renderTownOptions();
+  sizeFortificationControl();
   syncFortificationControl();
-  renderFortificationDetails();
   render();
 }
 

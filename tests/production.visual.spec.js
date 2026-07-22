@@ -67,6 +67,7 @@ test("Horde buildings are embedded on dwelling roots", () => {
 test("PWA app shell reloads while offline", async ({ page, context }) => {
   await page.goto("/");
   await expect(page.locator("#town-select")).toBeEnabled();
+  await expect(page.locator('script[id="vite-plugin-pwa:register-sw"]')).toHaveCount(0);
 
   const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
   expect(manifestHref).toBe("manifest.webmanifest");
@@ -133,9 +134,10 @@ for (const viewport of viewports) {
     const overflow = await page.evaluate(() => {
       const selectors = [
         ".app-shell",
-        ".control-panel",
+        ".production-scheme-section",
+        ".scheme-controls",
         ".fortification-control",
-        ".radio-group",
+        ".fortification-cycle-button",
       ];
       return selectors.map((selector) => {
         const element = document.querySelector(selector);
@@ -154,10 +156,10 @@ for (const viewport of viewports) {
       })),
     );
 
-    const controlPanel = await page.locator(".control-panel").boundingBox();
-    const radioGroup = await page.locator(".radio-group").boundingBox();
-    expect(radioGroup.y + radioGroup.height).toBeLessThanOrEqual(
-      controlPanel.y + controlPanel.height,
+    const schemePanel = await page.locator(".production-scheme-section").boundingBox();
+    const fortificationButton = await page.locator("#fortification-cycle").boundingBox();
+    expect(fortificationButton.y + fortificationButton.height).toBeLessThanOrEqual(
+      schemePanel.y + schemePanel.height,
     );
 
     const firstCard = await page.locator(".unit-slot").nth(0).boundingBox();
@@ -207,8 +209,8 @@ for (const viewport of viewports) {
     if (viewport.width === 900) {
       expect(thirdCard.y).toBe(firstCard.y);
       expect(fourthCard.y).toBe(firstCard.y);
-      expect(fifthCard.x - controlPanel.x).toBeCloseTo(
-        controlPanel.x + controlPanel.width - (seventhCard.x + seventhCard.width),
+      expect(fifthCard.x - schemePanel.x).toBeCloseTo(
+        schemePanel.x + schemePanel.width - (seventhCard.x + seventhCard.width),
         0,
       );
     }
@@ -294,16 +296,30 @@ for (const viewport of viewports) {
     await expect(emptyCard.locator(".creature-details .resource-icon-gold")).toBeVisible();
 
     if (viewport.width === 600) {
+      await page.locator("#fortification-cycle").click();
+      await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+        "data-fortification",
+        "citadel",
+      );
       const citadelGrowth = await page
-        .locator("#citadel-detail .fortification-growth")
+        .locator("#fortification-detail .fortification-growth")
         .boundingBox();
-      const citadelCost = await page.locator("#citadel-detail .fortification-cost").boundingBox();
-      expect(citadelCost.y).toBeGreaterThan(citadelGrowth.y);
+      const citadelCost = await page
+        .locator("#fortification-detail .fortification-cost")
+        .boundingBox();
+      const cycleButton = await page.locator("#fortification-cycle").boundingBox();
+      expect(citadelCost.x).toBeGreaterThanOrEqual(cycleButton.x);
+      expect(citadelCost.x + citadelCost.width).toBeLessThanOrEqual(
+        cycleButton.x + cycleButton.width,
+      );
+      expect(citadelCost.y).toBeGreaterThanOrEqual(citadelGrowth.y);
 
-      const castleCostItems = page.locator("#castle-detail .cost-item");
+      await page.locator("#fortification-cycle").click();
+      const castleCostItems = page.locator("#fortification-detail .cost-item");
       const firstCastleCost = await castleCostItems.first().boundingBox();
       const lastCastleCost = await castleCostItems.last().boundingBox();
       expect(lastCastleCost.y).toBe(firstCastleCost.y);
+      await page.locator("#fortification-cycle").click();
     }
 
     await expect(page).toHaveScreenshot(`production-${viewport.name}.png`, {
@@ -313,21 +329,33 @@ for (const viewport of viewports) {
   });
 }
 
-test("fortification details stay inside their cards at 528px", async ({ page }) => {
+test("fortification button cycles without overflowing at 528px", async ({ page }) => {
   await page.setViewportSize({ width: 528, height: 900 });
   await page.goto("/index.html");
   await expect(page.locator("#town-select")).toBeEnabled();
 
-  const cards = await page.locator(".radio-group input + span").evaluateAll((elements) =>
-    elements.map((element) => ({
+  const button = page.locator("#fortification-cycle");
+  await expect(page.locator('input[name="fortification"]')).toHaveCount(0);
+  await expect(button.locator(".fortification-cycle-icon")).toHaveCount(0);
+  let stableWidth;
+  for (const level of [
+    { id: "fort", name: "Fort", next: "Citadel" },
+    { id: "citadel", name: "Citadel", next: "Castle" },
+    { id: "castle", name: "Castle", next: "Fort" },
+  ]) {
+    await expect(button).toHaveAttribute("data-fortification", level.id);
+    await expect(button.locator("#fortification-name")).toHaveText(level.name);
+    await expect(button).toHaveAttribute("title", "Select " + level.next);
+    const dimensions = await button.evaluate((element) => ({
       clientWidth: element.clientWidth,
       scrollWidth: element.scrollWidth,
-    })),
-  );
-
-  expect(cards).toEqual(
-    cards.map((card) => ({ ...card, scrollWidth: card.clientWidth })),
-  );
+    }));
+    expect(dimensions.scrollWidth).toBe(dimensions.clientWidth);
+    stableWidth ??= dimensions.clientWidth;
+    expect(dimensions.clientWidth).toBe(stableWidth);
+    await button.click();
+  }
+  await expect(button).toHaveAttribute("data-fortification", "fort");
 });
 
 test("recruitment column follows desktop scrolling only", async ({ page }) => {
@@ -451,7 +479,11 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(page.locator("#external-results-body tr").first()).toContainText("Imp");
   await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
 
-  await page.locator('label:has(input[name="fortification"][value="citadel"])').click();
+  await page.locator("#fortification-cycle").click();
+  await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+    "data-fortification",
+    "citadel",
+  );
   await expect(firstSlot.locator(".production-detail strong")).toHaveText("24");
   await expect(page.locator("#external-results-body tr").first()).toContainText("15 units");
 
@@ -748,7 +780,12 @@ test("planner state persists across reloads", async ({ page }) => {
     "data-stage",
     "-1",
   );
-  await page.locator('label:has(input[name="fortification"][value="castle"])').click();
+  await page.locator("#fortification-cycle").click();
+  await page.locator("#fortification-cycle").click();
+  await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+    "data-fortification",
+    "castle",
+  );
 
   const thirdSlot = page.locator(".unit-slot").nth(2);
   await thirdSlot.locator(".unit-card-cycle").click();
@@ -772,9 +809,10 @@ test("planner state persists across reloads", async ({ page }) => {
 
   await page.reload();
   await expect(page.locator("#town-select")).toHaveValue("castle");
-  await expect(
-    page.locator('input[name="fortification"][value="castle"]'),
-  ).toBeChecked();
+  await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+    "data-fortification",
+    "castle",
+  );
   await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
     "Griffin",
   );
@@ -787,12 +825,15 @@ test("planner state persists across reloads", async ({ page }) => {
     page.locator("#external-dwelling-grid .external-dwelling-card"),
   ).toHaveAttribute("data-count", "2");
 
-  await page.locator('label:has(input[name="fortification"][value="fort"])').click();
+  await page.locator("#fortification-cycle").click();
   await page.locator(".unit-slot").nth(2).locator(".unit-card-cycle").click();
   await page.locator(".unit-slot").nth(2).locator('[data-external-action="increment"]').click();
   await page.locator("#reset-scheme").click();
   await expect(page.locator("#town-select")).toHaveValue("castle");
-  await expect(page.locator('input[name="fortification"][value="castle"]')).toBeChecked();
+  await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+    "data-fortification",
+    "castle",
+  );
   await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
     "Griffin",
   );
@@ -803,7 +844,10 @@ test("planner state persists across reloads", async ({ page }) => {
 
   await page.reload();
   await expect(page.locator("#town-select")).toHaveValue("castle");
-  await expect(page.locator('input[name="fortification"][value="castle"]')).toBeChecked();
+  await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+    "data-fortification",
+    "castle",
+  );
   await expect(
     page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
   ).toHaveValue("2");
@@ -831,8 +875,14 @@ test("multi-resource creature costs have visible separators", async ({ page }) =
 test("all resource costs use embedded wiki icons", async ({ page }) => {
   await page.goto("/index.html");
 
+  const fortificationButton = page.locator("#fortification-cycle");
+  await fortificationButton.click();
+  for (const resource of ["gold", "ore"]) {
+    await expect(fortificationButton.locator(`.resource-icon-${resource}`)).toBeVisible();
+  }
+  await fortificationButton.click();
   for (const resource of ["gold", "wood", "ore"]) {
-    await expect(page.locator(`.fortification-control .resource-icon-${resource}`).first()).toBeVisible();
+    await expect(fortificationButton.locator(`.resource-icon-${resource}`)).toBeVisible();
   }
 
   const creatureResources = [

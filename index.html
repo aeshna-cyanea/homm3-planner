@@ -16,40 +16,32 @@
 
     <div class="planner-layout">
       <div class="planner-inputs">
-        <section class="control-panel panel" id="town-selection" aria-label="Production settings">
-          <label class="town-control" for="town-select">
-            <span>Town</span>
-            <select id="town-select" disabled>
-              <option>Loading creatures…</option>
-            </select>
-          </label>
+        <section class="scheme-section production-scheme-section panel" id="town-selection" aria-label="Production scheme">
+          <div class="scheme-controls">
+            <label class="town-control" for="town-select">
+              <span>Town</span>
+              <select id="town-select" disabled>
+                <option>Loading creatures…</option>
+              </select>
+            </label>
 
-          <div class="fortification-control">
-            <span class="fortification-label" id="fortification-label">Fortification</span>
-            <div class="radio-group" role="radiogroup" aria-labelledby="fortification-label">
-              <label>
-                <input type="radio" name="fortification" value="fort" checked>
-                <span><strong>Fort</strong><small><span class="fortification-growth">Base growth</span></small></span>
-              </label>
-              <label>
-                <input type="radio" name="fortification" value="citadel">
-                <span><strong>Citadel</strong><small id="citadel-detail">×1.5, rounded down</small></span>
-              </label>
-              <label>
-                <input type="radio" name="fortification" value="castle">
-                <span><strong>Castle</strong><small id="castle-detail">×2 growth</small></span>
-              </label>
+            <div class="fortification-control">
+              <span class="fortification-label" id="fortification-label">Fortification</span>
+              <button
+                class="fortification-cycle-button"
+                id="fortification-cycle"
+                type="button"
+                data-fortification="fort"
+                aria-labelledby="fortification-label fortification-name fortification-detail"
+                aria-describedby="fortification-cycle-hint"
+              >
+                <span class="fortification-button-copy">
+                  <strong id="fortification-name">Fort</strong>
+                  <small id="fortification-detail"><span class="fortification-growth">Base growth</span></small>
+                </span>
+              </button>
+              <span class="sr-only" id="fortification-cycle-hint">Activate to select Citadel.</span>
             </div>
-          </div>
-        </section>
-
-        <section class="scheme-section panel" aria-labelledby="scheme-title">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Production scheme</p>
-              <h2 id="scheme-title">Creature dwellings</h2>
-            </div>
-            <p class="cycle-key">Click a tier to cycle its available creatures.</p>
           </div>
           <div class="unit-grid" id="unit-grid" aria-live="polite"></div>
         </section>
