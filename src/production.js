@@ -1,7 +1,8 @@
+import Alpine from "alpinejs";
+import persist from "@alpinejs/persist";
 import AutoComplete from "@tarekraafat/autocomplete.js";
 import createAutoCompletePositionPlugin from "./autocomplete-position-plugin.js";
 import initializeServiceWorker from "./service-worker.js";
-import "./production.css";
 
 initializeServiceWorker();
 
@@ -13,67 +14,36 @@ const FORTIFICATION_COPY = {
   castle: { name: "Castle", growth: "2x growth" },
 };
 const RESOURCE_ORDER = ["gold", "wood", "ore", "mercury", "sulfur", "crystal", "gem"];
-const TOWN_ORDER = [
-  "castle", "rampart", "tower", "inferno", "necropolis", "dungeon",
-  "stronghold", "fortress", "conflux", "cove", "factory", "bulwark",
-];
-const TOWN_NAMES = {
-  castle: "Castle",
-  rampart: "Rampart",
-  tower: "Tower",
-  inferno: "Inferno",
-  necropolis: "Necropolis",
-  dungeon: "Dungeon",
-  stronghold: "Stronghold",
-  fortress: "Fortress",
-  conflux: "Conflux",
-  cove: "Cove",
-  factory: "Factory",
-  bulwark: "Bulwark",
-};
 const STAGE_NAMES = {
   [-1]: "None",
   0: "Basic",
   1: "Upgraded",
   2: "Second upgrade",
 };
-const state = {
-  town: "castle",
-  fortification: "fort",
-  selections: [],
-  hordeEnabled: [],
-  externalDwellings: new Map(),
-  rosters: new Map(),
-  dwellingCatalog: new Map(),
-  fortificationBuildings: new Map(),
-};
-
-let externalDwellingSearch = null;
-
-const elements = {
-  townSelect: document.querySelector("#town-select"),
-  fortificationButton: document.querySelector("#fortification-cycle"),
-  fortificationName: document.querySelector("#fortification-name"),
-  fortificationDetail: document.querySelector("#fortification-detail"),
-  fortificationHint: document.querySelector("#fortification-cycle-hint"),
-  unitGrid: document.querySelector("#unit-grid"),
-  externalDwellingGrid: document.querySelector("#external-dwelling-grid"),
-  saveButton: document.querySelector("#save-state"),
-  resetButton: document.querySelector("#reset-scheme"),
-  emptyResults: document.querySelector("#empty-results"),
-  tableWrap: document.querySelector("#results-table-wrap"),
-  resultsBody: document.querySelector("#results-body"),
-  resultContext: document.querySelector("#result-context"),
-  totals: document.querySelector("#totals"),
-  resourceTotals: document.querySelector("#resource-totals"),
-  externalResultsSection: document.querySelector("#external-results-section"),
-  externalResultsBody: document.querySelector("#external-results-body"),
-  externalResultContext: document.querySelector("#external-result-context"),
-  externalResourceTotals: document.querySelector("#external-resource-totals"),
-  loadError: document.querySelector("#load-error"),
-};
-
 const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
+const SAFE_STORAGE = {
+  getItem(key) {
+    try {
+      const value = localStorage.getItem(key);
+      if (value !== null) JSON.parse(value);
+      return value;
+    } catch (_error) {
+      return null;
+    }
+  },
+  setItem(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (_error) {
+      // Persistence is optional when storage is blocked or unavailable.
+    }
+  },
+};
+
+let catalog = null;
+let externalDwellingSearch = null;
+let pendingSearchFocus = false;
+
 function formatNumber(value) {
   return NUMBER_FORMATTER.format(value);
 }
@@ -103,15 +73,18 @@ function resourceIcon(resource) {
   );
 }
 
-function formatCost(cost) {
-  const entries = Object.entries(cost)
+function costEntries(cost) {
+  return Object.entries(cost || {})
     .filter(function positive(entry) {
       return entry[1] > 0;
     })
     .sort(function ordered(left, right) {
       return resourceSort(left[0], right[0]);
     });
+}
 
+function formatCost(cost) {
+  const entries = costEntries(cost);
   return entries
     .map(function costItem(entry, index) {
       return (
@@ -142,91 +115,64 @@ function addCost(total, cost) {
   }
 }
 
+function buildCatalog(data) {
+  if (!Array.isArray(data.towns)) throw new Error("Creature data is missing its towns");
+
+  const dwellingCatalog = new Map();
+  for (const town of data.towns) {
+    for (const dwelling of town.dwellings) {
+      const creature = basicCreatureFor(dwelling);
+      dwellingCatalog.set(creature.name, {
+        factionName: town.name,
+        creature,
+        tier: dwelling.tier,
+        growth: dwelling.growth,
+      });
+    }
+  }
+  for (const creature of data.neutral_creatures || []) {
+    dwellingCatalog.set(creature.name, {
+      factionName: "Neutral",
+      creature,
+      tier: creature.tier,
+      growth: creature.growth,
+    });
+  }
+  return {
+    towns: data.towns,
+    dwellingCatalog,
+    fortificationBuildings: data.fortification_buildings || [],
+    townOptions: data.towns.map(function townName(town) {
+      return town.name;
+    }),
+  };
+}
+
+function townFor(name) {
+  return catalog?.towns.find(function matchingTown(town) {
+    return town.name === name;
+  }) || null;
+}
+
+function basicCreatureFor(slot) {
+  return slot?.variants[0] || null;
+}
+
+function creatureFor(slot, selection) {
+  if (!slot || selection < 0) return null;
+  return slot.variants[selection] || null;
+}
+
 function hordeFor(slot) {
-  return basicCreatureFor(slot)?.horde_building || null;
-}
-
-function externalDwellingCount(creatureName) {
-  return state.externalDwellings.get(creatureName) || 0;
-}
-
-function setExternalDwellingCount(creatureName, value) {
-  if (!state.dwellingCatalog.has(creatureName)) return;
-  const count = normalizedExternalCount(value);
-  if (count === 0) {
-    state.externalDwellings.delete(creatureName);
-  } else {
-    state.externalDwellings.set(creatureName, count);
-  }
-}
-
-function productionFor(growth, slot, slotIndex) {
-  const horde = hordeFor(slot);
-  const hordeBonus = state.hordeEnabled[slotIndex] && horde ? horde.growth_bonus : 0;
-  const externalBonus = externalDwellingCount(basicCreatureFor(slot)?.name);
-  const adjustedGrowth = growth + hordeBonus + externalBonus;
-  if (state.fortification === "citadel") return Math.floor(adjustedGrowth * 1.5);
-  if (state.fortification === "castle") return adjustedGrowth * 2;
-  return adjustedGrowth;
-}
-
-function renderCardDetails(creature, slot, slotIndex) {
-  if (!creature) return "";
-
-  return (
-    '<span class="production-detail">' +
-    "<strong>" +
-    formatNumber(productionFor(creature.growth, slot, slotIndex)) +
-    "</strong>/week, </span>" +
-    '<span class="cost-detail">' +
-    formatCost(creature.cost) +
-    "</span>"
-  );
-}
-
-function dwellingSlots() {
-  return state.rosters.get(state.town) || [];
-}
-
-function creatureUpgradeChain(rootCreature) {
-  const creatures = [];
-  const visited = new Set();
-  let creature = rootCreature;
-
-  while (creature) {
-    if (visited.has(creature)) {
-      throw new Error("Creature upgrade cycle found at " + creature.name);
-    }
-    if (
-      creature.horde_building !== undefined &&
-      (typeof creature.horde_building !== "object" ||
-        Array.isArray(creature.horde_building))
-    ) {
-      throw new Error(creature.name + " has an invalid horde_building");
-    }
-    visited.add(creature);
-    creatures.push(creature);
-    const upgrade = creature.upgraded_creature;
-    if (upgrade != null && (typeof upgrade !== "object" || Array.isArray(upgrade))) {
-      throw new Error(creature.name + " has an invalid upgraded_creature");
-    }
-    creature = upgrade || null;
-  }
-
-  return creatures;
+  return slot?.horde || null;
 }
 
 function availableSelections(slot) {
   return [-1].concat(
-    slot.creatures.map(function selectionIndex(_, index) {
+    slot.variants.map(function selectionIndex(_, index) {
       return index;
     }),
   );
-}
-
-function creatureFor(slot, selection) {
-  if (selection < 0) return null;
-  return slot.creatures[selection] || null;
 }
 
 function nextSelection(slot, currentSelection) {
@@ -235,465 +181,399 @@ function nextSelection(slot, currentSelection) {
   return selections[(currentIndex + 1) % selections.length];
 }
 
-function basicCreatureFor(slot) {
-  return slot.creatures[0] || null;
+function normalizedExternalCount(value) {
+  const count = Number.parseInt(value, 10);
+  if (!Number.isFinite(count)) return 0;
+  return Math.min(99, Math.max(0, count));
 }
 
-function serializedPlannerState() {
+function createPlannerStore() {
   return {
-    town: state.town,
-    fortification: state.fortification,
-    dwellings: dwellingSlots().map(function serializeDwelling(slot, slotIndex) {
-      const basicCreature = basicCreatureFor(slot);
-      const selectedCreature = creatureFor(slot, state.selections[slotIndex]);
+    ready: false,
+    loadError: "",
+    townOptions: [],
+    townPlans: [
+      {
+        id: "town-1",
+        town: "Castle",
+        fortification: "fort",
+        selections: [],
+        hordeEnabled: [],
+      },
+    ],
+    externalDwellings: [],
+    savedState: Alpine.$persist(null).as(STORAGE_KEY).using(SAFE_STORAGE),
+    fortificationCopy: FORTIFICATION_COPY,
+
+    get activePlan() {
+      return this.townPlans[0];
+    },
+
+    initialize(data) {
+      catalog = buildCatalog(data);
+      this.townOptions = catalog.townOptions;
+      if (!this.restore(this.savedState)) this.applyInitialState();
+    },
+
+    mount() {
+      Alpine.nextTick(() => {
+        initializeExternalDwellingSearch(this);
+        this.ready = true;
+      });
+    },
+
+    createPlan(town = "Castle", id = "town-1") {
+      const resolvedTown = townFor(town) || catalog.towns[0];
+      const slots = resolvedTown?.dwellings || [];
       return {
-        basicCreature: basicCreature?.name || null,
-        selectedCreature: selectedCreature?.name || null,
-        hordeEnabled: Boolean(state.hordeEnabled[slotIndex]),
+        id,
+        town: resolvedTown.name,
+        fortification: "fort",
+        selections: slots.map(function defaultSelection(_, index) {
+          return index === 0 ? 0 : -1;
+        }),
+        hordeEnabled: Array(slots.length).fill(false),
       };
-    }),
-    externalDwellings: Array.from(state.externalDwellings, function serializeExternal(entry) {
-      return {
-        basicCreature: entry[0],
-        count: entry[1],
-      };
-    }),
-  };
-}
+    },
 
-function persistPlannerState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(serializedPlannerState()));
-  } catch (_error) {
-    // Storage may be disabled or unavailable for this origin, especially under file:// policies.
-  }
-}
+    applyInitialState() {
+      this.townPlans = [this.createPlan("Castle")];
+      this.externalDwellings = [];
+    },
 
-function readPersistedPlannerState() {
-  try {
-    const serialized = localStorage.getItem(STORAGE_KEY);
-    if (!serialized) return null;
-    const savedState = JSON.parse(serialized);
-    if (
-      !savedState ||
-      typeof savedState.town !== "string"
-    ) {
-      return null;
-    }
-    return savedState;
-  } catch (_error) {
-    return null;
-  }
-}
+    restore(savedState) {
+      if (!savedState || !Array.isArray(savedState.townPlans)) return false;
 
-function restorePlannerState(savedState) {
-  if (!savedState || !state.rosters.has(savedState.town)) return false;
+      const restoredPlans = savedState.townPlans.flatMap((savedPlan, planIndex) => {
+        if (!savedPlan || !townFor(savedPlan.town)) return [];
+        const plan = this.createPlan(
+          savedPlan.town,
+          typeof savedPlan.id === "string" ? savedPlan.id : "town-" + (planIndex + 1),
+        );
+        plan.fortification = FORTIFICATION_LEVELS.includes(savedPlan.fortification)
+          ? savedPlan.fortification
+          : "fort";
+        const savedDwellings = Array.isArray(savedPlan.dwellings)
+          ? savedPlan.dwellings
+          : [];
 
-  state.town = savedState.town;
-  state.fortification = FORTIFICATION_LEVELS.includes(savedState.fortification)
-    ? savedState.fortification
-    : "fort";
-  state.externalDwellings.clear();
-  resetCreatureSelections();
+        this.slots(plan).forEach(function restoreDwelling(slot, slotIndex) {
+          const basicCreatureName = basicCreatureFor(slot)?.name;
+          const savedDwelling = savedDwellings.find(function matchingDwelling(dwelling) {
+            return dwelling?.basicCreature === basicCreatureName;
+          });
+          if (!savedDwelling) return;
 
-  const savedDwellings = Array.isArray(savedState.dwellings) ? savedState.dwellings : [];
-  const savedByBasicCreature = new Map(
-    savedDwellings
-      .filter(function usable(savedDwelling) {
-        return savedDwelling && typeof savedDwelling.basicCreature === "string";
-      })
-      .map(function keyed(savedDwelling) {
-        return [savedDwelling.basicCreature, savedDwelling];
-      }),
-  );
+          if (savedDwelling.selectedCreature === null) {
+            plan.selections[slotIndex] = -1;
+          } else if (typeof savedDwelling.selectedCreature === "string") {
+            const selection = slot.variants.findIndex(function selected(creature) {
+              return creature.name === savedDwelling.selectedCreature;
+            });
+            if (selection >= 0) plan.selections[slotIndex] = selection;
+          }
 
-  dwellingSlots().forEach(function restoreDwelling(slot, slotIndex) {
-    const basicCreature = basicCreatureFor(slot);
-    const savedDwelling = savedByBasicCreature.get(basicCreature?.name);
-    if (!savedDwelling) return;
-
-    if (savedDwelling.selectedCreature === null) {
-      state.selections[slotIndex] = -1;
-    } else if (typeof savedDwelling.selectedCreature === "string") {
-      const selection = slot.creatures.findIndex(function selected(creature) {
-        return creature.name === savedDwelling.selectedCreature;
+          plan.hordeEnabled[slotIndex] = Boolean(
+            savedDwelling.hordeEnabled &&
+            plan.selections[slotIndex] >= 0 &&
+            hordeFor(slot),
+          );
+        });
+        return [plan];
       });
-      if (selection >= 0) state.selections[slotIndex] = selection;
-    }
+      if (restoredPlans.length === 0) return false;
 
-    state.hordeEnabled[slotIndex] = Boolean(
-      savedDwelling.hordeEnabled &&
-      state.selections[slotIndex] >= 0 &&
-      hordeFor(slot),
-    );
-  });
-
-  const savedExternalDwellings = Array.isArray(savedState.externalDwellings)
-    ? savedState.externalDwellings
-    : [];
-  for (const savedExternal of savedExternalDwellings) {
-    if (!savedExternal || typeof savedExternal.basicCreature !== "string") continue;
-    setExternalDwellingCount(savedExternal.basicCreature, savedExternal.count);
-  }
-
-  // Migrate planner states saved before external dwellings became global.
-  if (savedExternalDwellings.length === 0) {
-    for (const savedDwelling of savedDwellings) {
-      if (!savedDwelling || typeof savedDwelling.basicCreature !== "string") continue;
-      setExternalDwellingCount(
-        savedDwelling.basicCreature,
-        savedDwelling.externalDwellings,
-      );
-    }
-  }
-
-  return true;
-}
-
-function fortificationDetail(level) {
-  const building = state.fortificationBuildings.get(level);
-  return (
-    '<span class="fortification-growth">' +
-    FORTIFICATION_COPY[level].growth +
-    "</span>" +
-    (building
-      ? '<span class="fortification-cost">' + formatCost(building.cost) + "</span>"
-      : "")
-  );
-}
-
-function sizeFortificationControl() {
-  const measurement = document.createElement("button");
-  const copy = document.createElement("span");
-  const name = document.createElement("strong");
-  const detail = document.createElement("small");
-  let widestWidth = 0;
-
-  measurement.className = "fortification-cycle-button is-measuring";
-  copy.className = "fortification-button-copy";
-  copy.append(name, detail);
-  measurement.append(copy);
-  document.body.append(measurement);
-
-  for (const level of FORTIFICATION_LEVELS) {
-    name.textContent = FORTIFICATION_COPY[level].name;
-    detail.innerHTML = fortificationDetail(level);
-    widestWidth = Math.max(widestWidth, measurement.getBoundingClientRect().width);
-  }
-
-  measurement.remove();
-  elements.fortificationButton.style.setProperty(
-    "--fortification-cycle-width",
-    Math.ceil(widestWidth) + "px",
-  );
-}
-
-function syncFortificationControl() {
-  const levelIndex = FORTIFICATION_LEVELS.indexOf(state.fortification);
-  const nextLevel = FORTIFICATION_LEVELS[(levelIndex + 1) % FORTIFICATION_LEVELS.length];
-  const currentCopy = FORTIFICATION_COPY[state.fortification];
-  const nextCopy = FORTIFICATION_COPY[nextLevel];
-
-  elements.fortificationButton.dataset.fortification = state.fortification;
-  elements.fortificationButton.title = "Select " + nextCopy.name;
-  elements.fortificationName.textContent = currentCopy.name;
-  elements.fortificationDetail.innerHTML = fortificationDetail(state.fortification);
-  elements.fortificationHint.textContent = "Activate to select " + nextCopy.name + ".";
-}
-
-function buildRosters(creaturesByFaction) {
-  for (const [faction, creatureRoots] of Object.entries(creaturesByFaction)) {
-    if (!Array.isArray(creatureRoots)) {
-      throw new Error("Creature faction " + faction + " is not an array");
-    }
-    const slots = creatureRoots.map(function dwelling(rootCreature) {
-      const slot = {
-        faction: faction,
-        tier: rootCreature.level,
-        creatures: creatureUpgradeChain(rootCreature),
-      };
-      state.dwellingCatalog.set(rootCreature.name, {
-        faction: faction,
-        slot: slot,
-      });
-      return slot;
-    });
-
-    if (faction !== "neutral") state.rosters.set(faction, slots);
-  }
-
-  for (const [town, roster] of state.rosters) {
-    for (let tier = 1; tier <= 7; tier += 1) {
-      const tierSlots = roster.filter(function atTier(slot) {
-        return slot.tier === tier;
-      });
-      const hasCompleteDwelling = tierSlots.some(function complete(slot) {
-        return slot.creatures.length >= 2;
-      });
-      if (!hasCompleteDwelling) {
-        state.rosters.delete(town);
-        break;
+      this.townPlans = restoredPlans;
+      this.externalDwellings = [];
+      const savedExternalDwellings = Array.isArray(savedState.externalDwellings)
+        ? savedState.externalDwellings
+        : [];
+      for (const savedExternal of savedExternalDwellings) {
+        if (!savedExternal || typeof savedExternal.basicCreature !== "string") continue;
+        this.setExternalDwellingCount(savedExternal.basicCreature, savedExternal.count);
       }
-    }
-  }
-}
+      return true;
+    },
 
-function indexFortificationBuildings(data) {
-  for (const building of data.fortification_buildings || []) {
-    state.fortificationBuildings.set(building.id, building);
-  }
-}
+    serialize() {
+      return {
+        townPlans: this.townPlans.map((plan) => {
+          return {
+            id: plan.id,
+            town: plan.town,
+            fortification: plan.fortification,
+            dwellings: this.slots(plan).map(function serializeDwelling(slot, slotIndex) {
+              return {
+                basicCreature: basicCreatureFor(slot)?.name || null,
+                selectedCreature: creatureFor(slot, plan.selections[slotIndex])?.name || null,
+                hordeEnabled: Boolean(plan.hordeEnabled[slotIndex]),
+              };
+            }),
+          };
+        }),
+        externalDwellings: this.externalDwellings.map(function serializeExternal(entry) {
+          return { basicCreature: entry.basicCreature, count: entry.count };
+        }),
+      };
+    },
 
-function renderTownOptions() {
-  const towns = Array.from(state.rosters.keys()).sort(function townSort(left, right) {
-    const leftIndex = TOWN_ORDER.indexOf(left);
-    const rightIndex = TOWN_ORDER.indexOf(right);
-    if (leftIndex === -1 || rightIndex === -1) return left.localeCompare(right);
-    return leftIndex - rightIndex;
-  });
+    save() {
+      this.savedState = JSON.parse(JSON.stringify(this.serialize()));
+    },
 
-  elements.townSelect.innerHTML = towns
-    .map(function townOption(town) {
-      return (
-        '<option value="' +
-        town +
-        '">' +
-        (TOWN_NAMES[town] || titleCase(town)) +
-        "</option>"
+    reset() {
+      if (!this.restore(this.savedState)) this.applyInitialState();
+    },
+
+    slots(plan = this.activePlan) {
+      return townFor(plan?.town)?.dwellings || [];
+    },
+
+    changeTown(plan, town) {
+      const replacement = this.createPlan(town);
+      plan.town = replacement.town;
+      plan.selections = replacement.selections;
+      plan.hordeEnabled = replacement.hordeEnabled;
+    },
+
+    cycleFortification(plan) {
+      const currentIndex = FORTIFICATION_LEVELS.indexOf(plan.fortification);
+      plan.fortification =
+        FORTIFICATION_LEVELS[(currentIndex + 1) % FORTIFICATION_LEVELS.length];
+    },
+
+    nextFortification(plan) {
+      const currentIndex = FORTIFICATION_LEVELS.indexOf(plan.fortification);
+      return FORTIFICATION_LEVELS[(currentIndex + 1) % FORTIFICATION_LEVELS.length];
+    },
+
+    cycleDwelling(plan, slotIndex) {
+      const slot = this.slots(plan)[slotIndex];
+      plan.selections[slotIndex] = nextSelection(slot, plan.selections[slotIndex]);
+      if (plan.selections[slotIndex] < 0) plan.hordeEnabled[slotIndex] = false;
+    },
+
+    toggleHorde(plan, slotIndex, enabled) {
+      const slot = this.slots(plan)[slotIndex];
+      plan.hordeEnabled[slotIndex] = Boolean(
+        enabled && this.creatureFor(plan, slotIndex) && hordeFor(slot),
       );
-    })
-    .join("");
+    },
 
-  if (!state.rosters.has(state.town)) state.town = towns[0];
-  elements.townSelect.value = state.town;
-  elements.townSelect.disabled = false;
-}
+    creatureFor(plan, slotIndex) {
+      return creatureFor(this.slots(plan)[slotIndex], plan.selections[slotIndex]);
+    },
 
-function renderCards(slots) {
-  elements.unitGrid.replaceChildren();
+    basicCreatureFor(slot) {
+      return basicCreatureFor(slot);
+    },
 
-  slots.forEach(function renderSlot(slotData, slotIndex) {
-    const tier = slotData.tier;
-    const selection = state.selections[slotIndex];
-    const creature = creatureFor(slotData, selection);
-    const stage = selection;
-    const horde = hordeFor(slotData);
-    const followingSelection = nextSelection(slotData, selection);
-    const followingCreature = creatureFor(slotData, followingSelection);
-    const slot = document.createElement("div");
-    const card = document.createElement("div");
-    const cycleButton = document.createElement("button");
-    slot.className = "unit-slot" + (horde ? " has-horde" : "");
-    card.className = "unit-card";
-    card.dataset.stage = String(stage);
-    cycleButton.className = "unit-card-cycle";
-    cycleButton.type = "button";
-    cycleButton.dataset.slot = String(slotIndex);
+    detailCreature(plan, slotIndex) {
+      return this.creatureFor(plan, slotIndex) || basicCreatureFor(this.slots(plan)[slotIndex]);
+    },
 
-    const basicCreature = basicCreatureFor(slotData);
-    const creatureName = creature?.name || basicCreature?.name || "Unknown creature";
-    const nextName = followingCreature?.name || "no unit";
-    cycleButton.setAttribute(
-      "aria-label",
-      "Tier " +
-        tier +
+    hordeFor(slot) {
+      return hordeFor(slot);
+    },
+
+    creatureName(plan, slotIndex) {
+      return this.creatureFor(plan, slotIndex)?.name ||
+        basicCreatureFor(this.slots(plan)[slotIndex])?.name ||
+        "Unknown creature";
+    },
+
+    nextCreatureName(plan, slotIndex) {
+      const slot = this.slots(plan)[slotIndex];
+      return creatureFor(slot, nextSelection(slot, plan.selections[slotIndex]))?.name || "no unit";
+    },
+
+    stageNames: STAGE_NAMES,
+
+    cardAriaLabel(plan, slotIndex) {
+      const slot = this.slots(plan)[slotIndex];
+      const creature = this.creatureFor(plan, slotIndex);
+      return (
+        "Tier " +
+        slot.tier +
         ": " +
-        creatureName +
-        (creature ? ", " + STAGE_NAMES[stage].toLowerCase() : ", not produced") +
+        this.creatureName(plan, slotIndex) +
+        (creature
+          ? ", " + STAGE_NAMES[plan.selections[slotIndex]].toLowerCase()
+          : ", not produced") +
         ". Click for " +
-        nextName +
-        ".",
-    );
+        this.nextCreatureName(plan, slotIndex) +
+        "."
+      );
+    },
 
-    const detailCreature = creature || basicCreature;
-    const details = renderCardDetails(detailCreature, slotData, slotIndex);
+    externalDwellingCount(creatureName) {
+      return this.externalDwellings.find(function matches(entry) {
+        return entry.basicCreature === creatureName;
+      })?.count || 0;
+    },
 
-    cycleButton.innerHTML =
-      '<span class="card-top">' +
-      '<span class="tier-label">Tier ' +
-      tier +
-      "</span>" +
-      '<span class="state-label" aria-hidden="true" title="' +
-      STAGE_NAMES[stage] +
-      '"></span>' +
-      "</span>" +
-      '<span class="creature-name">' +
-      creatureName +
-      "</span>" +
-      '<span class="creature-details">' +
-      details +
-      "</span>";
+    setExternalDwellingCount(creatureName, value) {
+      if (!catalog?.dwellingCatalog.has(creatureName)) return 0;
+      const count = normalizedExternalCount(value);
+      const index = this.externalDwellings.findIndex(function matches(entry) {
+        return entry.basicCreature === creatureName;
+      });
+      if (count === 0) {
+        if (index >= 0) this.externalDwellings.splice(index, 1);
+      } else if (index >= 0) {
+        this.externalDwellings[index].count = count;
+      } else {
+        this.externalDwellings.push({ basicCreature: creatureName, count });
+      }
+      return count;
+    },
 
-    card.append(cycleButton);
-    slot.append(card);
+    adjustExternalDwelling(creatureName, action) {
+      const current = this.externalDwellingCount(creatureName);
+      if (action === "increment") {
+        this.setExternalDwellingCount(creatureName, current + 1);
+      } else if (action === "decrement") {
+        this.setExternalDwellingCount(creatureName, current - 1);
+      } else {
+        this.setExternalDwellingCount(creatureName, 0);
+      }
+    },
 
-    const externalCreatureName = basicCreature?.name || creatureName;
-    const externalCount = externalDwellingCount(externalCreatureName);
-    const externalControl = document.createElement("div");
-    externalControl.className = "external-dwelling-control";
-    externalControl.innerHTML =
-      '<span class="external-dwelling-icon" aria-hidden="true">🏠</span>' +
-      '<button class="external-dwelling-button" type="button" data-external-action="decrement" data-slot="' +
-      slotIndex +
-      '" aria-label="Remove an external dwelling for ' +
-      externalCreatureName +
-      '"' +
-      (externalCount === 0 ? " disabled" : "") +
-      ">−</button>" +
-      '<input class="external-dwelling-input" type="number" inputmode="numeric" min="0" max="99" placeholder="0" value="' +
-      (externalCount || "") +
-      '" data-slot="' +
-      slotIndex +
-      '" aria-label="External dwellings for ' +
-      externalCreatureName +
-      '">' +
-      '<button class="external-dwelling-button" type="button" data-external-action="increment" data-slot="' +
-      slotIndex +
-      '" aria-label="Add an external dwelling for ' +
-      externalCreatureName +
-      '"' +
-      (externalCount === 99 ? " disabled" : "") +
-      ">+</button>" +
-      '<button class="external-dwelling-button" type="button" data-external-action="reset" data-slot="' +
-      slotIndex +
-      '" aria-label="Reset external dwellings for ' +
-      externalCreatureName +
-      '"' +
-      (externalCount === 0 ? " disabled" : "") +
-      ">⟲</button>";
-    card.append(externalControl);
+    adjustExternalCard(creatureName, action) {
+      const current = this.externalDwellingCount(creatureName);
+      if (action === "increment") {
+        this.setExternalDwellingCount(creatureName, current + 1);
+      } else if (current > 1) {
+        this.setExternalDwellingCount(creatureName, current - 1);
+      }
+    },
 
-    if (horde) {
-      const toggle = document.createElement("label");
-      const disabled = !creature;
-      toggle.className = "horde-toggle" + (disabled ? " is-disabled" : "");
-      toggle.innerHTML =
-        '<input class="horde-checkbox" type="checkbox" data-slot="' +
-        slotIndex +
-        '"' +
-        (state.hordeEnabled[slotIndex] ? " checked" : "") +
-        (disabled ? " disabled" : "") +
-        ">" +
-        '<span class="toggle-indicator" aria-hidden="true"></span>' +
-        '<span class="horde-copy"><strong>' +
-        horde.name +
-        "</strong><small>+" +
-        horde.growth_bonus +
-        " growth · " +
-        formatCost(horde.cost) +
-        "</small></span>";
-      slot.append(toggle);
-    }
+    setExternalCardCount(creatureName, value) {
+      return this.setExternalDwellingCount(
+        creatureName,
+        Math.max(1, normalizedExternalCount(value)),
+      );
+    },
 
-    elements.unitGrid.append(slot);
-  });
-}
+    addExternalDwelling(creatureName) {
+      this.setExternalDwellingCount(
+        creatureName,
+        this.externalDwellingCount(creatureName) + 1,
+      );
+    },
 
-function renderExternalDwellingCards() {
-  if (externalDwellingSearch) {
-    externalDwellingSearch.unInit();
-    externalDwellingSearch = null;
-  }
-  elements.externalDwellingGrid.replaceChildren();
+    productionFor(plan, slotIndex) {
+      const slot = this.slots(plan)[slotIndex];
+      const horde = hordeFor(slot);
+      const hordeBonus = plan.hordeEnabled[slotIndex] && horde ? horde.growth_bonus : 0;
+      const externalBonus = this.externalDwellingCount(basicCreatureFor(slot)?.name);
+      const adjustedGrowth = slot.growth + hordeBonus + externalBonus;
+      if (plan.fortification === "citadel") return Math.floor(adjustedGrowth * 1.5);
+      if (plan.fortification === "castle") return adjustedGrowth * 2;
+      return adjustedGrowth;
+    },
 
-  for (const [creatureName, count] of state.externalDwellings) {
-    const dwelling = state.dwellingCatalog.get(creatureName);
-    if (!dwelling) continue;
-    const creature = basicCreatureFor(dwelling.slot);
-    const slot = document.createElement("div");
-    const card = document.createElement("div");
-    const body = document.createElement("div");
-    slot.className = "unit-slot external-dwelling-slot";
-    card.className = "unit-card external-dwelling-card";
-    card.dataset.stage = "0";
-    card.dataset.creatureName = creatureName;
-    card.dataset.count = String(count);
-    body.className = "unit-card-cycle external-dwelling-card-body";
-    body.innerHTML =
-      '<span class="card-top">' +
-      '<span class="tier-label">' +
-      (TOWN_NAMES[dwelling.faction] || titleCase(dwelling.faction)) +
-      " · Tier " +
-      dwelling.slot.tier +
-      "</span>" +
-      '<button class="external-remove-button" type="button" aria-label="Remove all external dwellings for ' +
-      creature.name +
-      '"><svg class="external-remove-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="m9 9 6 6m0-6-6 6"></path></svg></button>' +
-      "</span>" +
-      '<span class="creature-name">' +
-      creature.name +
-      "</span>" +
-      '<span class="creature-details">' +
-      '<span class="production-detail"><strong>' +
-      formatNumber(creature.growth * count) +
-      "</strong>/week, </span>" +
-      '<span class="cost-detail">' +
-      formatCost(creature.cost) +
-      "</span></span>";
-    card.append(body);
+    get productionRows() {
+      const plan = this.activePlan;
+      return this.slots(plan).flatMap((slot, slotIndex) => {
+        const selection = plan.selections[slotIndex];
+        const creature = creatureFor(slot, selection);
+        if (!creature) return [];
+        const activeHorde = plan.hordeEnabled[slotIndex] ? hordeFor(slot) : null;
+        const production = this.productionFor(plan, slotIndex);
+        return [{
+          name: creature.name,
+          detail:
+            "Tier " +
+            slot.tier +
+            " · " +
+            STAGE_NAMES[selection] +
+            (activeHorde ? " · " + activeHorde.name : ""),
+          production,
+          unitCost: creature.cost,
+          weeklyCost: multiplyCost(creature.cost, production),
+        }];
+      });
+    },
 
-    const control = document.createElement("div");
-    control.className = "external-dwelling-control external-card-count-control";
-    control.innerHTML =
-      '<span class="external-dwelling-icon" aria-hidden="true">🏠</span>' +
-      '<button class="external-dwelling-button" type="button" data-external-card-action="decrement" aria-label="Remove one external dwelling for ' +
-      creature.name +
-      '"' +
-      (count <= 1 ? " disabled" : "") +
-      ">−</button>" +
-      '<input class="external-dwelling-input external-card-count-input" type="number" inputmode="numeric" min="1" max="99" value="' +
-      count +
-      '" aria-label="External dwellings for ' +
-      creature.name +
-      '">' +
-      '<button class="external-dwelling-button" type="button" data-external-card-action="increment" aria-label="Add one external dwelling for ' +
-      creature.name +
-      '"' +
-      (count >= 99 ? " disabled" : "") +
-      ">+</button>";
-    card.append(control);
-    slot.append(card);
-    elements.externalDwellingGrid.append(slot);
-  }
+    get externalDwellingCards() {
+      return this.externalDwellings.flatMap(function card(entry) {
+        const dwelling = catalog.dwellingCatalog.get(entry.basicCreature);
+        if (!dwelling) return [];
+        return [{
+          creatureName: entry.basicCreature,
+          count: entry.count,
+          creature: dwelling.creature,
+          factionName: dwelling.factionName,
+          tier: dwelling.tier,
+          production: dwelling.growth * entry.count,
+        }];
+      });
+    },
 
-  const addSlot = document.createElement("div");
-  const addCard = document.createElement("div");
-  const addBody = document.createElement("div");
-  addSlot.className = "unit-slot external-dwelling-slot add-dwelling-slot";
-  addCard.className = "unit-card add-dwelling-card";
-  addBody.className = "unit-card-cycle add-dwelling-card-body";
-  addBody.innerHTML =
-    '<span class="card-top">' +
-    '<span class="tier-label">New external dwelling</span>' +
-    '<span class="add-dwelling-symbol" aria-hidden="true">+</span>' +
-    "</span>" +
-    '<span class="creature-name">Add a dwelling</span>' +
-    '<label class="sr-only" for="external-dwelling-search">Search creatures</label>' +
-    '<input class="external-dwelling-search-source" id="external-dwelling-search" type="search" placeholder="press / to search" autocomplete="off" aria-describedby="external-search-note">' +
-    '<small class="external-search-note" id="external-search-note">Select to add one dwelling.</small>';
-  addCard.append(addBody);
-  addSlot.append(addCard);
-  elements.externalDwellingGrid.append(addSlot);
-  initializeExternalDwellingSearch();
+    get externalRows() {
+      return this.externalDwellingCards.map(function row(card) {
+        return {
+          name: card.creature.name,
+          detail:
+            "Tier " +
+            card.tier +
+            " · Basic · " +
+            card.count +
+            " external dwelling" +
+            (card.count === 1 ? "" : "s"),
+          production: card.production,
+          unitCost: card.creature.cost,
+          weeklyCost: multiplyCost(card.creature.cost, card.production),
+        };
+      });
+    },
+
+    totalsFor(rows) {
+      const totals = {};
+      for (const row of rows) addCost(totals, row.weeklyCost);
+      return costEntries(totals);
+    },
+
+    get productionTotals() {
+      return this.totalsFor(this.productionRows);
+    },
+
+    get externalTotals() {
+      return this.totalsFor(this.externalRows);
+    },
+
+    get resultContext() {
+      return this.activePlan.town + " · " + titleCase(this.activePlan.fortification);
+    },
+
+    fortificationCost(level) {
+      return catalog?.fortificationBuildings.find(function matchingBuilding(building) {
+        return building.id === level;
+      })?.cost || null;
+    },
+
+    formatNumber,
+    formatCost,
+  };
 }
 
 function externalDwellingSearchData() {
   const options = [];
-
-  for (const [creatureName, dwelling] of state.dwellingCatalog) {
-    const factionName = TOWN_NAMES[dwelling.faction] || titleCase(dwelling.faction);
+  for (const [creatureName, dwelling] of catalog.dwellingCatalog) {
     options.push({
       name: creatureName,
-      faction: factionName,
-      tier: dwelling.slot.tier,
+      faction: dwelling.factionName,
+      tier: dwelling.tier,
     });
   }
-
   return options;
 }
 
-function initializeExternalDwellingSearch() {
+function initializeExternalDwellingSearch(planner) {
+  if (externalDwellingSearch) return;
   const searchInput = document.querySelector("#external-dwelling-search");
+  if (!searchInput) return;
   const searchData = externalDwellingSearchData();
   const positionPlugin = createAutoCompletePositionPlugin({
     aboveClass: "is-above",
@@ -758,247 +638,20 @@ function initializeExternalDwellingSearch() {
         selection: function addSearchedDwelling(event) {
           const creatureName = event.detail.selection?.value?.name;
           if (!creatureName) return;
-          setExternalDwellingCount(
-            creatureName,
-            externalDwellingCount(creatureName) + 1,
-          );
+          planner.addExternalDwelling(creatureName);
           searchInput.value = "";
-          const selectedSearch = externalDwellingSearch;
-          queueMicrotask(function renderSelectedDwelling() {
-            if (externalDwellingSearch === selectedSearch) render();
-          });
         },
       },
     },
   }));
   positionPlugin.attach(externalDwellingSearch);
-}
-
-function renderResultRow(name, detail, production, unitCost, weeklyCost) {
-  return (
-    "<tr>" +
-      "<td><strong>" +
-      name +
-      "</strong><small>" +
-      detail +
-      "</small></td>" +
-      "<td>" +
-      formatNumber(production) +
-      " <small>units</small></td>" +
-      '<td><span class="cost-list">' +
-      formatCost(unitCost) +
-      "</span></td>" +
-      '<td><span class="cost-list">' +
-      formatCost(weeklyCost) +
-      "</span></td>" +
-    "</tr>"
-  );
-}
-
-function renderResults(slots) {
-  const rows = [];
-  const totalsByResource = {};
-
-  slots.forEach(function addResult(slotData, slotIndex) {
-    const tier = slotData.tier;
-    const selection = state.selections[slotIndex];
-    const creature = creatureFor(slotData, selection);
-    if (!creature) return;
-
-    const activeHorde = state.hordeEnabled[slotIndex] ? hordeFor(slotData) : null;
-    const production = productionFor(creature.growth, slotData, slotIndex);
-    const weeklyCost = multiplyCost(creature.cost, production);
-    addCost(totalsByResource, weeklyCost);
-
-    const detail =
-      "Tier " +
-      tier +
-      " · " +
-      STAGE_NAMES[selection] +
-      (activeHorde ? " · " + activeHorde.name : "");
-    rows.push(renderResultRow(creature.name, detail, production, creature.cost, weeklyCost));
-  });
-
-  elements.resultContext.textContent =
-    (TOWN_NAMES[state.town] || titleCase(state.town)) +
-    " · " +
-    titleCase(state.fortification);
-
-  const hasResults = rows.length > 0;
-  elements.emptyResults.hidden = hasResults;
-  elements.tableWrap.hidden = !hasResults;
-  elements.totals.hidden = !hasResults;
-
-  if (!hasResults) {
-    elements.resultsBody.replaceChildren();
-    return;
+  if (pendingSearchFocus) {
+    pendingSearchFocus = false;
+    searchInput.focus();
   }
-
-  elements.resultsBody.innerHTML = rows.join("");
-  renderResourceTotals(elements.resourceTotals, totalsByResource);
 }
 
-function renderResourceTotals(container, totalsByResource) {
-  container.innerHTML = Object.entries(totalsByResource)
-    .sort(function ordered(left, right) {
-      return resourceSort(left[0], right[0]);
-    })
-    .map(function resourceTotal(entry) {
-      return (
-        '<span class="resource-total"><strong>' +
-        formatNumber(entry[1]) +
-        "</strong>" +
-        resourceIcon(entry[0]) +
-        "</span>"
-      );
-    })
-    .join("");
-}
-
-function renderExternalResults() {
-  const rows = [];
-  const totalsByResource = {};
-
-  for (const [creatureName, dwellingCount] of state.externalDwellings) {
-    const dwelling = state.dwellingCatalog.get(creatureName);
-    if (!dwelling) continue;
-    const basicCreature = basicCreatureFor(dwelling.slot);
-
-    const production = basicCreature.growth * dwellingCount;
-    const weeklyCost = multiplyCost(basicCreature.cost, production);
-    addCost(totalsByResource, weeklyCost);
-
-    const detail =
-      "Tier " +
-      dwelling.slot.tier +
-      " · Basic · " +
-      dwellingCount +
-      " external dwelling" +
-      (dwellingCount === 1 ? "" : "s");
-    rows.push(
-      renderResultRow(
-        basicCreature.name,
-        detail,
-        production,
-        basicCreature.cost,
-        weeklyCost,
-      ),
-    );
-  }
-
-  const hasExternalResults = rows.length > 0;
-  elements.externalResultsSection.hidden = !hasExternalResults;
-  if (!hasExternalResults) {
-    elements.externalResultsBody.replaceChildren();
-    return;
-  }
-
-  elements.externalResultContext.textContent = "All factions · External dwellings";
-  elements.externalResultsBody.innerHTML = rows.join("");
-  renderResourceTotals(elements.externalResourceTotals, totalsByResource);
-}
-
-function render() {
-  const slots = dwellingSlots();
-  renderCards(slots);
-  renderExternalDwellingCards();
-  renderResults(slots);
-  renderExternalResults();
-}
-
-function resetCreatureSelections() {
-  const slotCount = dwellingSlots().length;
-  state.selections = Array.from({ length: slotCount }, function defaultSelection(_, index) {
-    return index === 0 ? 0 : -1;
-  });
-  state.hordeEnabled = Array(slotCount).fill(false);
-}
-
-function applyInitialPlannerState() {
-  state.town = "castle";
-  state.fortification = "fort";
-  state.externalDwellings.clear();
-  resetCreatureSelections();
-}
-
-function normalizedExternalCount(value) {
-  const count = Number.parseInt(value, 10);
-  if (!Number.isFinite(count)) return 0;
-  return Math.min(99, Math.max(0, count));
-}
-
-elements.unitGrid.addEventListener("click", function cycleDwelling(event) {
-  const cycleButton = event.target.closest(".unit-card-cycle");
-  if (!cycleButton) return;
-  const slotIndex = Number(cycleButton.dataset.slot);
-  const slot = dwellingSlots()[slotIndex];
-  state.selections[slotIndex] = nextSelection(slot, state.selections[slotIndex]);
-  if (state.selections[slotIndex] < 0) state.hordeEnabled[slotIndex] = false;
-  render();
-});
-
-elements.unitGrid.addEventListener("change", function toggleHorde(event) {
-  if (!event.target.matches(".horde-checkbox")) return;
-  const slotIndex = Number(event.target.dataset.slot);
-  state.hordeEnabled[slotIndex] = event.target.checked;
-  render();
-});
-
-elements.unitGrid.addEventListener("click", function adjustExternalDwelling(event) {
-  const button = event.target.closest("[data-external-action]");
-  if (!button) return;
-  const slotIndex = Number(button.dataset.slot);
-  const creatureName = basicCreatureFor(dwellingSlots()[slotIndex])?.name;
-  const current = externalDwellingCount(creatureName);
-  if (button.dataset.externalAction === "increment") {
-    setExternalDwellingCount(creatureName, current + 1);
-  } else if (button.dataset.externalAction === "decrement") {
-    setExternalDwellingCount(creatureName, current - 1);
-  } else {
-    setExternalDwellingCount(creatureName, 0);
-  }
-  render();
-});
-
-elements.unitGrid.addEventListener("change", function setSchemeExternalDwellingCount(event) {
-  if (!event.target.matches(".external-dwelling-input")) return;
-  const slotIndex = Number(event.target.dataset.slot);
-  const creatureName = basicCreatureFor(dwellingSlots()[slotIndex])?.name;
-  setExternalDwellingCount(creatureName, event.target.value);
-  render();
-});
-
-elements.externalDwellingGrid.addEventListener("click", function adjustExternalCard(event) {
-  const card = event.target.closest(".external-dwelling-card");
-  if (!card) return;
-  const creatureName = card.dataset.creatureName;
-
-  if (event.target.closest(".external-remove-button")) {
-    setExternalDwellingCount(creatureName, 0);
-    render();
-    return;
-  }
-
-  const button = event.target.closest("[data-external-card-action]");
-  if (!button) return;
-  const current = externalDwellingCount(creatureName);
-  if (button.dataset.externalCardAction === "increment") {
-    setExternalDwellingCount(creatureName, current + 1);
-  } else if (current > 1) {
-    setExternalDwellingCount(creatureName, current - 1);
-  }
-  render();
-});
-
-elements.externalDwellingGrid.addEventListener("change", function setExternalCardCount(event) {
-  if (!event.target.matches(".external-card-count-input")) return;
-  const card = event.target.closest(".external-dwelling-card");
-  const count = Math.max(1, normalizedExternalCount(event.target.value));
-  setExternalDwellingCount(card.dataset.creatureName, count);
-  render();
-});
-
-document.addEventListener("keydown", function focusExternalDwellingSearch(event) {
+window.addEventListener("keydown", function focusExternalDwellingSearch(event) {
   if (
     event.key !== "/" ||
     event.defaultPrevented ||
@@ -1008,7 +661,6 @@ document.addEventListener("keydown", function focusExternalDwellingSearch(event)
   ) {
     return;
   }
-
   const target = event.target;
   if (
     target instanceof HTMLInputElement ||
@@ -1018,82 +670,55 @@ document.addEventListener("keydown", function focusExternalDwellingSearch(event)
   ) {
     return;
   }
-
   const searchInput = document.querySelector("#external-dwelling-search");
   if (!searchInput || searchInput.disabled) return;
   event.preventDefault();
+  pendingSearchFocus = true;
   searchInput.focus();
-});
-
-elements.townSelect.addEventListener("change", function changeTown() {
-  state.town = elements.townSelect.value;
-  resetCreatureSelections();
-  render();
-});
-
-elements.fortificationButton.addEventListener("click", function cycleFortification() {
-  const currentIndex = FORTIFICATION_LEVELS.indexOf(state.fortification);
-  state.fortification =
-    FORTIFICATION_LEVELS[(currentIndex + 1) % FORTIFICATION_LEVELS.length];
-  syncFortificationControl();
-  render();
-});
-
-elements.saveButton.addEventListener("click", function savePlannerState() {
-  persistPlannerState();
-});
-
-elements.resetButton.addEventListener("click", function resetScheme() {
-  const restored = restorePlannerState(readPersistedPlannerState());
-  if (!restored) applyInitialPlannerState();
-  elements.townSelect.value = state.town;
-  syncFortificationControl();
-  render();
-});
+}, { capture: true });
 
 function initializePlanner(data) {
-  if (
-    !data.creatures ||
-    typeof data.creatures !== "object" ||
-    Array.isArray(data.creatures)
-  ) {
-    throw new Error("Creature data is missing its faction groups");
-  }
-  indexFortificationBuildings(data);
-  buildRosters(data.creatures);
-  const restored = restorePlannerState(readPersistedPlannerState());
-  if (!restored) applyInitialPlannerState();
-  renderTownOptions();
-  sizeFortificationControl();
-  syncFortificationControl();
-  render();
+  Alpine.store("planner").initialize(data);
 }
 
 function showLoadError(error, context) {
-  elements.loadError.hidden = false;
-  elements.loadError.textContent = context + ": " + error.message;
+  Alpine.store("planner").loadError = context + ": " + error.message;
 }
 
+let initialData = null;
+let initialError = null;
+let initialErrorContext = "";
 const embeddedData = document.querySelector("#creature-data");
-if (embeddedData) {
-  try {
-    initializePlanner(JSON.parse(embeddedData.textContent));
-  } catch (error) {
-    showLoadError(error, "Could not load embedded creature data");
+
+try {
+  if (embeddedData) {
+    initialData = JSON.parse(embeddedData.textContent);
+  } else {
+    const response = await fetch("creatures.json");
+    if (!response.ok) {
+      throw new Error("Creature data returned HTTP " + response.status);
+    }
+    initialData = await response.json();
   }
+} catch (error) {
+  initialError = error;
+  initialErrorContext = embeddedData
+    ? "Could not load embedded creature data"
+    : "Could not load creatures.json. Run npm run dev and open the local URL it prints";
+}
+
+Alpine.plugin(persist);
+Alpine.store("planner", createPlannerStore());
+window.Alpine = Alpine;
+
+if (initialData) {
+  initializePlanner(initialData);
+}
+
+Alpine.start();
+
+if (initialData) {
+  Alpine.store("planner").mount();
 } else {
-  fetch("creatures.json")
-    .then(function checkResponse(response) {
-      if (!response.ok) {
-        throw new Error("Creature data returned HTTP " + response.status);
-      }
-      return response.json();
-    })
-    .then(initializePlanner)
-    .catch(function showFetchError(error) {
-      showLoadError(
-        error,
-        "Could not load creatures.json. Run npm run dev and open the local URL it prints",
-      );
-    });
+  showLoadError(initialError, initialErrorContext);
 }

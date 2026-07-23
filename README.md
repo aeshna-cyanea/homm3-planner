@@ -9,11 +9,12 @@ External dwellings can be added from a faction's production scheme or by
 searching the base dwelling creatures; repeated additions increment one shared
 dwelling count.
 
-`public/creatures.json` contains only the fields used by the planner and groups
-dwelling roots by faction, including a `neutral` group. A creature has an
-`upgraded_creature` link when another form follows. A dwelling root contains a
-`horde_building` object when one applies; its nested upgrades share that
-building. The fuller source dataset is preserved in `creatures_big.json`.
+`public/creatures.json` contains only the fields used by the planner. Towns are
+identified by their names and contain dwellings with shared `tier` and `growth`
+values plus an ordered `variants` list. A dwelling has an optional `horde`
+object when one applies. Non-upgradable neutral creatures are stored as flat
+records under `neutral_creatures`. The fuller source dataset is preserved in
+`creatures_big.json`.
 
 Install the project dependencies once:
 

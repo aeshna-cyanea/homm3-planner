@@ -16,1681 +16,1885 @@
       }
     }
   ],
-  "creatures": {
-    "castle": [
-      {
-        "name": "Pikeman",
-        "level": 1,
-        "growth": 14,
-        "cost": {
-          "gold": 60
-        },
-        "upgraded_creature": {
-          "name": "Halberdier",
-          "level": 1,
+  "towns": [
+    {
+      "name": "Castle",
+      "dwellings": [
+        {
+          "tier": 1,
           "growth": 14,
-          "cost": {
-            "gold": 75
-          }
-        }
-      },
-      {
-        "name": "Archer",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 100
+          "variants": [
+            {
+              "name": "Pikeman",
+              "cost": {
+                "gold": 60
+              }
+            },
+            {
+              "name": "Halberdier",
+              "cost": {
+                "gold": 75
+              }
+            }
+          ]
         },
-        "upgraded_creature": {
-          "name": "Marksman",
-          "level": 2,
+        {
+          "tier": 2,
           "growth": 9,
-          "cost": {
-            "gold": 150
-          }
-        }
-      },
-      {
-        "name": "Griffin",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 200
+          "variants": [
+            {
+              "name": "Archer",
+              "cost": {
+                "gold": 100
+              }
+            },
+            {
+              "name": "Marksman",
+              "cost": {
+                "gold": 150
+              }
+            }
+          ]
         },
-        "horde_building": {
-          "name": "Griffin Bastion",
-          "growth_bonus": 3,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Royal Griffin",
-          "level": 3,
+        {
+          "tier": 3,
           "growth": 7,
-          "cost": {
-            "gold": 240
-          }
-        }
-      },
-      {
-        "name": "Swordsman",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 300
-        },
-        "upgraded_creature": {
-          "name": "Crusader",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 400
-          }
-        }
-      },
-      {
-        "name": "Monk",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 400
-        },
-        "upgraded_creature": {
-          "name": "Zealot",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 450
-          }
-        }
-      },
-      {
-        "name": "Cavalier",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 1000
-        },
-        "upgraded_creature": {
-          "name": "Champion",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1200
-          }
-        }
-      },
-      {
-        "name": "Angel",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 3000,
-          "gem": 1
-        },
-        "upgraded_creature": {
-          "name": "Archangel",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 5000,
-            "gem": 3
-          }
-        }
-      }
-    ],
-    "rampart": [
-      {
-        "name": "Centaur",
-        "level": 1,
-        "growth": 14,
-        "cost": {
-          "gold": 70
-        },
-        "upgraded_creature": {
-          "name": "Centaur Captain",
-          "level": 1,
-          "growth": 14,
-          "cost": {
-            "gold": 90
-          }
-        }
-      },
-      {
-        "name": "Dwarf",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 120
-        },
-        "horde_building": {
-          "name": "Miners' Guild",
-          "growth_bonus": 4,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Battle Dwarf",
-          "level": 2,
-          "growth": 8,
-          "cost": {
-            "gold": 150
-          }
-        }
-      },
-      {
-        "name": "Wood Elf",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 200
-        },
-        "upgraded_creature": {
-          "name": "Grand Elf",
-          "level": 3,
-          "growth": 7,
-          "cost": {
-            "gold": 225
-          }
-        }
-      },
-      {
-        "name": "Pegasus",
-        "level": 4,
-        "growth": 5,
-        "cost": {
-          "gold": 250
-        },
-        "upgraded_creature": {
-          "name": "Silver Pegasus",
-          "level": 4,
-          "growth": 5,
-          "cost": {
-            "gold": 275
-          }
-        }
-      },
-      {
-        "name": "Dendroid Guard",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 350
-        },
-        "horde_building": {
-          "name": "Dendroid Saplings",
-          "growth_bonus": 2,
-          "cost": {
-            "gold": 2000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Dendroid Soldier",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 425
-          }
-        }
-      },
-      {
-        "name": "Unicorn",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 850
-        },
-        "upgraded_creature": {
-          "name": "War Unicorn",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 950
-          }
-        }
-      },
-      {
-        "name": "Green Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2400,
-          "crystal": 1
-        },
-        "upgraded_creature": {
-          "name": "Gold Dragon",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 4000,
-            "crystal": 2
-          }
-        }
-      }
-    ],
-    "tower": [
-      {
-        "name": "Gremlin",
-        "level": 1,
-        "growth": 16,
-        "cost": {
-          "gold": 30
-        },
-        "upgraded_creature": {
-          "name": "Master Gremlin",
-          "level": 1,
-          "growth": 16,
-          "cost": {
-            "gold": 40
-          }
-        }
-      },
-      {
-        "name": "Stone Gargoyle",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 130
-        },
-        "horde_building": {
-          "name": "Sculptor's Wings",
-          "growth_bonus": 4,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Obsidian Gargoyle",
-          "level": 2,
-          "growth": 9,
-          "cost": {
-            "gold": 160
-          }
-        }
-      },
-      {
-        "name": "Stone Golem",
-        "level": 3,
-        "growth": 6,
-        "cost": {
-          "gold": 150
-        },
-        "upgraded_creature": {
-          "name": "Iron Golem",
-          "level": 3,
-          "growth": 6,
-          "cost": {
-            "gold": 200
-          }
-        }
-      },
-      {
-        "name": "Mage",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 350
-        },
-        "upgraded_creature": {
-          "name": "Arch Mage",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 450
-          }
-        }
-      },
-      {
-        "name": "Genie",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 550
-        },
-        "upgraded_creature": {
-          "name": "Master Genie",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 600
-          }
-        }
-      },
-      {
-        "name": "Naga",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 1100
-        },
-        "upgraded_creature": {
-          "name": "Naga Queen",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1600
-          }
-        }
-      },
-      {
-        "name": "Giant",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2000,
-          "gem": 1
-        },
-        "upgraded_creature": {
-          "name": "Titan",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 5000,
-            "gem": 2
-          }
-        }
-      }
-    ],
-    "inferno": [
-      {
-        "name": "Imp",
-        "level": 1,
-        "growth": 15,
-        "cost": {
-          "gold": 50
-        },
-        "horde_building": {
-          "name": "Birthing Pool",
-          "growth_bonus": 8,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Familiar",
-          "level": 1,
-          "growth": 15,
-          "cost": {
-            "gold": 60
-          }
-        }
-      },
-      {
-        "name": "Gog",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 125
-        },
-        "upgraded_creature": {
-          "name": "Magog",
-          "level": 2,
-          "growth": 8,
-          "cost": {
-            "gold": 175
-          }
-        }
-      },
-      {
-        "name": "Hell Hound",
-        "level": 3,
-        "growth": 5,
-        "cost": {
-          "gold": 200
-        },
-        "horde_building": {
-          "name": "Cages",
-          "growth_bonus": 3,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Cerberus",
-          "level": 3,
-          "growth": 5,
-          "cost": {
-            "gold": 250
-          }
-        }
-      },
-      {
-        "name": "Demon",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 250
-        },
-        "upgraded_creature": {
-          "name": "Horned Demon",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 270
-          }
-        }
-      },
-      {
-        "name": "Pit Fiend",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 500
-        },
-        "upgraded_creature": {
-          "name": "Pit Lord",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 700
-          }
-        }
-      },
-      {
-        "name": "Efreeti",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 900
-        },
-        "upgraded_creature": {
-          "name": "Efreet Sultan",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1100
-          }
-        }
-      },
-      {
-        "name": "Devil",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2700,
-          "mercury": 1
-        },
-        "upgraded_creature": {
-          "name": "Arch Devil",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 4500,
-            "mercury": 2
-          }
-        }
-      }
-    ],
-    "necropolis": [
-      {
-        "name": "Skeleton",
-        "level": 1,
-        "growth": 12,
-        "cost": {
-          "gold": 60
-        },
-        "horde_building": {
-          "name": "Unearthed Graves",
-          "growth_bonus": 6,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Skeleton Warrior",
-          "level": 1,
-          "growth": 12,
-          "cost": {
-            "gold": 70
-          }
-        }
-      },
-      {
-        "name": "Walking Dead",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 100
-        },
-        "upgraded_creature": {
-          "name": "Zombie",
-          "level": 2,
-          "growth": 8,
-          "cost": {
-            "gold": 125
-          }
-        }
-      },
-      {
-        "name": "Wight",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 200
-        },
-        "upgraded_creature": {
-          "name": "Wraith",
-          "level": 3,
-          "growth": 7,
-          "cost": {
-            "gold": 230
-          }
-        }
-      },
-      {
-        "name": "Vampire",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 360
-        },
-        "upgraded_creature": {
-          "name": "Vampire Lord",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 500
-          }
-        }
-      },
-      {
-        "name": "Lich",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 550
-        },
-        "upgraded_creature": {
-          "name": "Power Lich",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 600
-          }
-        }
-      },
-      {
-        "name": "Black Knight",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 1200
-        },
-        "upgraded_creature": {
-          "name": "Dread Knight",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1500
-          }
-        }
-      },
-      {
-        "name": "Bone Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 1800
-        },
-        "upgraded_creature": {
-          "name": "Ghost Dragon",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 3000,
-            "mercury": 1
-          }
-        }
-      }
-    ],
-    "dungeon": [
-      {
-        "name": "Troglodyte",
-        "level": 1,
-        "growth": 14,
-        "cost": {
-          "gold": 50
-        },
-        "horde_building": {
-          "name": "Mushroom Rings",
-          "growth_bonus": 7,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Infernal Troglodyte",
-          "level": 1,
-          "growth": 14,
-          "cost": {
-            "gold": 65
-          }
-        }
-      },
-      {
-        "name": "Harpy",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 130
-        },
-        "upgraded_creature": {
-          "name": "Harpy Hag",
-          "level": 2,
-          "growth": 8,
-          "cost": {
-            "gold": 170
-          }
-        }
-      },
-      {
-        "name": "Beholder",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 250
-        },
-        "upgraded_creature": {
-          "name": "Evil Eye",
-          "level": 3,
-          "growth": 7,
-          "cost": {
-            "gold": 280
-          }
-        }
-      },
-      {
-        "name": "Medusa",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 300
-        },
-        "upgraded_creature": {
-          "name": "Medusa Queen",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 330
-          }
-        }
-      },
-      {
-        "name": "Minotaur",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 500
-        },
-        "upgraded_creature": {
-          "name": "Minotaur King",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 575
-          }
-        }
-      },
-      {
-        "name": "Manticore",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 850
-        },
-        "upgraded_creature": {
-          "name": "Scorpicore",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1050
-          }
-        }
-      },
-      {
-        "name": "Red Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2500,
-          "sulfur": 1
-        },
-        "upgraded_creature": {
-          "name": "Black Dragon",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 4000,
-            "sulfur": 2
-          }
-        }
-      }
-    ],
-    "stronghold": [
-      {
-        "name": "Goblin",
-        "level": 1,
-        "growth": 15,
-        "cost": {
-          "gold": 40
-        },
-        "horde_building": {
-          "name": "Mess Hall",
-          "growth_bonus": 8,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Hobgoblin",
-          "level": 1,
-          "growth": 15,
-          "cost": {
-            "gold": 50
-          }
-        }
-      },
-      {
-        "name": "Wolf Rider",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 100
-        },
-        "upgraded_creature": {
-          "name": "Wolf Raider",
-          "level": 2,
-          "growth": 9,
-          "cost": {
-            "gold": 140
-          }
-        }
-      },
-      {
-        "name": "Orc",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 150
-        },
-        "upgraded_creature": {
-          "name": "Orc Chieftain",
-          "level": 3,
-          "growth": 7,
-          "cost": {
-            "gold": 165
-          }
-        }
-      },
-      {
-        "name": "Ogre",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 300
-        },
-        "upgraded_creature": {
-          "name": "Ogre Mage",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 400
-          }
-        }
-      },
-      {
-        "name": "Roc",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 600
-        },
-        "upgraded_creature": {
-          "name": "Thunderbird",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 700
-          }
-        }
-      },
-      {
-        "name": "Cyclops",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 750
-        },
-        "upgraded_creature": {
-          "name": "Cyclops King",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1100
-          }
-        }
-      },
-      {
-        "name": "Behemoth",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 1500
-        },
-        "upgraded_creature": {
-          "name": "Ancient Behemoth",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 3000,
-            "crystal": 1
-          }
-        }
-      }
-    ],
-    "fortress": [
-      {
-        "name": "Gnoll",
-        "level": 1,
-        "growth": 12,
-        "cost": {
-          "gold": 50
-        },
-        "horde_building": {
-          "name": "Captain's Quarters",
-          "growth_bonus": 6,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Gnoll Marauder",
-          "level": 1,
-          "growth": 12,
-          "cost": {
-            "gold": 70
-          }
-        }
-      },
-      {
-        "name": "Lizardman",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 110
-        },
-        "upgraded_creature": {
-          "name": "Lizard Warrior",
-          "level": 2,
-          "growth": 9,
-          "cost": {
-            "gold": 140
-          }
-        }
-      },
-      {
-        "name": "Serpent Fly",
-        "level": 3,
-        "growth": 8,
-        "cost": {
-          "gold": 220
-        },
-        "upgraded_creature": {
-          "name": "Dragon Fly",
-          "level": 3,
-          "growth": 8,
-          "cost": {
-            "gold": 240
-          }
-        }
-      },
-      {
-        "name": "Basilisk",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 325
-        },
-        "upgraded_creature": {
-          "name": "Greater Basilisk",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 400
-          }
-        }
-      },
-      {
-        "name": "Gorgon",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 525
-        },
-        "upgraded_creature": {
-          "name": "Mighty Gorgon",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 600
-          }
-        }
-      },
-      {
-        "name": "Wyvern",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 800
-        },
-        "upgraded_creature": {
-          "name": "Wyvern Monarch",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1100
-          }
-        }
-      },
-      {
-        "name": "Hydra",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2200
-        },
-        "upgraded_creature": {
-          "name": "Chaos Hydra",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 3500,
-            "sulfur": 1
-          }
-        }
-      }
-    ],
-    "conflux": [
-      {
-        "name": "Pixie",
-        "level": 1,
-        "growth": 20,
-        "cost": {
-          "gold": 25
-        },
-        "horde_building": {
-          "name": "Garden of Life",
-          "growth_bonus": 10,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Sprite",
-          "level": 1,
-          "growth": 20,
-          "cost": {
-            "gold": 30
-          }
-        }
-      },
-      {
-        "name": "Air Elemental",
-        "level": 2,
-        "growth": 6,
-        "cost": {
-          "gold": 250
-        },
-        "upgraded_creature": {
-          "name": "Storm Elemental",
-          "level": 2,
-          "growth": 6,
-          "cost": {
-            "gold": 275
-          }
-        }
-      },
-      {
-        "name": "Water Elemental",
-        "level": 3,
-        "growth": 6,
-        "cost": {
-          "gold": 300
-        },
-        "upgraded_creature": {
-          "name": "Ice Elemental",
-          "level": 3,
-          "growth": 6,
-          "cost": {
-            "gold": 375
-          }
-        }
-      },
-      {
-        "name": "Fire Elemental",
-        "level": 4,
-        "growth": 5,
-        "cost": {
-          "gold": 350
-        },
-        "upgraded_creature": {
-          "name": "Energy Elemental",
-          "level": 4,
-          "growth": 5,
-          "cost": {
-            "gold": 400
-          }
-        }
-      },
-      {
-        "name": "Earth Elemental",
-        "level": 5,
-        "growth": 4,
-        "cost": {
-          "gold": 400
-        },
-        "upgraded_creature": {
-          "name": "Magma Elemental",
-          "level": 5,
-          "growth": 4,
-          "cost": {
-            "gold": 500
-          }
-        }
-      },
-      {
-        "name": "Psychic Elemental",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 950
-        },
-        "upgraded_creature": {
-          "name": "Magic Elemental",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1200
-          }
-        }
-      },
-      {
-        "name": "Firebird",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2000
-        },
-        "horde_building": {
-          "name": "Vault of Ashes",
-          "growth_bonus": 1,
-          "cost": {
-            "mercury": 5,
-            "gold": 5000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Phoenix",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 3000,
-            "mercury": 1
-          }
-        }
-      }
-    ],
-    "cove": [
-      {
-        "name": "Nymph",
-        "level": 1,
-        "growth": 16,
-        "cost": {
-          "gold": 35
-        },
-        "upgraded_creature": {
-          "name": "Oceanid",
-          "level": 1,
-          "growth": 16,
-          "cost": {
-            "gold": 45
-          }
-        }
-      },
-      {
-        "name": "Crew Mate",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 110
-        },
-        "horde_building": {
-          "name": "Pub",
-          "growth_bonus": 4,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Seaman",
-          "level": 2,
-          "growth": 9,
-          "cost": {
-            "gold": 140
-          }
-        }
-      },
-      {
-        "name": "Pirate",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 225
-        },
-        "upgraded_creature": {
-          "name": "Corsair",
-          "level": 3,
-          "growth": 7,
-          "cost": {
-            "gold": 275
-          },
-          "upgraded_creature": {
-            "name": "Sea Dog",
-            "level": 3,
-            "growth": 7,
+          "variants": [
+            {
+              "name": "Griffin",
+              "cost": {
+                "gold": 200
+              }
+            },
+            {
+              "name": "Royal Griffin",
+              "cost": {
+                "gold": 240
+              }
+            }
+          ],
+          "horde": {
+            "name": "Griffin Bastion",
+            "growth_bonus": 3,
             "cost": {
-              "gold": 375
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Swordsman",
+              "cost": {
+                "gold": 300
+              }
+            },
+            {
+              "name": "Crusader",
+              "cost": {
+                "gold": 400
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Monk",
+              "cost": {
+                "gold": 400
+              }
+            },
+            {
+              "name": "Zealot",
+              "cost": {
+                "gold": 450
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Cavalier",
+              "cost": {
+                "gold": 1000
+              }
+            },
+            {
+              "name": "Champion",
+              "cost": {
+                "gold": 1200
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Angel",
+              "cost": {
+                "gold": 3000,
+                "gem": 1
+              }
+            },
+            {
+              "name": "Archangel",
+              "cost": {
+                "gold": 5000,
+                "gem": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rampart",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 14,
+          "variants": [
+            {
+              "name": "Centaur",
+              "cost": {
+                "gold": 70
+              }
+            },
+            {
+              "name": "Centaur Captain",
+              "cost": {
+                "gold": 90
+              }
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "growth": 8,
+          "variants": [
+            {
+              "name": "Dwarf",
+              "cost": {
+                "gold": 120
+              }
+            },
+            {
+              "name": "Battle Dwarf",
+              "cost": {
+                "gold": 150
+              }
+            }
+          ],
+          "horde": {
+            "name": "Miners' Guild",
+            "growth_bonus": 4,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 3,
+          "growth": 7,
+          "variants": [
+            {
+              "name": "Wood Elf",
+              "cost": {
+                "gold": 200
+              }
+            },
+            {
+              "name": "Grand Elf",
+              "cost": {
+                "gold": 225
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 5,
+          "variants": [
+            {
+              "name": "Pegasus",
+              "cost": {
+                "gold": 250
+              }
+            },
+            {
+              "name": "Silver Pegasus",
+              "cost": {
+                "gold": 275
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Dendroid Guard",
+              "cost": {
+                "gold": 350
+              }
+            },
+            {
+              "name": "Dendroid Soldier",
+              "cost": {
+                "gold": 425
+              }
+            }
+          ],
+          "horde": {
+            "name": "Dendroid Saplings",
+            "growth_bonus": 2,
+            "cost": {
+              "gold": 2000
+            }
+          }
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Unicorn",
+              "cost": {
+                "gold": 850
+              }
+            },
+            {
+              "name": "War Unicorn",
+              "cost": {
+                "gold": 950
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Green Dragon",
+              "cost": {
+                "gold": 2400,
+                "crystal": 1
+              }
+            },
+            {
+              "name": "Gold Dragon",
+              "cost": {
+                "gold": 4000,
+                "crystal": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tower",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 16,
+          "variants": [
+            {
+              "name": "Gremlin",
+              "cost": {
+                "gold": 30
+              }
+            },
+            {
+              "name": "Master Gremlin",
+              "cost": {
+                "gold": 40
+              }
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "growth": 9,
+          "variants": [
+            {
+              "name": "Stone Gargoyle",
+              "cost": {
+                "gold": 130
+              }
+            },
+            {
+              "name": "Obsidian Gargoyle",
+              "cost": {
+                "gold": 160
+              }
+            }
+          ],
+          "horde": {
+            "name": "Sculptor's Wings",
+            "growth_bonus": 4,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 3,
+          "growth": 6,
+          "variants": [
+            {
+              "name": "Stone Golem",
+              "cost": {
+                "gold": 150
+              }
+            },
+            {
+              "name": "Iron Golem",
+              "cost": {
+                "gold": 200
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Mage",
+              "cost": {
+                "gold": 350
+              }
+            },
+            {
+              "name": "Arch Mage",
+              "cost": {
+                "gold": 450
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Genie",
+              "cost": {
+                "gold": 550
+              }
+            },
+            {
+              "name": "Master Genie",
+              "cost": {
+                "gold": 600
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Naga",
+              "cost": {
+                "gold": 1100
+              }
+            },
+            {
+              "name": "Naga Queen",
+              "cost": {
+                "gold": 1600
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Giant",
+              "cost": {
+                "gold": 2000,
+                "gem": 1
+              }
+            },
+            {
+              "name": "Titan",
+              "cost": {
+                "gold": 5000,
+                "gem": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Inferno",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 15,
+          "variants": [
+            {
+              "name": "Imp",
+              "cost": {
+                "gold": 50
+              }
+            },
+            {
+              "name": "Familiar",
+              "cost": {
+                "gold": 60
+              }
+            }
+          ],
+          "horde": {
+            "name": "Birthing Pool",
+            "growth_bonus": 8,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 2,
+          "growth": 8,
+          "variants": [
+            {
+              "name": "Gog",
+              "cost": {
+                "gold": 125
+              }
+            },
+            {
+              "name": "Magog",
+              "cost": {
+                "gold": 175
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 5,
+          "variants": [
+            {
+              "name": "Hell Hound",
+              "cost": {
+                "gold": 200
+              }
+            },
+            {
+              "name": "Cerberus",
+              "cost": {
+                "gold": 250
+              }
+            }
+          ],
+          "horde": {
+            "name": "Cages",
+            "growth_bonus": 3,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Demon",
+              "cost": {
+                "gold": 250
+              }
+            },
+            {
+              "name": "Horned Demon",
+              "cost": {
+                "gold": 270
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Pit Fiend",
+              "cost": {
+                "gold": 500
+              }
+            },
+            {
+              "name": "Pit Lord",
+              "cost": {
+                "gold": 700
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Efreeti",
+              "cost": {
+                "gold": 900
+              }
+            },
+            {
+              "name": "Efreet Sultan",
+              "cost": {
+                "gold": 1100
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Devil",
+              "cost": {
+                "gold": 2700,
+                "mercury": 1
+              }
+            },
+            {
+              "name": "Arch Devil",
+              "cost": {
+                "gold": 4500,
+                "mercury": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Necropolis",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 12,
+          "variants": [
+            {
+              "name": "Skeleton",
+              "cost": {
+                "gold": 60
+              }
+            },
+            {
+              "name": "Skeleton Warrior",
+              "cost": {
+                "gold": 70
+              }
+            }
+          ],
+          "horde": {
+            "name": "Unearthed Graves",
+            "growth_bonus": 6,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 2,
+          "growth": 8,
+          "variants": [
+            {
+              "name": "Walking Dead",
+              "cost": {
+                "gold": 100
+              }
+            },
+            {
+              "name": "Zombie",
+              "cost": {
+                "gold": 125
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 7,
+          "variants": [
+            {
+              "name": "Wight",
+              "cost": {
+                "gold": 200
+              }
+            },
+            {
+              "name": "Wraith",
+              "cost": {
+                "gold": 230
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Vampire",
+              "cost": {
+                "gold": 360
+              }
+            },
+            {
+              "name": "Vampire Lord",
+              "cost": {
+                "gold": 500
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Lich",
+              "cost": {
+                "gold": 550
+              }
+            },
+            {
+              "name": "Power Lich",
+              "cost": {
+                "gold": 600
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Black Knight",
+              "cost": {
+                "gold": 1200
+              }
+            },
+            {
+              "name": "Dread Knight",
+              "cost": {
+                "gold": 1500
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Bone Dragon",
+              "cost": {
+                "gold": 1800
+              }
+            },
+            {
+              "name": "Ghost Dragon",
+              "cost": {
+                "gold": 3000,
+                "mercury": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dungeon",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 14,
+          "variants": [
+            {
+              "name": "Troglodyte",
+              "cost": {
+                "gold": 50
+              }
+            },
+            {
+              "name": "Infernal Troglodyte",
+              "cost": {
+                "gold": 65
+              }
+            }
+          ],
+          "horde": {
+            "name": "Mushroom Rings",
+            "growth_bonus": 7,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 2,
+          "growth": 8,
+          "variants": [
+            {
+              "name": "Harpy",
+              "cost": {
+                "gold": 130
+              }
+            },
+            {
+              "name": "Harpy Hag",
+              "cost": {
+                "gold": 170
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 7,
+          "variants": [
+            {
+              "name": "Beholder",
+              "cost": {
+                "gold": 250
+              }
+            },
+            {
+              "name": "Evil Eye",
+              "cost": {
+                "gold": 280
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Medusa",
+              "cost": {
+                "gold": 300
+              }
+            },
+            {
+              "name": "Medusa Queen",
+              "cost": {
+                "gold": 330
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Minotaur",
+              "cost": {
+                "gold": 500
+              }
+            },
+            {
+              "name": "Minotaur King",
+              "cost": {
+                "gold": 575
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Manticore",
+              "cost": {
+                "gold": 850
+              }
+            },
+            {
+              "name": "Scorpicore",
+              "cost": {
+                "gold": 1050
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Red Dragon",
+              "cost": {
+                "gold": 2500,
+                "sulfur": 1
+              }
+            },
+            {
+              "name": "Black Dragon",
+              "cost": {
+                "gold": 4000,
+                "sulfur": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Stronghold",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 15,
+          "variants": [
+            {
+              "name": "Goblin",
+              "cost": {
+                "gold": 40
+              }
+            },
+            {
+              "name": "Hobgoblin",
+              "cost": {
+                "gold": 50
+              }
+            }
+          ],
+          "horde": {
+            "name": "Mess Hall",
+            "growth_bonus": 8,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 2,
+          "growth": 9,
+          "variants": [
+            {
+              "name": "Wolf Rider",
+              "cost": {
+                "gold": 100
+              }
+            },
+            {
+              "name": "Wolf Raider",
+              "cost": {
+                "gold": 140
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 7,
+          "variants": [
+            {
+              "name": "Orc",
+              "cost": {
+                "gold": 150
+              }
+            },
+            {
+              "name": "Orc Chieftain",
+              "cost": {
+                "gold": 165
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Ogre",
+              "cost": {
+                "gold": 300
+              }
+            },
+            {
+              "name": "Ogre Mage",
+              "cost": {
+                "gold": 400
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Roc",
+              "cost": {
+                "gold": 600
+              }
+            },
+            {
+              "name": "Thunderbird",
+              "cost": {
+                "gold": 700
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Cyclops",
+              "cost": {
+                "gold": 750
+              }
+            },
+            {
+              "name": "Cyclops King",
+              "cost": {
+                "gold": 1100
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Behemoth",
+              "cost": {
+                "gold": 1500
+              }
+            },
+            {
+              "name": "Ancient Behemoth",
+              "cost": {
+                "gold": 3000,
+                "crystal": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fortress",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 12,
+          "variants": [
+            {
+              "name": "Gnoll",
+              "cost": {
+                "gold": 50
+              }
+            },
+            {
+              "name": "Gnoll Marauder",
+              "cost": {
+                "gold": 70
+              }
+            }
+          ],
+          "horde": {
+            "name": "Captain's Quarters",
+            "growth_bonus": 6,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 2,
+          "growth": 9,
+          "variants": [
+            {
+              "name": "Lizardman",
+              "cost": {
+                "gold": 110
+              }
+            },
+            {
+              "name": "Lizard Warrior",
+              "cost": {
+                "gold": 140
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 8,
+          "variants": [
+            {
+              "name": "Serpent Fly",
+              "cost": {
+                "gold": 220
+              }
+            },
+            {
+              "name": "Dragon Fly",
+              "cost": {
+                "gold": 240
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Basilisk",
+              "cost": {
+                "gold": 325
+              }
+            },
+            {
+              "name": "Greater Basilisk",
+              "cost": {
+                "gold": 400
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Gorgon",
+              "cost": {
+                "gold": 525
+              }
+            },
+            {
+              "name": "Mighty Gorgon",
+              "cost": {
+                "gold": 600
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Wyvern",
+              "cost": {
+                "gold": 800
+              }
+            },
+            {
+              "name": "Wyvern Monarch",
+              "cost": {
+                "gold": 1100
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Hydra",
+              "cost": {
+                "gold": 2200
+              }
+            },
+            {
+              "name": "Chaos Hydra",
+              "cost": {
+                "gold": 3500,
+                "sulfur": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Conflux",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 20,
+          "variants": [
+            {
+              "name": "Pixie",
+              "cost": {
+                "gold": 25
+              }
+            },
+            {
+              "name": "Sprite",
+              "cost": {
+                "gold": 30
+              }
+            }
+          ],
+          "horde": {
+            "name": "Garden of Life",
+            "growth_bonus": 10,
+            "cost": {
+              "gold": 1000
+            }
+          }
+        },
+        {
+          "tier": 2,
+          "growth": 6,
+          "variants": [
+            {
+              "name": "Air Elemental",
+              "cost": {
+                "gold": 250
+              }
+            },
+            {
+              "name": "Storm Elemental",
+              "cost": {
+                "gold": 275
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 6,
+          "variants": [
+            {
+              "name": "Water Elemental",
+              "cost": {
+                "gold": 300
+              }
+            },
+            {
+              "name": "Ice Elemental",
+              "cost": {
+                "gold": 375
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 5,
+          "variants": [
+            {
+              "name": "Fire Elemental",
+              "cost": {
+                "gold": 350
+              }
+            },
+            {
+              "name": "Energy Elemental",
+              "cost": {
+                "gold": 400
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Earth Elemental",
+              "cost": {
+                "gold": 400
+              }
+            },
+            {
+              "name": "Magma Elemental",
+              "cost": {
+                "gold": 500
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Psychic Elemental",
+              "cost": {
+                "gold": 950
+              }
+            },
+            {
+              "name": "Magic Elemental",
+              "cost": {
+                "gold": 1200
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Firebird",
+              "cost": {
+                "gold": 2000
+              }
+            },
+            {
+              "name": "Phoenix",
+              "cost": {
+                "gold": 3000,
+                "mercury": 1
+              }
+            }
+          ],
+          "horde": {
+            "name": "Vault of Ashes",
+            "growth_bonus": 1,
+            "cost": {
+              "mercury": 5,
+              "gold": 5000
             }
           }
         }
-      },
-      {
-        "name": "Stormbird",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 275
+      ]
+    },
+    {
+      "name": "Cove",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 16,
+          "variants": [
+            {
+              "name": "Nymph",
+              "cost": {
+                "gold": 35
+              }
+            },
+            {
+              "name": "Oceanid",
+              "cost": {
+                "gold": 45
+              }
+            }
+          ]
         },
-        "horde_building": {
-          "name": "Roost",
-          "growth_bonus": 3,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Ayssid",
-          "level": 4,
-          "growth": 4,
-          "cost": {
-            "gold": 325
-          }
-        }
-      },
-      {
-        "name": "Sea Witch",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 515
-        },
-        "upgraded_creature": {
-          "name": "Sorceress",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 565
-          }
-        }
-      },
-      {
-        "name": "Nix",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 1000
-        },
-        "upgraded_creature": {
-          "name": "Nix Warrior",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1300
-          }
-        }
-      },
-      {
-        "name": "Sea Serpent",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2200,
-          "sulfur": 1
-        },
-        "upgraded_creature": {
-          "name": "Haspid",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 4000,
-            "sulfur": 2
-          }
-        }
-      }
-    ],
-    "factory": [
-      {
-        "name": "Halfling",
-        "level": 1,
-        "growth": 15,
-        "cost": {
-          "gold": 40
-        },
-        "upgraded_creature": {
-          "name": "Halfling Grenadier",
-          "level": 1,
-          "growth": 15,
-          "cost": {
-            "gold": 60
-          }
-        }
-      },
-      {
-        "name": "Mechanic",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 140
-        },
-        "upgraded_creature": {
-          "name": "Engineer",
-          "level": 2,
-          "growth": 8,
-          "cost": {
-            "gold": 170
-          }
-        }
-      },
-      {
-        "name": "Armadillo",
-        "level": 3,
-        "growth": 6,
-        "cost": {
-          "gold": 200
-        },
-        "horde_building": {
-          "name": "Pen",
-          "growth_bonus": 3,
-          "cost": {
-            "gold": 1000
-          }
-        },
-        "upgraded_creature": {
-          "name": "Bellwether Armadillo",
-          "level": 3,
-          "growth": 6,
-          "cost": {
-            "gold": 230
-          }
-        }
-      },
-      {
-        "name": "Automaton",
-        "level": 4,
-        "growth": 5,
-        "cost": {
-          "gold": 350
-        },
-        "upgraded_creature": {
-          "name": "Sentinel Automaton",
-          "level": 4,
-          "growth": 5,
-          "cost": {
-            "gold": 450
-          }
-        }
-      },
-      {
-        "name": "Sandworm",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 575
-        },
-        "upgraded_creature": {
-          "name": "Olgoi-Khorkhoi",
-          "level": 5,
-          "growth": 3,
-          "cost": {
-            "gold": 650
-          }
-        }
-      },
-      {
-        "name": "Gunslinger",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 800
-        },
-        "upgraded_creature": {
-          "name": "Bounty Hunter",
-          "level": 6,
-          "growth": 2,
-          "cost": {
-            "gold": 1100
-          }
-        }
-      },
-      {
-        "name": "Couatl",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2000
-        },
-        "upgraded_creature": {
-          "name": "Crimson Couatl",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 3500,
-            "crystal": 1
-          }
-        }
-      },
-      {
-        "name": "Dreadnought",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2200,
-          "crystal": 1
-        },
-        "upgraded_creature": {
-          "name": "Juggernaut",
-          "level": 7,
-          "growth": 1,
-          "cost": {
-            "gold": 3500,
-            "crystal": 2
-          }
-        }
-      }
-    ],
-    "bulwark": [
-      {
-        "name": "Kobold",
-        "level": 1,
-        "growth": 15,
-        "cost": {
-          "gold": 40
-        },
-        "upgraded_creature": {
-          "name": "Kobold Foreman",
-          "level": 1,
-          "growth": 15,
-          "cost": {
-            "gold": 60
-          }
-        }
-      },
-      {
-        "name": "Mountain Ram",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 135
-        },
-        "upgraded_creature": {
-          "name": "Argali",
-          "level": 2,
+        {
+          "tier": 2,
           "growth": 9,
-          "cost": {
-            "gold": 170
+          "variants": [
+            {
+              "name": "Crew Mate",
+              "cost": {
+                "gold": 110
+              }
+            },
+            {
+              "name": "Seaman",
+              "cost": {
+                "gold": 140
+              }
+            }
+          ],
+          "horde": {
+            "name": "Pub",
+            "growth_bonus": 4,
+            "cost": {
+              "gold": 1000
+            }
           }
-        }
-      },
-      {
-        "name": "Snow Elf",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 230
         },
-        "upgraded_creature": {
-          "name": "Steel Elf",
-          "level": 3,
+        {
+          "tier": 3,
           "growth": 7,
-          "cost": {
-            "gold": 260
-          }
-        }
-      },
-      {
-        "name": "Yeti",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 325
+          "variants": [
+            {
+              "name": "Pirate",
+              "cost": {
+                "gold": 225
+              }
+            },
+            {
+              "name": "Corsair",
+              "cost": {
+                "gold": 275
+              }
+            },
+            {
+              "name": "Sea Dog",
+              "cost": {
+                "gold": 375
+              }
+            }
+          ]
         },
-        "upgraded_creature": {
-          "name": "Yeti Runemaster",
-          "level": 4,
+        {
+          "tier": 4,
           "growth": 4,
-          "cost": {
-            "gold": 400
+          "variants": [
+            {
+              "name": "Stormbird",
+              "cost": {
+                "gold": 275
+              }
+            },
+            {
+              "name": "Ayssid",
+              "cost": {
+                "gold": 325
+              }
+            }
+          ],
+          "horde": {
+            "name": "Roost",
+            "growth_bonus": 3,
+            "cost": {
+              "gold": 1000
+            }
           }
-        }
-      },
-      {
-        "name": "Shaman",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 450
         },
-        "upgraded_creature": {
-          "name": "Great Shaman",
-          "level": 5,
+        {
+          "tier": 5,
           "growth": 3,
-          "cost": {
-            "gold": 600
-          }
-        }
-      },
-      {
-        "name": "Mammoth",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 850
+          "variants": [
+            {
+              "name": "Sea Witch",
+              "cost": {
+                "gold": 515
+              }
+            },
+            {
+              "name": "Sorceress",
+              "cost": {
+                "gold": 565
+              }
+            }
+          ]
         },
-        "horde_building": {
-          "name": "Hay Bins",
-          "growth_bonus": 1,
-          "cost": {
-            "gold": 2000
-          }
-        },
-        "upgraded_creature": {
-          "name": "War Mammoth",
-          "level": 6,
+        {
+          "tier": 6,
           "growth": 2,
-          "cost": {
-            "gold": 1000
-          }
-        }
-      },
-      {
-        "name": "Jotunn",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 2000
+          "variants": [
+            {
+              "name": "Nix",
+              "cost": {
+                "gold": 1000
+              }
+            },
+            {
+              "name": "Nix Warrior",
+              "cost": {
+                "gold": 1300
+              }
+            }
+          ]
         },
-        "upgraded_creature": {
-          "name": "Jotunn Warlord",
-          "level": 7,
+        {
+          "tier": 7,
           "growth": 1,
-          "cost": {
-            "gold": 3500,
-            "gem": 1
+          "variants": [
+            {
+              "name": "Sea Serpent",
+              "cost": {
+                "gold": 2200,
+                "sulfur": 1
+              }
+            },
+            {
+              "name": "Haspid",
+              "cost": {
+                "gold": 4000,
+                "sulfur": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Factory",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 15,
+          "variants": [
+            {
+              "name": "Halfling",
+              "cost": {
+                "gold": 40
+              }
+            },
+            {
+              "name": "Halfling Grenadier",
+              "cost": {
+                "gold": 60
+              }
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "growth": 8,
+          "variants": [
+            {
+              "name": "Mechanic",
+              "cost": {
+                "gold": 140
+              }
+            },
+            {
+              "name": "Engineer",
+              "cost": {
+                "gold": 170
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 6,
+          "variants": [
+            {
+              "name": "Armadillo",
+              "cost": {
+                "gold": 200
+              }
+            },
+            {
+              "name": "Bellwether Armadillo",
+              "cost": {
+                "gold": 230
+              }
+            }
+          ],
+          "horde": {
+            "name": "Pen",
+            "growth_bonus": 3,
+            "cost": {
+              "gold": 1000
+            }
           }
+        },
+        {
+          "tier": 4,
+          "growth": 5,
+          "variants": [
+            {
+              "name": "Automaton",
+              "cost": {
+                "gold": 350
+              }
+            },
+            {
+              "name": "Sentinel Automaton",
+              "cost": {
+                "gold": 450
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Sandworm",
+              "cost": {
+                "gold": 575
+              }
+            },
+            {
+              "name": "Olgoi-Khorkhoi",
+              "cost": {
+                "gold": 650
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Gunslinger",
+              "cost": {
+                "gold": 800
+              }
+            },
+            {
+              "name": "Bounty Hunter",
+              "cost": {
+                "gold": 1100
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Couatl",
+              "cost": {
+                "gold": 2000
+              }
+            },
+            {
+              "name": "Crimson Couatl",
+              "cost": {
+                "gold": 3500,
+                "crystal": 1
+              }
+            }
+          ]
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Dreadnought",
+              "cost": {
+                "gold": 2200,
+                "crystal": 1
+              }
+            },
+            {
+              "name": "Juggernaut",
+              "cost": {
+                "gold": 3500,
+                "crystal": 2
+              }
+            }
+          ]
         }
+      ]
+    },
+    {
+      "name": "Bulwark",
+      "dwellings": [
+        {
+          "tier": 1,
+          "growth": 15,
+          "variants": [
+            {
+              "name": "Kobold",
+              "cost": {
+                "gold": 40
+              }
+            },
+            {
+              "name": "Kobold Foreman",
+              "cost": {
+                "gold": 60
+              }
+            }
+          ]
+        },
+        {
+          "tier": 2,
+          "growth": 9,
+          "variants": [
+            {
+              "name": "Mountain Ram",
+              "cost": {
+                "gold": 135
+              }
+            },
+            {
+              "name": "Argali",
+              "cost": {
+                "gold": 170
+              }
+            }
+          ]
+        },
+        {
+          "tier": 3,
+          "growth": 7,
+          "variants": [
+            {
+              "name": "Snow Elf",
+              "cost": {
+                "gold": 230
+              }
+            },
+            {
+              "name": "Steel Elf",
+              "cost": {
+                "gold": 260
+              }
+            }
+          ]
+        },
+        {
+          "tier": 4,
+          "growth": 4,
+          "variants": [
+            {
+              "name": "Yeti",
+              "cost": {
+                "gold": 325
+              }
+            },
+            {
+              "name": "Yeti Runemaster",
+              "cost": {
+                "gold": 400
+              }
+            }
+          ]
+        },
+        {
+          "tier": 5,
+          "growth": 3,
+          "variants": [
+            {
+              "name": "Shaman",
+              "cost": {
+                "gold": 450
+              }
+            },
+            {
+              "name": "Great Shaman",
+              "cost": {
+                "gold": 600
+              }
+            }
+          ]
+        },
+        {
+          "tier": 6,
+          "growth": 2,
+          "variants": [
+            {
+              "name": "Mammoth",
+              "cost": {
+                "gold": 850
+              }
+            },
+            {
+              "name": "War Mammoth",
+              "cost": {
+                "gold": 1000
+              }
+            }
+          ],
+          "horde": {
+            "name": "Hay Bins",
+            "growth_bonus": 1,
+            "cost": {
+              "gold": 2000
+            }
+          }
+        },
+        {
+          "tier": 7,
+          "growth": 1,
+          "variants": [
+            {
+              "name": "Jotunn",
+              "cost": {
+                "gold": 2000
+              }
+            },
+            {
+              "name": "Jotunn Warlord",
+              "cost": {
+                "gold": 3500,
+                "gem": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "neutral_creatures": [
+    {
+      "name": "Peasant",
+      "tier": 1,
+      "growth": 25,
+      "cost": {
+        "gold": 10
       }
-    ],
-    "neutral": [
-      {
-        "name": "Peasant",
-        "level": 1,
-        "growth": 25,
-        "cost": {
-          "gold": 10
-        }
-      },
-      {
-        "name": "Boar",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 150
-        }
-      },
-      {
-        "name": "Rogue",
-        "level": 2,
-        "growth": 8,
-        "cost": {
-          "gold": 100
-        }
-      },
-      {
-        "name": "Leprechaun",
-        "level": 2,
-        "growth": 9,
-        "cost": {
-          "gold": 100
-        }
-      },
-      {
-        "name": "Mummy",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 300
-        }
-      },
-      {
-        "name": "Nomad",
-        "level": 3,
-        "growth": 7,
-        "cost": {
-          "gold": 200
-        }
-      },
-      {
-        "name": "Sharpshooter",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 400
-        }
-      },
-      {
-        "name": "Satyr",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 300
-        }
-      },
-      {
-        "name": "Steel Golem",
-        "level": 4,
-        "growth": 4,
-        "cost": {
-          "gold": 400
-        }
-      },
-      {
-        "name": "Troll",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 500
-        }
-      },
-      {
-        "name": "Gold Golem",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 500
-        }
-      },
-      {
-        "name": "Fangarm",
-        "level": 5,
-        "growth": 3,
-        "cost": {
-          "gold": 600
-        }
-      },
-      {
-        "name": "Diamond Golem",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 750
-        }
-      },
-      {
-        "name": "Enchanter",
-        "level": 6,
-        "growth": 2,
-        "cost": {
-          "gold": 750
-        }
-      },
-      {
-        "name": "Faerie Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 10000,
-          "gem": 8
-        }
-      },
-      {
-        "name": "Rust Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 15000,
-          "sulfur": 14
-        }
-      },
-      {
-        "name": "Crystal Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 20000,
-          "crystal": 10
-        }
-      },
-      {
-        "name": "Azure Dragon",
-        "level": 7,
-        "growth": 1,
-        "cost": {
-          "gold": 30000,
-          "mercury": 20
-        }
+    },
+    {
+      "name": "Boar",
+      "tier": 2,
+      "growth": 8,
+      "cost": {
+        "gold": 150
       }
-    ]
-  }
+    },
+    {
+      "name": "Rogue",
+      "tier": 2,
+      "growth": 8,
+      "cost": {
+        "gold": 100
+      }
+    },
+    {
+      "name": "Leprechaun",
+      "tier": 2,
+      "growth": 9,
+      "cost": {
+        "gold": 100
+      }
+    },
+    {
+      "name": "Mummy",
+      "tier": 3,
+      "growth": 7,
+      "cost": {
+        "gold": 300
+      }
+    },
+    {
+      "name": "Nomad",
+      "tier": 3,
+      "growth": 7,
+      "cost": {
+        "gold": 200
+      }
+    },
+    {
+      "name": "Sharpshooter",
+      "tier": 4,
+      "growth": 4,
+      "cost": {
+        "gold": 400
+      }
+    },
+    {
+      "name": "Satyr",
+      "tier": 4,
+      "growth": 4,
+      "cost": {
+        "gold": 300
+      }
+    },
+    {
+      "name": "Steel Golem",
+      "tier": 4,
+      "growth": 4,
+      "cost": {
+        "gold": 400
+      }
+    },
+    {
+      "name": "Troll",
+      "tier": 5,
+      "growth": 3,
+      "cost": {
+        "gold": 500
+      }
+    },
+    {
+      "name": "Gold Golem",
+      "tier": 5,
+      "growth": 3,
+      "cost": {
+        "gold": 500
+      }
+    },
+    {
+      "name": "Fangarm",
+      "tier": 5,
+      "growth": 3,
+      "cost": {
+        "gold": 600
+      }
+    },
+    {
+      "name": "Diamond Golem",
+      "tier": 6,
+      "growth": 2,
+      "cost": {
+        "gold": 750
+      }
+    },
+    {
+      "name": "Enchanter",
+      "tier": 6,
+      "growth": 2,
+      "cost": {
+        "gold": 750
+      }
+    },
+    {
+      "name": "Faerie Dragon",
+      "tier": 7,
+      "growth": 1,
+      "cost": {
+        "gold": 10000,
+        "gem": 8
+      }
+    },
+    {
+      "name": "Rust Dragon",
+      "tier": 7,
+      "growth": 1,
+      "cost": {
+        "gold": 15000,
+        "sulfur": 14
+      }
+    },
+    {
+      "name": "Crystal Dragon",
+      "tier": 7,
+      "growth": 1,
+      "cost": {
+        "gold": 20000,
+        "crystal": 10
+      }
+    },
+    {
+      "name": "Azure Dragon",
+      "tier": 7,
+      "growth": 1,
+      "cost": {
+        "gold": 30000,
+        "mercury": 20
+      }
+    }
+  ]
 }

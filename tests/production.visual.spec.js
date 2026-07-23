@@ -10,41 +10,47 @@ const viewports = [
   { name: "split-two-column", width: 1100, height: 900 },
 ];
 
-test("creature data is grouped by faction", () => {
-  expect(Object.keys(creatureData)).toEqual(["fortification_buildings", "creatures"]);
-  expect(Object.keys(creatureData.creatures)).toEqual([
-    "castle", "rampart", "tower", "inferno", "necropolis", "dungeon",
-    "stronghold", "fortress", "conflux", "cove", "factory", "bulwark",
-    "neutral",
+test("creature data is grouped into town dwellings and neutral creatures", () => {
+  expect(Object.keys(creatureData)).toEqual([
+    "fortification_buildings", "towns", "neutral_creatures",
+  ]);
+  expect(creatureData.towns.map((town) => town.name)).toEqual([
+    "Castle", "Rampart", "Tower", "Inferno", "Necropolis", "Dungeon",
+    "Stronghold", "Fortress", "Conflux", "Cove", "Factory", "Bulwark",
   ]);
 
   let creatureCount = 0;
-  for (const creatureRoots of Object.values(creatureData.creatures)) {
-    expect(Array.isArray(creatureRoots)).toBe(true);
-    for (const root of creatureRoots) {
-      let creature = root;
-      while (creature) {
-        expect(creature).not.toHaveProperty("town");
-        expect(Object.keys(creature).every((key) => [
-          "name", "level", "growth", "cost", "horde_building", "upgraded_creature",
-        ].includes(key))).toBe(true);
+  for (const town of creatureData.towns) {
+    expect(town).not.toHaveProperty("id");
+    expect(Object.keys(town)).toEqual(["name", "dwellings"]);
+    for (const dwelling of town.dwellings) {
+      expect(Object.keys(dwelling).every((key) => [
+        "tier", "growth", "variants", "horde",
+      ].includes(key))).toBe(true);
+      expect(dwelling.variants.length).toBeGreaterThanOrEqual(2);
+      for (const creature of dwelling.variants) {
+        expect(Object.keys(creature)).toEqual(["name", "cost"]);
         creatureCount += 1;
-        creature = creature.upgraded_creature;
       }
     }
+  }
+  for (const creature of creatureData.neutral_creatures) {
+    expect(creature).not.toHaveProperty("variants");
+    expect(Object.keys(creature)).toEqual(["name", "tier", "growth", "cost"]);
+    creatureCount += 1;
   }
   expect(creatureCount).toBe(189);
 });
 
-test("Horde buildings are embedded on dwelling roots", () => {
+test("Horde buildings are embedded on town dwellings", () => {
   expect(creatureData).not.toHaveProperty("horde_buildings");
   expect(creatureData).not.toHaveProperty("horde_building_count");
 
   let hordeBuildingCount = 0;
-  for (const creatureRoots of Object.values(creatureData.creatures)) {
-    for (const root of creatureRoots) {
-      if (root.horde_building) {
-        expect(root.horde_building).toEqual(
+  for (const town of creatureData.towns) {
+    for (const dwelling of town.dwellings) {
+      if (dwelling.horde) {
+        expect(dwelling.horde).toEqual(
           expect.objectContaining({
             name: expect.any(String),
             cost: expect.any(Object),
@@ -53,12 +59,7 @@ test("Horde buildings are embedded on dwelling roots", () => {
         );
         hordeBuildingCount += 1;
       }
-
-      let upgrade = root.upgraded_creature;
-      while (upgrade) {
-        expect(upgrade).not.toHaveProperty("horde_building");
-        upgrade = upgrade.upgraded_creature;
-      }
+      expect(dwelling.variants.every((variant) => !variant.horde)).toBe(true);
     }
   }
   expect(hordeBuildingCount).toBe(16);
@@ -379,7 +380,7 @@ test("recruitment column follows desktop scrolling only", async ({ page }) => {
 test("Factory centers its final pair in the three-column layout", async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 900 });
   await page.goto("/index.html");
-  await page.locator("#town-select").selectOption("factory");
+  await page.locator("#town-select").selectOption("Factory");
 
   const grid = await page.locator("#unit-grid").boundingBox();
   const seventhCard = await page.locator(".unit-slot").nth(6).boundingBox();
@@ -434,7 +435,7 @@ test("recruitment wraps before the scheme drops below three columns", async ({ p
 test("wrapped creature names do not collide with dwelling controls", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 900 });
   await page.goto("/index.html");
-  await page.locator("#town-select").selectOption("factory");
+  await page.locator("#town-select").selectOption("Factory");
 
   await page.locator(".unit-card-cycle").first().click();
   await page.locator(".unit-card-cycle").nth(6).click();
@@ -453,7 +454,7 @@ test("wrapped creature names do not collide with dwelling controls", async ({ pa
 test("external dwellings add to base growth and reset independently", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/index.html");
-  await page.locator("#town-select").selectOption("inferno");
+  await page.locator("#town-select").selectOption("Inferno");
 
   const firstSlot = page.locator(".unit-slot").first();
   const count = firstSlot.locator(".external-dwelling-input");
@@ -466,9 +467,13 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(externalResults).toBeVisible();
   await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
   await expect(page.locator("#external-results-body tr")).toHaveCount(1);
-  await expect(page.locator("#external-results-body tr").first()).toContainText(
-    "ImpTier 1 · Basic · 1 external dwelling15 units50 gold750 gold",
+  const externalRow = page.locator("#external-results-body tr").first();
+  await expect(externalRow.locator("td").nth(0)).toContainText(
+    "ImpTier 1 · Basic · 1 external dwelling",
   );
+  await expect(externalRow.locator("td").nth(1)).toHaveText("15 units");
+  await expect(externalRow.locator("td").nth(2)).toHaveText("50 gold");
+  await expect(externalRow.locator("td").nth(3)).toHaveText("750 gold");
   const weeklyBox = await page.locator(".results-column > .results-section").first().boundingBox();
   const externalBox = await externalResults.boundingBox();
   expect(externalBox.x).toBe(weeklyBox.x);
@@ -517,7 +522,7 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
     "press / to search",
   );
 
-  await page.locator("#town-select").selectOption("inferno");
+  await page.locator("#town-select").selectOption("Inferno");
   const schemeSlot = page.locator("#unit-grid .unit-slot").first();
   await schemeSlot.locator('[data-external-action="increment"]').click();
 
@@ -552,7 +557,7 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
   await externalCard.locator(".external-card-count-input").press("Tab");
   await expect(externalCard.locator(".external-card-count-input")).toHaveValue("1");
 
-  await page.locator("#town-select").selectOption("castle");
+  await page.locator("#town-select").selectOption("Castle");
   await expect(externalCard.locator(".creature-name")).toHaveText("Imp");
   await expect(page.locator("#external-results-body")).toContainText("Imp");
 
@@ -560,7 +565,7 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
   await expect(externalGrid.locator(".external-dwelling-card")).toHaveCount(0);
   await expect(page.locator("#external-results-section")).toBeHidden();
 
-  await page.locator("#town-select").selectOption("inferno");
+  await page.locator("#town-select").selectOption("Inferno");
   await expect(
     page.locator("#unit-grid .unit-slot").first().locator(".external-dwelling-input"),
   ).toHaveValue("");
@@ -748,7 +753,7 @@ test("creature search keeps its opening side while result height changes", async
   expect(dropdownBox.y + dropdownBox.height).toBeLessThan(inputBox.y);
 });
 
-test("nested upgrade chains drive stages and share Horde buildings", async ({ page }) => {
+test("ordered dwelling variants drive stages and share Horde buildings", async ({ page }) => {
   await page.goto("/index.html");
 
   const griffinSlot = page.locator(".unit-slot").nth(2);
@@ -759,7 +764,7 @@ test("nested upgrade chains drive stages and share Horde buildings", async ({ pa
   await griffinSlot.locator(".horde-toggle").click();
   await expect(griffinSlot.locator(".production-detail strong")).toHaveText("10");
 
-  await page.locator("#town-select").selectOption("cove");
+  await page.locator("#town-select").selectOption("Cove");
   const pirateSlot = page.locator(".unit-slot").nth(2);
   for (const name of ["Pirate", "Corsair", "Sea Dog"]) {
     await pirateSlot.locator(".unit-card-cycle").click();
@@ -772,7 +777,7 @@ test("planner state persists across reloads", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator(".add-dwelling-card #external-dwelling-search")).toBeVisible();
   await expect(page.locator("#town-select")).toBeEnabled();
-  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator("#town-select")).toHaveValue("Castle");
   await expect(page.locator(".unit-slot").first().locator(".creature-name")).toHaveText(
     "Pikeman",
   );
@@ -801,14 +806,20 @@ test("planner state persists across reloads", async ({ page }) => {
   const savedState = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("hota-production-planner-state")),
   );
-  expect(savedState.town).toBe("castle");
-  expect(savedState.fortification).toBe("castle");
+  expect(savedState.townPlans).toHaveLength(1);
+  expect(savedState.townPlans[0]).toEqual(
+    expect.objectContaining({
+      id: "town-1",
+      town: "Castle",
+      fortification: "castle",
+    }),
+  );
   expect(savedState.externalDwellings).toEqual([
     { basicCreature: "Griffin", count: 2 },
   ]);
 
   await page.reload();
-  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator("#town-select")).toHaveValue("Castle");
   await expect(page.locator("#fortification-cycle")).toHaveAttribute(
     "data-fortification",
     "castle",
@@ -829,7 +840,7 @@ test("planner state persists across reloads", async ({ page }) => {
   await page.locator(".unit-slot").nth(2).locator(".unit-card-cycle").click();
   await page.locator(".unit-slot").nth(2).locator('[data-external-action="increment"]').click();
   await page.locator("#reset-scheme").click();
-  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator("#town-select")).toHaveValue("Castle");
   await expect(page.locator("#fortification-cycle")).toHaveAttribute(
     "data-fortification",
     "castle",
@@ -843,7 +854,7 @@ test("planner state persists across reloads", async ({ page }) => {
   await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
 
   await page.reload();
-  await expect(page.locator("#town-select")).toHaveValue("castle");
+  await expect(page.locator("#town-select")).toHaveValue("Castle");
   await expect(page.locator("#fortification-cycle")).toHaveAttribute(
     "data-fortification",
     "castle",
@@ -856,7 +867,7 @@ test("planner state persists across reloads", async ({ page }) => {
 test("multi-resource creature costs have visible separators", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/index.html");
-  await page.locator("#town-select").selectOption("factory");
+  await page.locator("#town-select").selectOption("Factory");
 
   const dreadnoughtCard = page.locator(".unit-card").nth(7);
   await dreadnoughtCard.locator(".unit-card-cycle").click();
@@ -886,10 +897,10 @@ test("all resource costs use embedded wiki icons", async ({ page }) => {
   }
 
   const creatureResources = [
-    ["castle", "gem"],
-    ["rampart", "crystal"],
-    ["inferno", "mercury"],
-    ["dungeon", "sulfur"],
+    ["Castle", "gem"],
+    ["Rampart", "crystal"],
+    ["Inferno", "mercury"],
+    ["Dungeon", "sulfur"],
   ];
   for (const [town, resource] of creatureResources) {
     await page.locator("#town-select").selectOption(town);

@@ -73,6 +73,8 @@ body {
   background: #151313;
 }
 
+[x-cloak] { display: none !important; }
+
 button, select, input { font: inherit; }
 button, select { color: inherit; }
 
@@ -219,7 +221,10 @@ select:focus-visible {
 }
 
 .fortification-control {
+  grid-template-columns: minmax(0, max-content);
+  justify-content: start;
   min-width: 0;
+  max-width: 100%;
 }
 
 .fortification-cycle-button {
@@ -227,7 +232,10 @@ select:focus-visible {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  width: var(--fortification-cycle-width, max-content);
+  z-index: 1;
+  grid-row: 2;
+  grid-column: 1;
+  width: 15rem;
   max-width: 100%;
   min-width: 0;
   min-height: 4rem;
@@ -237,16 +245,6 @@ select:focus-visible {
   background: rgba(221, 182, 94, 0.13);
   text-align: left;
   cursor: pointer;
-}
-
-.fortification-cycle-button.is-measuring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: max-content;
-  max-width: none;
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .fortification-button-copy {
