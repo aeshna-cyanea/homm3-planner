@@ -125,6 +125,25 @@ test("PWA app shell reloads while offline", async ({ page, context }) => {
   }
 });
 
+test("footer links to the repository and deployed commit", async ({ page }) => {
+  await page.goto("/");
+
+  const footer = page.locator(".site-meta");
+  const repositoryLink = footer.getByRole("link", { name: "GitHub", exact: true });
+  const commitLink = footer.getByRole("link", { name: /View commit/ });
+  const commitHash = await commitLink.textContent();
+
+  await expect(repositoryLink).toHaveAttribute(
+    "href",
+    "https://github.com/aeshna-cyanea/homm3-planner",
+  );
+  expect(commitHash).toMatch(/^[0-9a-f]{7}$/);
+  await expect(commitLink).toHaveAttribute(
+    "href",
+    "https://github.com/aeshna-cyanea/homm3-planner/commit/" + commitHash,
+  );
+});
+
 for (const viewport of viewports) {
   test(`production planner fits at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
@@ -323,6 +342,9 @@ for (const viewport of viewports) {
       await page.locator("#fortification-cycle").click();
     }
 
+    await page.locator(".site-meta code").evaluate(function stabilizeCommitHash(code) {
+      code.textContent = "abcdef0";
+    });
     await expect(page).toHaveScreenshot(`production-${viewport.name}.png`, {
       animations: "disabled",
       fullPage: true,

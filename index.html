@@ -430,6 +430,17 @@
       x-show="$store.planner.loadError"
       x-text="$store.planner.loadError"
     ></div>
+
+    <footer class="site-meta" aria-label="Source version">
+      <a
+        :href="$store.planner.githubUrl"
+      >GitHub</a>
+      <span aria-hidden="true"> · </span>
+      <a
+        :href="$store.planner.commitUrl"
+        :aria-label="'View commit ' + $store.planner.commitHash + ' on GitHub'"
+      ><code x-text="$store.planner.commitHash"></code></a>
+    </footer>
   </main>
 </body>
 </html>

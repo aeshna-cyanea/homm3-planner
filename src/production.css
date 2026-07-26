@@ -79,9 +79,36 @@ button, select, input { font: inherit; }
 button, select { color: inherit; }
 
 .app-shell {
+  position: relative;
   width: min(92.5rem, calc(100% - 2.5rem));
   margin: 0 auto;
   padding: 3rem 0 4rem;
+}
+
+.site-meta {
+  position: absolute;
+  right: 0;
+  bottom: 1rem;
+  color: var(--muted);
+  font-size: 0.6875rem;
+  line-height: 1;
+  opacity: 0.72;
+}
+
+.site-meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-meta a:hover,
+.site-meta a:focus-visible {
+  color: var(--gold-bright);
+  text-decoration: underline;
+}
+
+.site-meta code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: inherit;
 }
 
 .section-heading {

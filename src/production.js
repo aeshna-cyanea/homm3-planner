@@ -7,6 +7,8 @@ import initializeServiceWorker from "./service-worker.js";
 initializeServiceWorker();
 
 const STORAGE_KEY = "hota-production-planner-state";
+const GITHUB_URL = "https://github.com/aeshna-cyanea/homm3-planner";
+const COMMIT_HASH = import.meta.env.VITE_GIT_COMMIT_HASH;
 const FORTIFICATION_LEVELS = ["fort", "citadel", "castle"];
 const FORTIFICATION_COPY = {
   fort: { name: "Fort", growth: "Base growth" },
@@ -204,6 +206,12 @@ function createPlannerStore() {
     externalDwellings: [],
     savedState: Alpine.$persist(null).as(STORAGE_KEY).using(SAFE_STORAGE),
     fortificationCopy: FORTIFICATION_COPY,
+    githubUrl: GITHUB_URL,
+    commitHash: COMMIT_HASH,
+
+    get commitUrl() {
+      return this.githubUrl + "/commit/" + this.commitHash;
+    },
 
     get activePlan() {
       return this.townPlans[0];
