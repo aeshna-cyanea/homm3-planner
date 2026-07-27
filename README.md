@@ -35,6 +35,19 @@ creates the ignored `dist/` deployment artifact, bundles autoComplete.js into a
 hashed file under `dist/assets/`, and generates `dist/third-party-licenses.md`.
 Use `npm run preview` to inspect the production build locally.
 
+The interface is written in SolidJS and strict TypeScript. Its source is split
+by responsibility:
+
+- `src/types.ts` defines the creature data and planner-state shapes.
+- `src/catalog.ts` turns the JSON data into the small runtime lookup catalog.
+- `src/planner.ts` owns state changes and derived recruitment calculations.
+- `src/components/` contains the Solid UI, organized by visible page section.
+- `src/persistence.ts` and `src/resources.ts` contain isolated storage and
+  resource-cost helpers.
+
+Run `npm run typecheck` for a fast type-only check. Production builds run that
+check automatically before Vite bundles the site.
+
 Pushes to `main` run `.github/workflows/deploy-pages.yml`, which installs the
 locked dependencies, builds `dist/`, and deploys that artifact. In the GitHub
 repository settings, configure Pages to use **GitHub Actions** as its source.

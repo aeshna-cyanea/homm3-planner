@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import solid from "vite-plugin-solid";
 
 const commitHash = (
   process.env.GITHUB_SHA ||
@@ -18,6 +19,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    solid(),
     VitePWA({
       manifest: false,
       registerType: "autoUpdate",

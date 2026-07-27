@@ -73,8 +73,6 @@ body {
   background: #151313;
 }
 
-[x-cloak] { display: none !important; }
-
 button, select, input { font: inherit; }
 button, select { color: inherit; }
 
