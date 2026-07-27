@@ -4,45 +4,51 @@ import { formatNumber } from "../resources";
 import type { RecruitmentRow } from "../types";
 import { CostDisplay, ResourceTotals } from "./ResourceCost";
 
-export function Recruitment(props: { planner: Planner }) {
+export function TownRecruitment(props: { planner: Planner; planId: string }) {
+  const rows = () => props.planner.productionRows(props.planId);
+  const id = (name: string) => domId(name, props.planId);
+
   return (
-    <div class="results-column">
-      <section class="results-section panel" aria-labelledby="results-title">
+    <div class="results-column" data-town-results={props.planId}>
+      <section class="results-section panel" aria-labelledby={id("results-title")}>
         <div class="section-heading">
           <div>
-            <p class="eyebrow" id="results-title">Weekly recruitment</p>
-            <Show when={props.planner.productionRows().length > 0}>
-              <div class="totals" id="totals" aria-live="polite">
+            <p class="eyebrow" id={id("results-title")}>Weekly subtotal</p>
+            <Show when={rows().length > 0}>
+              <div class="totals" id={id("totals")} aria-live="polite">
                 <ResourceTotals
-                  id="resource-totals"
-                  entries={props.planner.productionTotals()}
+                  id={id("resource-totals")}
+                  entries={props.planner.productionTotals(props.planId)}
                 />
               </div>
             </Show>
           </div>
-          <p class="result-context" id="result-context">
-            {props.planner.resultContext()}
+          <p class="result-context" id={id("result-context")}>
+            {props.planner.resultContext(props.planId)}
           </p>
         </div>
 
         <Show
-          when={props.planner.productionRows().length > 0}
+          when={rows().length > 0}
           fallback={
-            <div class="empty-results" id="empty-results">
-              Select a dwelling to begin the production plan.
+            <div class="empty-results" id={id("empty-results")}>
+              Select a dwelling to begin this production plan.
             </div>
           }
         >
-          <div class="results-table-wrap" id="results-table-wrap">
-            <ResultsTable
-              id="results-body"
-              rows={props.planner.productionRows()}
-            />
+          <div class="results-table-wrap" id={id("results-table-wrap")}>
+            <ResultsTable id={id("results-body")} rows={rows()} />
           </div>
         </Show>
       </section>
+    </div>
+  );
+}
 
-      <Show when={props.planner.externalRows().length > 0}>
+export function ExternalRecruitment(props: { planner: Planner }) {
+  return (
+    <Show when={props.planner.externalRows().length > 0}>
+      <div class="results-column external-results-column">
         <section
           class="results-section panel"
           id="external-results-section"
@@ -51,7 +57,7 @@ export function Recruitment(props: { planner: Planner }) {
           <div class="section-heading">
             <div>
               <p class="eyebrow" id="external-results-title">
-                External recruitment
+                External subtotal
               </p>
               <div class="totals" aria-live="polite">
                 <ResourceTotals
@@ -61,7 +67,7 @@ export function Recruitment(props: { planner: Planner }) {
               </div>
             </div>
             <p class="result-context" id="external-result-context">
-              All factions · External dwellings
+              Recruitment at external dwellings
             </p>
           </div>
 
@@ -72,31 +78,12 @@ export function Recruitment(props: { planner: Planner }) {
             />
           </div>
         </section>
-      </Show>
-
-      <div class="state-actions">
-        <button
-          class="reset-button"
-          id="save-state"
-          type="button"
-          onClick={() => props.planner.save()}
-        >
-          Save State
-        </button>
-        <button
-          class="reset-button"
-          id="reset-scheme"
-          type="button"
-          onClick={() => props.planner.reset()}
-        >
-          Reset State
-        </button>
       </div>
-    </div>
+    </Show>
   );
 }
 
-function ResultsTable(props: { id: string; rows: RecruitmentRow[] }) {
+export function ResultsTable(props: { id?: string; rows: RecruitmentRow[] }) {
   return (
     <table class="results-table">
       <thead>
@@ -134,4 +121,8 @@ function ResultsTable(props: { id: string; rows: RecruitmentRow[] }) {
       </tbody>
     </table>
   );
+}
+
+function domId(base: string, planId: string): string {
+  return planId === "town-1" ? base : `${base}-${planId}`;
 }

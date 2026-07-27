@@ -8,7 +8,7 @@ import { CostDisplay } from "./ResourceCost";
 export function ExternalDwellings(props: { planner: Planner }) {
   return (
     <section
-      class="scheme-section external-dwellings-section panel"
+      class="scheme-section external-dwellings-section panel planner-inputs"
       aria-labelledby="external-dwellings-title"
     >
       <div class="section-heading">

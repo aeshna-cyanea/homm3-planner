@@ -1,13 +1,18 @@
 ## HotA production planner
 
-The static planner reads `public/creatures.json` and calculates one week of production
-for creature tiers 1–7. Each dwelling cycles through none, basic, and upgraded
-creatures. Cove's tier 3 also cycles through its Sea Dog second upgrade.
-Relevant tiers show an optional Horde-building toggle. Horde growth is added
-before Fort, Citadel, and Castle modifiers are applied to recruitment costs.
-External dwellings can be added from a faction's production scheme or by
-searching the base dwelling creatures; repeated additions increment one shared
-dwelling count.
+The static planner reads `public/creatures.json` and calculates one week of
+production across any number of towns. Each town has its own production scheme
+and recruitment subtotal. The global-total dialog aggregates every town plus
+recruitment at external dwellings. Press `T` to add a town or `P` to open the
+global total.
+
+Each dwelling cycles through none, basic, and upgraded creatures. Cove's tier 3
+also cycles through its Sea Dog second upgrade. Relevant tiers show an optional
+Horde-building toggle. Horde growth is added before Fort, Citadel, and Castle
+modifiers are applied to recruitment costs. External dwellings can be added
+from a faction's production scheme or by searching the base dwelling creatures;
+repeated additions increment one shared dwelling count, and their growth bonus
+applies to every matching town.
 
 `public/creatures.json` contains only the fields used by the planner. Towns are
 identified by their names and contain dwellings with shared `tier` and `growth`

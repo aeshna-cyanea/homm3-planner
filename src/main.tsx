@@ -15,8 +15,11 @@ try {
   const data = embeddedData
     ? (JSON.parse(embeddedData.textContent ?? "") as CreatureData)
     : await fetchCreatureData();
-  const planner = createPlanner(buildCatalog(data));
-  render(() => <App planner={planner} />, root);
+  const catalog = buildCatalog(data);
+  render(() => {
+    const planner = createPlanner(catalog);
+    return <App planner={planner} />;
+  }, root);
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
   render(

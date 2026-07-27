@@ -23,6 +23,7 @@ export interface AutoCompleteInstance<T> {
   next(): void;
   previous(): void;
   select(index?: number): void;
+  start(query?: string): void;
   close(): void;
   unInit(): void;
 }
@@ -32,6 +33,8 @@ interface InputEvents<T> {
   keydown?: (event: KeyboardEvent) => void;
   open?: (event: CustomEvent<AutoCompleteFeedback<T>>) => void;
   close?: (event: CustomEvent<AutoCompleteFeedback<T>>) => void;
+  focus?: (event: FocusEvent) => void;
+  click?: (event: MouseEvent) => void;
 }
 
 export interface AutoCompleteConfig<T> {

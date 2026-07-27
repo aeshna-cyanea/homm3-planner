@@ -5,6 +5,7 @@ import type {
   AutoCompleteConfig,
   AutoCompleteInstance,
 } from "../autocomplete-types";
+import { isPlainShortcut } from "../keyboard";
 import type { Planner } from "../planner";
 
 interface SearchOption {
@@ -37,7 +38,7 @@ export function DwellingSearch(props: { planner: Planner }) {
       data: { src: options, keys: ["name"], cache: true },
       threshold: 1,
       resultsList: {
-        class: "external-dwelling-dropdown",
+        class: "autocomplete-dropdown external-dwelling-dropdown",
         maxResults: options.length,
         noResults: true,
         element(list, feedback) {
@@ -50,7 +51,7 @@ export function DwellingSearch(props: { planner: Planner }) {
         },
       },
       resultItem: {
-        class: "external-search-result",
+        class: "autocomplete-result external-search-result",
         selected: "is-selected",
         element(item, result) {
           item.replaceChildren(renderOption(result.value, input.value));
@@ -81,24 +82,7 @@ export function DwellingSearch(props: { planner: Planner }) {
   });
 
   function focusSearch(event: KeyboardEvent): void {
-    if (
-      event.key !== "/" ||
-      event.defaultPrevented ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.altKey
-    ) {
-      return;
-    }
-    const target = event.target;
-    if (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target instanceof HTMLSelectElement ||
-      (target instanceof HTMLElement && target.isContentEditable)
-    ) {
-      return;
-    }
+    if (!isPlainShortcut(event, "/")) return;
     event.preventDefault();
     input.focus();
   }

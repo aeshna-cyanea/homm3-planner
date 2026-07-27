@@ -1,5 +1,4 @@
 import { createMemo } from "solid-js";
-import type { Accessor } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
 import type { Store } from "solid-js/store";
 import {
@@ -10,7 +9,7 @@ import {
   townByName,
 } from "./catalog";
 import { loadSavedState, saveState } from "./persistence";
-import { multiplyCost, totalCosts } from "./resources";
+import { multiplyCost, sumCosts, totalCosts } from "./resources";
 import type {
   Catalog,
   Cost,
@@ -39,26 +38,31 @@ type ExternalCountAction = "increment" | "decrement" | "reset";
 export interface Planner {
   catalog: Catalog;
   state: Store<PlannerState>;
-  activePlan: Accessor<TownPlan>;
-  dwellings: Accessor<Dwelling[]>;
-  productionRows: Accessor<RecruitmentRow[]>;
-  productionTotals: Accessor<CostEntry[]>;
-  externalDwellingCards: Accessor<ExternalDwellingCard[]>;
-  externalRows: Accessor<RecruitmentRow[]>;
-  externalTotals: Accessor<CostEntry[]>;
-  resultContext: Accessor<string>;
-  changeTown(town: string): void;
-  cycleFortification(): void;
-  nextFortification(): Fortification;
-  cycleDwelling(index: number): void;
-  toggleHorde(index: number, enabled: boolean): void;
-  creature(index: number): ReturnType<typeof selectedCreature>;
-  detailCreature(index: number): ReturnType<typeof basicCreature>;
-  productionFor(index: number): number;
-  creatureName(index: number): string;
-  nextCreatureName(index: number): string;
+  plan(planId: string): TownPlan;
+  townLabel(planId: string): string;
+  dwellings(planId: string): Dwelling[];
+  productionRows(planId: string): RecruitmentRow[];
+  productionTotals(planId: string): CostEntry[];
+  externalDwellingCards(): ExternalDwellingCard[];
+  externalRows(): RecruitmentRow[];
+  externalTotals(): CostEntry[];
+  globalRows(): RecruitmentRow[];
+  globalTotals(): CostEntry[];
+  resultContext(planId: string): string;
+  addTown(town: string): void;
+  removeTown(planId: string): void;
+  changeTown(planId: string, town: string): void;
+  cycleFortification(planId: string): void;
+  nextFortification(planId: string): Fortification;
+  cycleDwelling(planId: string, dwellingIndex: number): void;
+  toggleHorde(planId: string, dwellingIndex: number, enabled: boolean): void;
+  creature(planId: string, dwellingIndex: number): ReturnType<typeof selectedCreature>;
+  detailCreature(planId: string, dwellingIndex: number): ReturnType<typeof basicCreature>;
+  productionFor(planId: string, dwellingIndex: number): number;
+  creatureName(planId: string, dwellingIndex: number): string;
+  nextCreatureName(planId: string, dwellingIndex: number): string;
   stageName(selection: number): string;
-  cardAriaLabel(index: number): string;
+  cardAriaLabel(planId: string, dwellingIndex: number): string;
   externalDwellingCount(creatureName: string): number;
   setExternalDwellingCount(creatureName: string, value: string | number): number;
   adjustExternalDwelling(creatureName: string, action: ExternalCountAction): void;
@@ -76,44 +80,74 @@ export function createPlanner(catalog: Catalog): Planner {
   let savedSnapshot = restored ? loadedSnapshot : null;
   const [state, setState] = createStore(restored ?? initialState(catalog));
 
-  const activePlan = (): TownPlan => state.townPlans[0];
-  const dwellings = (): Dwelling[] =>
-    townByName(catalog, activePlan().town)?.dwellings ?? [];
+  function planIndex(planId: string): number {
+    const index = state.townPlans.findIndex((candidate) => candidate.id === planId);
+    if (index < 0) throw new Error(`Unknown town plan: ${planId}`);
+    return index;
+  }
 
-  function nextFortification(): Fortification {
-    const index = FORTIFICATIONS.indexOf(activePlan().fortification);
+  function plan(planId: string): TownPlan {
+    return state.townPlans[planIndex(planId)];
+  }
+
+  function dwellings(planId: string): Dwelling[] {
+    return dwellingsFor(catalog, plan(planId));
+  }
+
+  function townLabel(planId: string): string {
+    const current = plan(planId);
+    const matching = state.townPlans.filter(
+      (candidate) => candidate.town === current.town,
+    );
+    if (matching.length === 1) return current.town;
+    return `${current.town} ${matching.findIndex((candidate) => candidate.id === planId) + 1}`;
+  }
+
+  function nextFortification(planId: string): Fortification {
+    const index = FORTIFICATIONS.indexOf(plan(planId).fortification);
     return FORTIFICATIONS[(index + 1) % FORTIFICATIONS.length];
   }
 
-  function creature(index: number) {
-    return selectedCreature(dwellings()[index], activePlan().selections[index]);
-  }
-
-  function detailCreature(index: number) {
-    return creature(index) ?? basicCreature(dwellings()[index]);
-  }
-
-  function creatureName(index: number): string {
-    return creature(index)?.name ?? basicCreature(dwellings()[index]).name;
-  }
-
-  function nextCreatureName(index: number): string {
-    const dwelling = dwellings()[index];
+  function creature(planId: string, dwellingIndex: number) {
     return selectedCreature(
-      dwelling,
-      nextSelection(dwelling, activePlan().selections[index]),
-    )?.name ?? "no unit";
+      dwellings(planId)[dwellingIndex],
+      plan(planId).selections[dwellingIndex],
+    );
   }
 
-  function cardAriaLabel(index: number): string {
-    const dwelling = dwellings()[index];
-    const selected = creature(index);
-    const currentState = selected
-      ? `, ${stageName(activePlan().selections[index]).toLowerCase()}`
+  function detailCreature(planId: string, dwellingIndex: number) {
+    return (
+      creature(planId, dwellingIndex) ??
+      basicCreature(dwellings(planId)[dwellingIndex])
+    );
+  }
+
+  function creatureName(planId: string, dwellingIndex: number): string {
+    return (
+      creature(planId, dwellingIndex)?.name ??
+      basicCreature(dwellings(planId)[dwellingIndex]).name
+    );
+  }
+
+  function nextCreatureName(planId: string, dwellingIndex: number): string {
+    const dwelling = dwellings(planId)[dwellingIndex];
+    return (
+      selectedCreature(
+        dwelling,
+        nextSelection(dwelling, plan(planId).selections[dwellingIndex]),
+      )?.name ?? "no unit"
+    );
+  }
+
+  function cardAriaLabel(planId: string, dwellingIndex: number): string {
+    const dwelling = dwellings(planId)[dwellingIndex];
+    const selection = plan(planId).selections[dwellingIndex];
+    const currentState = creature(planId, dwellingIndex)
+      ? `, ${stageName(selection).toLowerCase()}`
       : ", not produced";
     return (
-      `Tier ${dwelling.tier}: ${creatureName(index)}${currentState}. ` +
-      `Click for ${nextCreatureName(index)}.`
+      `Tier ${dwelling.tier}: ${creatureName(planId, dwellingIndex)}` +
+      `${currentState}. Click for ${nextCreatureName(planId, dwellingIndex)}.`
     );
   }
 
@@ -125,40 +159,46 @@ export function createPlanner(catalog: Catalog): Planner {
     );
   }
 
-  function productionFor(index: number): number {
-    const dwelling = dwellings()[index];
+  function productionFor(planId: string, dwellingIndex: number): number {
+    const currentPlan = plan(planId);
+    const dwelling = dwellings(planId)[dwellingIndex];
     const horde = hordeBuilding(dwelling);
-    const hordeBonus = activePlan().hordeEnabled[index] && horde
+    const hordeBonus = currentPlan.hordeEnabled[dwellingIndex] && horde
       ? horde.growth_bonus
       : 0;
     const externalBonus = externalDwellingCount(basicCreature(dwelling).name);
     const growth = dwelling.growth + hordeBonus + externalBonus;
 
-    if (activePlan().fortification === "citadel") return Math.floor(growth * 1.5);
-    if (activePlan().fortification === "castle") return growth * 2;
+    if (currentPlan.fortification === "citadel") return Math.floor(growth * 1.5);
+    if (currentPlan.fortification === "castle") return growth * 2;
     return growth;
   }
 
-  const productionRows = createMemo<RecruitmentRow[]>(() =>
-    dwellings().flatMap((dwelling, index) => {
-      const selected = creature(index);
+  function productionRows(planId: string): RecruitmentRow[] {
+    const currentPlan = plan(planId);
+    return dwellings(planId).flatMap((dwelling, dwellingIndex) => {
+      const selected = creature(planId, dwellingIndex);
       if (!selected) return [];
 
-      const horde = activePlan().hordeEnabled[index]
+      const horde = currentPlan.hordeEnabled[dwellingIndex]
         ? hordeBuilding(dwelling)
         : undefined;
-      const production = productionFor(index);
+      const production = productionFor(planId, dwellingIndex);
       return [{
         name: selected.name,
         detail:
-          `Tier ${dwelling.tier} · ${stageName(activePlan().selections[index])}` +
+          `Tier ${dwelling.tier} · ${stageName(currentPlan.selections[dwellingIndex])}` +
           (horde ? ` · ${horde.name}` : ""),
         production,
         unitCost: selected.cost,
         weeklyCost: multiplyCost(selected.cost, production),
       }];
-    }),
-  );
+    });
+  }
+
+  function productionTotals(planId: string): CostEntry[] {
+    return totalCosts(productionRows(planId).map((row) => row.weeklyCost));
+  }
 
   const externalDwellingCards = createMemo<ExternalDwellingCard[]>(() =>
     state.externalDwellings.flatMap((entry) => {
@@ -187,6 +227,19 @@ export function createPlanner(catalog: Catalog): Planner {
       weeklyCost: multiplyCost(card.creature.cost, card.production),
     })),
   );
+
+  const globalRows = createMemo<RecruitmentRow[]>(() => {
+    const sourcedRows = state.townPlans.flatMap((currentPlan) =>
+      productionRows(currentPlan.id).map((row) => ({
+        row,
+        source: townLabel(currentPlan.id),
+      })),
+    );
+    sourcedRows.push(
+      ...externalRows().map((row) => ({ row, source: "External dwellings" })),
+    );
+    return aggregateRows(sourcedRows);
+  });
 
   function setExternalDwellingCount(
     creatureName: string,
@@ -231,21 +284,24 @@ export function createPlanner(catalog: Catalog): Planner {
   ): void {
     const count = externalDwellingCount(creatureName);
     if (action === "increment" || count > 1) {
-      setExternalDwellingCount(creatureName, count + (action === "increment" ? 1 : -1));
+      setExternalDwellingCount(
+        creatureName,
+        count + (action === "increment" ? 1 : -1),
+      );
     }
   }
 
   function serialize(): SavedPlannerState {
     return {
-      townPlans: state.townPlans.map((plan) => ({
-        id: plan.id,
-        town: plan.town,
-        fortification: plan.fortification,
-        dwellings: dwellingsFor(catalog, plan).map((dwelling, index) => ({
+      townPlans: state.townPlans.map((currentPlan) => ({
+        id: currentPlan.id,
+        town: currentPlan.town,
+        fortification: currentPlan.fortification,
+        dwellings: dwellingsFor(catalog, currentPlan).map((dwelling, index) => ({
           basicCreature: basicCreature(dwelling).name,
           selectedCreature:
-            selectedCreature(dwelling, plan.selections[index])?.name ?? null,
-          hordeEnabled: Boolean(plan.hordeEnabled[index]),
+            selectedCreature(dwelling, currentPlan.selections[index])?.name ?? null,
+          hordeEnabled: Boolean(currentPlan.hordeEnabled[index]),
         })),
       })),
       externalDwellings: state.externalDwellings.map((dwelling) => ({ ...dwelling })),
@@ -255,46 +311,80 @@ export function createPlanner(catalog: Catalog): Planner {
   return {
     catalog,
     state,
-    activePlan,
+    plan,
+    townLabel,
     dwellings,
     productionRows,
-    productionTotals: createMemo(() =>
-      totalCosts(productionRows().map((row) => row.weeklyCost))),
+    productionTotals,
     externalDwellingCards,
     externalRows,
     externalTotals: createMemo(() =>
       totalCosts(externalRows().map((row) => row.weeklyCost))),
-    resultContext: createMemo(() =>
-      `${activePlan().town} · ${capitalize(activePlan().fortification)}`),
+    globalRows,
+    globalTotals: createMemo(() =>
+      totalCosts(globalRows().map((row) => row.weeklyCost))),
+    resultContext(planId) {
+      const currentPlan = plan(planId);
+      return `${townLabel(planId)} · ${capitalize(currentPlan.fortification)}`;
+    },
 
-    changeTown(town) {
-      const replacement = createPlan(catalog, town);
-      setState("townPlans", 0, {
+    addTown(town) {
+      setState("townPlans", (plans) => [
+        ...plans,
+        createPlan(catalog, town, nextTownId(plans)),
+      ]);
+    },
+
+    removeTown(planId) {
+      if (state.townPlans.length <= 1) return;
+      setState("townPlans", (plans) =>
+        plans.filter((candidate) => candidate.id !== planId));
+    },
+
+    changeTown(planId, town) {
+      const index = planIndex(planId);
+      const replacement = createPlan(catalog, town, planId);
+      setState("townPlans", index, {
         town: replacement.town,
         selections: replacement.selections,
         hordeEnabled: replacement.hordeEnabled,
       });
     },
 
-    cycleFortification() {
-      setState("townPlans", 0, "fortification", nextFortification());
+    cycleFortification(planId) {
+      setState(
+        "townPlans",
+        planIndex(planId),
+        "fortification",
+        nextFortification(planId),
+      );
     },
 
     nextFortification,
 
-    cycleDwelling(index) {
-      const selection = nextSelection(dwellings()[index], activePlan().selections[index]);
-      setState("townPlans", 0, "selections", index, selection);
-      if (selection < 0) setState("townPlans", 0, "hordeEnabled", index, false);
+    cycleDwelling(planId, dwellingIndex) {
+      const index = planIndex(planId);
+      const selection = nextSelection(
+        dwellings(planId)[dwellingIndex],
+        plan(planId).selections[dwellingIndex],
+      );
+      setState("townPlans", index, "selections", dwellingIndex, selection);
+      if (selection < 0) {
+        setState("townPlans", index, "hordeEnabled", dwellingIndex, false);
+      }
     },
 
-    toggleHorde(index, enabled) {
+    toggleHorde(planId, dwellingIndex, enabled) {
       setState(
         "townPlans",
-        0,
+        planIndex(planId),
         "hordeEnabled",
-        index,
-        Boolean(enabled && creature(index) && hordeBuilding(dwellings()[index])),
+        dwellingIndex,
+        Boolean(
+          enabled &&
+          creature(planId, dwellingIndex) &&
+          hordeBuilding(dwellings(planId)[dwellingIndex]),
+        ),
       );
     },
 
@@ -305,14 +395,16 @@ export function createPlanner(catalog: Catalog): Planner {
     nextCreatureName,
     stageName,
     cardAriaLabel,
-
     externalDwellingCount,
     setExternalDwellingCount,
     adjustExternalDwelling,
     adjustExternalCard,
 
     setExternalCardCount(creatureName, value) {
-      return setExternalDwellingCount(creatureName, Math.max(1, normalizedCount(value)));
+      return setExternalDwellingCount(
+        creatureName,
+        Math.max(1, normalizedCount(value)),
+      );
     },
 
     addExternalDwelling(creatureName) {
@@ -356,6 +448,12 @@ function createPlan(catalog: Catalog, townName: string, id = "town-1"): TownPlan
     selections: town.dwellings.map((_, index) => (index === 0 ? 0 : -1)),
     hordeEnabled: town.dwellings.map(() => false),
   };
+}
+
+function nextTownId(plans: readonly TownPlan[]): string {
+  let number = 1;
+  while (plans.some((plan) => plan.id === `town-${number}`)) number += 1;
+  return `town-${number}`;
 }
 
 function restoreState(
@@ -406,6 +504,36 @@ function restoreState(
 
 function dwellingsFor(catalog: Catalog, plan: TownPlan): Dwelling[] {
   return townByName(catalog, plan.town)?.dwellings ?? [];
+}
+
+function aggregateRows(
+  sourcedRows: { row: RecruitmentRow; source: string }[],
+): RecruitmentRow[] {
+  const groups = new Map<
+    string,
+    { row: RecruitmentRow; sources: string[]; costs: Cost[] }
+  >();
+
+  for (const { row, source } of sourcedRows) {
+    const group = groups.get(row.name);
+    if (group) {
+      group.row.production += row.production;
+      group.costs.push(row.weeklyCost);
+      if (!group.sources.includes(source)) group.sources.push(source);
+    } else {
+      groups.set(row.name, {
+        row: { ...row },
+        sources: [source],
+        costs: [row.weeklyCost],
+      });
+    }
+  }
+
+  return Array.from(groups.values(), ({ row, sources, costs }) => ({
+    ...row,
+    detail: sources.join(" · "),
+    weeklyCost: sumCosts(costs),
+  }));
 }
 
 function normalizedCount(value: string | number): number {

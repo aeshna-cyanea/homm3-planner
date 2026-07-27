@@ -388,9 +388,16 @@ test("recruitment column follows desktop scrolling only", async ({ page }) => {
 
   const resultsColumn = page.locator(".results-column");
   await expect(resultsColumn).toHaveCSS("position", "sticky");
-  await page.evaluate(() => window.scrollTo(0, 700));
+  await page.evaluate(() => window.scrollTo(0, 300));
   const desktopBox = await resultsColumn.boundingBox();
   expect(desktopBox.y).toBe(22);
+
+  await page.evaluate(() => window.scrollTo(0, 700));
+  const containedResults = await resultsColumn.boundingBox();
+  const townSection = await page.locator(".town-section").first().boundingBox();
+  expect(containedResults.y + containedResults.height).toBeLessThanOrEqual(
+    townSection.y + townSection.height + 0.5,
+  );
 
   await page.setViewportSize({ width: 600, height: 600 });
   await page.evaluate(() => window.scrollTo(0, 700));
@@ -440,14 +447,15 @@ test("card columns respond to scheme width rather than viewport width", async ({
 test("recruitment wraps before the scheme drops below three columns", async ({ page }) => {
   await page.goto("/index.html");
 
+  const firstTown = page.locator(".town-section").first();
   await page.setViewportSize({ width: 1050, height: 700 });
-  const wrappedInputs = await page.locator(".planner-inputs").boundingBox();
-  const wrappedResults = await page.locator(".results-column").boundingBox();
+  const wrappedInputs = await firstTown.locator(".planner-inputs").boundingBox();
+  const wrappedResults = await firstTown.locator(".results-column").boundingBox();
   expect(wrappedResults.y).toBeGreaterThan(wrappedInputs.y + wrappedInputs.height);
 
   await page.setViewportSize({ width: 1060, height: 700 });
-  const splitInputs = await page.locator(".planner-inputs").boundingBox();
-  const splitResults = await page.locator(".results-column").boundingBox();
+  const splitInputs = await firstTown.locator(".planner-inputs").boundingBox();
+  const splitResults = await firstTown.locator(".results-column").boundingBox();
   const firstCard = await page.locator(".unit-slot").first().boundingBox();
   const thirdCard = await page.locator(".unit-slot").nth(2).boundingBox();
   expect(splitResults.y).toBe(splitInputs.y);

@@ -1,7 +1,9 @@
+import { For } from "solid-js";
 import type { Planner } from "./planner";
 import { ExternalDwellings } from "./components/ExternalDwellings";
-import { ProductionScheme } from "./components/ProductionScheme";
-import { Recruitment } from "./components/Recruitment";
+import { PlannerControls } from "./components/PlannerControls";
+import { ExternalRecruitment } from "./components/Recruitment";
+import { TownSection } from "./components/TownSection";
 
 const githubUrl = "https://github.com/aeshna-cyanea/homm3-planner";
 const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH;
@@ -10,13 +12,22 @@ export function App(props: { planner: Planner }) {
   return (
     <main class="app-shell">
       <h1 class="sr-only">HotA town production</h1>
-      <div class="planner-layout">
-        <div class="planner-inputs">
-          <ProductionScheme planner={props.planner} />
-          <ExternalDwellings planner={props.planner} />
-        </div>
-        <Recruitment planner={props.planner} />
+      <div class="town-list">
+        <For each={props.planner.state.townPlans}>
+          {(plan, index) => (
+            <TownSection
+              planner={props.planner}
+              planId={plan.id}
+              index={index()}
+            />
+          )}
+        </For>
       </div>
+      <div class="planner-layout external-layout">
+        <ExternalDwellings planner={props.planner} />
+        <ExternalRecruitment planner={props.planner} />
+      </div>
+      <PlannerControls planner={props.planner} />
       <SourceFooter />
     </main>
   );

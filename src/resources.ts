@@ -19,14 +19,18 @@ export function multiplyCost(cost: Cost, quantity: number): Cost {
   );
 }
 
-export function totalCosts(costs: Cost[]): CostEntry[] {
+export function sumCosts(costs: Cost[]): Cost {
   const total: Cost = {};
   for (const cost of costs) {
     for (const [resource, amount] of costEntries(cost)) {
       total[resource] = (total[resource] ?? 0) + amount;
     }
   }
-  return costEntries(total);
+  return total;
+}
+
+export function totalCosts(costs: Cost[]): CostEntry[] {
+  return costEntries(sumCosts(costs));
 }
 
 function resourceOrder(resource: Resource): number {
