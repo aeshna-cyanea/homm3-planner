@@ -551,6 +551,9 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
     "placeholder",
     "press / to search",
   );
+  const headingBox = await page.locator("#external-dwellings-title").boundingBox();
+  const emptyAddCardBox = await externalGrid.locator(".add-dwelling-card").boundingBox();
+  expect(emptyAddCardBox.x).toBeCloseTo(headingBox.x, 1);
 
   await page.locator("#town-select").selectOption("Inferno");
   const schemeSlot = page.locator("#unit-grid .unit-slot").first();

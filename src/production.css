@@ -774,6 +774,8 @@ select,
 .external-dwelling-grid {
   align-items: stretch;
   justify-content: flex-start;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .external-dwelling-card,
