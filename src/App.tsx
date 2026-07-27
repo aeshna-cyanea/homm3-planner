@@ -14,11 +14,10 @@ export function App(props: { planner: Planner }) {
       <h1 class="sr-only">HotA town production</h1>
       <div class="town-list">
         <For each={props.planner.state.townPlans}>
-          {(plan, index) => (
+          {(plan) => (
             <TownSection
               planner={props.planner}
               planId={plan.id}
-              index={index()}
             />
           )}
         </For>

@@ -66,6 +66,7 @@ export interface Catalog {
 
 export interface TownPlan {
   id: string;
+  label: string;
   town: string;
   fortification: Fortification;
   selections: number[];
@@ -90,6 +91,7 @@ export interface SavedDwelling {
 
 export interface SavedTownPlan {
   id: string;
+  label?: string;
   town: string;
   fortification: Fortification;
   dwellings: SavedDwelling[];

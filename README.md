@@ -2,9 +2,9 @@
 
 The static planner reads `public/creatures.json` and calculates one week of
 production across any number of towns. Each town has its own production scheme
-and recruitment subtotal. The global-total dialog aggregates every town plus
-recruitment at external dwellings. Press `T` to add a town or `P` to open the
-global total.
+and recruitment subtotal, and its default label can be renamed with the pencil
+beside it. The global-total dialog aggregates every town plus recruitment at
+external dwellings. Press `T` to add a town or `P` to open the global total.
 
 Each dwelling cycles through none, basic, and upgraded creatures. Cove's tier 3
 also cycles through its Sea Dog second upgrade. Relevant tiers show an optional

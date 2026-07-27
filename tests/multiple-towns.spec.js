@@ -19,7 +19,12 @@ test("towns have independent schemes and external bonuses apply to every match",
 
   const towns = page.locator(".town-section");
   await expect(towns).toHaveCount(3);
-  await expect(towns.locator("h2")).toHaveText(["Castle 1", "Inferno", "Castle 2"]);
+  await expect(towns.locator("h2")).toHaveText(["Town 1", "Town 2", "Town 3"]);
+  await expect(towns.locator(".town-section-header .eyebrow")).toHaveText([
+    "Castle",
+    "Inferno",
+    "Castle",
+  ]);
   await expect(page.locator("#add-town-search")).toHaveValue("");
 
   const firstCastle = towns.nth(0);
@@ -56,7 +61,7 @@ test("towns have independent schemes and external bonuses apply to every match",
   await expect(dialog).toBeVisible();
   const pikeman = dialog.locator("tbody tr").filter({ hasText: "Pikeman" });
   await expect(pikeman.locator("td").nth(0)).toContainText(
-    "Castle 1 · Castle 2 · External dwellings",
+    "Town 1 · Town 3 · External dwellings",
   );
   await expect(pikeman.locator("td").nth(1)).toHaveText("51 units");
   await expect(pikeman.locator("td").nth(3)).toHaveText("3,060 gold");
@@ -94,7 +99,7 @@ test("town controls remain unique, collapsible, removable, and persistent", asyn
   await page
     .locator(".town-section")
     .nth(1)
-    .getByRole("button", { name: "Remove Cove" })
+    .getByRole("button", { name: "Remove Town 2" })
     .click();
   await expect(page.locator(".town-section")).toHaveCount(1);
   await expect(page.locator(".remove-town-button")).toHaveCount(0);
@@ -123,8 +128,38 @@ test("T focuses town search and Enter confirms keyboard selection", async ({
   await search.press("Enter");
 
   await expect(page.locator(".town-section")).toHaveCount(2);
-  await expect(page.locator(".town-section").nth(1).locator("h2")).toHaveText("Cove");
+  const addedTown = page.locator(".town-section").nth(1);
+  await expect(addedTown.locator("h2")).toHaveText("Town 2");
+  await expect(addedTown.locator(".town-section-header .eyebrow")).toHaveText("Cove");
   await expect(search).toHaveValue("");
+});
+
+test("town labels can be edited independently from their type and persist", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const town = page.locator(".town-section").first();
+  await town.getByRole("button", { name: "Rename Town 1" }).click();
+
+  const labelInput = town.getByRole("textbox", { name: "Town name" });
+  await expect(labelInput).toBeFocused();
+  await expect(labelInput).toHaveValue("Town 1");
+  await labelInput.fill("Home Base");
+  await labelInput.press("Enter");
+
+  await expect(town.locator("h2")).toHaveText("Home Base");
+  await page.locator("#town-select").selectOption("Inferno");
+  await expect(town.locator(".town-section-header .eyebrow")).toHaveText("Inferno");
+  await expect(town.locator("h2")).toHaveText("Home Base");
+  await expect(town.locator(".result-context")).toHaveText(
+    "Home Base · Inferno · Fort",
+  );
+
+  await page.locator("#save-state").click();
+  await page.reload();
+  await expect(page.locator(".town-section h2")).toHaveText("Home Base");
+  await expect(page.locator("#town-select")).toHaveValue("Inferno");
 });
 
 test("P opens global totals without hijacking form fields", async ({ page }) => {

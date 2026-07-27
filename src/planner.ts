@@ -51,6 +51,7 @@ export interface Planner {
   resultContext(planId: string): string;
   addTown(town: string): void;
   removeTown(planId: string): void;
+  renameTown(planId: string, label: string): string;
   changeTown(planId: string, town: string): void;
   cycleFortification(planId: string): void;
   nextFortification(planId: string): Fortification;
@@ -95,12 +96,7 @@ export function createPlanner(catalog: Catalog): Planner {
   }
 
   function townLabel(planId: string): string {
-    const current = plan(planId);
-    const matching = state.townPlans.filter(
-      (candidate) => candidate.town === current.town,
-    );
-    if (matching.length === 1) return current.town;
-    return `${current.town} ${matching.findIndex((candidate) => candidate.id === planId) + 1}`;
+    return plan(planId).label;
   }
 
   function nextFortification(planId: string): Fortification {
@@ -295,6 +291,7 @@ export function createPlanner(catalog: Catalog): Planner {
     return {
       townPlans: state.townPlans.map((currentPlan) => ({
         id: currentPlan.id,
+        label: currentPlan.label,
         town: currentPlan.town,
         fortification: currentPlan.fortification,
         dwellings: dwellingsFor(catalog, currentPlan).map((dwelling, index) => ({
@@ -325,7 +322,7 @@ export function createPlanner(catalog: Catalog): Planner {
       totalCosts(globalRows().map((row) => row.weeklyCost))),
     resultContext(planId) {
       const currentPlan = plan(planId);
-      return `${townLabel(planId)} · ${capitalize(currentPlan.fortification)}`;
+      return `${townLabel(planId)} · ${currentPlan.town} · ${capitalize(currentPlan.fortification)}`;
     },
 
     addTown(town) {
@@ -339,6 +336,13 @@ export function createPlanner(catalog: Catalog): Planner {
       if (state.townPlans.length <= 1) return;
       setState("townPlans", (plans) =>
         plans.filter((candidate) => candidate.id !== planId));
+    },
+
+    renameTown(planId, label) {
+      const currentLabel = townLabel(planId);
+      const nextLabel = label.trim().slice(0, 40) || currentLabel;
+      setState("townPlans", planIndex(planId), "label", nextLabel);
+      return nextLabel;
     },
 
     changeTown(planId, town) {
@@ -443,6 +447,7 @@ function createPlan(catalog: Catalog, townName: string, id = "town-1"): TownPlan
 
   return {
     id,
+    label: defaultTownLabel(id),
     town: town.name,
     fortification: "fort",
     selections: town.dwellings.map((_, index) => (index === 0 ? 0 : -1)),
@@ -451,9 +456,16 @@ function createPlan(catalog: Catalog, townName: string, id = "town-1"): TownPlan
 }
 
 function nextTownId(plans: readonly TownPlan[]): string {
-  let number = 1;
-  while (plans.some((plan) => plan.id === `town-${number}`)) number += 1;
-  return `town-${number}`;
+  const highestNumber = plans.reduce((highest, plan) => {
+    const match = /^town-(\d+)$/.exec(plan.id);
+    return Math.max(highest, Number(match?.[1] ?? 0));
+  }, 0);
+  return `town-${highestNumber + 1}`;
+}
+
+function defaultTownLabel(id: string, fallback = 1): string {
+  const number = /^town-(\d+)$/.exec(id)?.[1] ?? fallback;
+  return `Town ${number}`;
 }
 
 function restoreState(
@@ -464,6 +476,10 @@ function restoreState(
     if (!savedPlan || !townByName(catalog, savedPlan.town)) return [];
 
     const plan = createPlan(catalog, savedPlan.town, savedPlan.id || `town-${index + 1}`);
+    plan.label =
+      typeof savedPlan.label === "string" && savedPlan.label.trim()
+        ? savedPlan.label.trim().slice(0, 40)
+        : defaultTownLabel(plan.id, index + 1);
     plan.fortification = isFortification(savedPlan.fortification)
       ? savedPlan.fortification
       : "fort";
