@@ -169,6 +169,10 @@ h2 {
   gap: 2.75rem;
 }
 
+.town-section {
+  scroll-margin-block-start: 1.5rem;
+}
+
 .town-section-header {
   display: flex;
   align-items: flex-end;
@@ -331,6 +335,14 @@ h2 {
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  cursor: text;
+}
+
+.add-town-label,
+.add-dwelling-name {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
 }
 
 .add-town-control .autoComplete_wrapper {
@@ -351,12 +363,13 @@ h2 {
   font-weight: 700;
 }
 
-.global-total-button kbd {
+.shortcut-key {
   display: inline-grid;
   place-items: center;
   min-width: 1.25rem;
   height: 1.25rem;
-  margin-left: 0.375rem;
+  box-sizing: border-box;
+  padding: 0 0.25rem;
   border: 1px solid #8b7757;
   border-radius: 0.25rem;
   background: #24211e;
@@ -365,8 +378,12 @@ h2 {
   font-size: 0.68rem;
 }
 
-.global-total-dialog {
-  width: min(62rem, calc(100% - 2rem));
+.global-total-button .shortcut-key {
+  margin-left: 0.375rem;
+}
+
+.global-total-dialog,
+.creature-details-dialog {
   max-height: calc(100dvh - 2rem);
   padding: 0;
   overflow: hidden;
@@ -378,19 +395,24 @@ h2 {
   box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.7);
 }
 
-.global-total-dialog::backdrop {
+.global-total-dialog { width: min(62rem, calc(100% - 2rem)); }
+.creature-details-dialog { width: min(34rem, calc(100% - 2rem)); }
+
+.global-total-dialog::backdrop,
+.creature-details-dialog::backdrop {
   background: rgba(12, 10, 9, 0.76);
   backdrop-filter: blur(0.1875rem);
 }
 
-.global-total-panel {
+.global-total-panel,
+.creature-details-panel {
   box-sizing: border-box;
   max-height: calc(100dvh - 2rem);
   padding: 1.625rem;
   overflow-y: auto;
 }
 
-.global-total-header {
+.dialog-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -420,12 +442,123 @@ h2 {
   background: rgba(221, 182, 94, 0.08);
 }
 
+.creature-details-panel.is-cycleable {
+  cursor: pointer;
+}
+
+.creature-dialog-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+}
+
+.creature-variant-cycle-button {
+  color: var(--gold);
+  font-size: 1.15rem;
+}
+
 .global-total-dialog .result-context {
   margin-top: 0.625rem;
 }
 
 .global-total-dialog .totals {
   margin-top: 1.25rem;
+}
+
+.creature-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.625rem;
+  margin: 1.5rem 0 0;
+}
+
+.creature-stat {
+  min-width: 0;
+  padding: 0.6875rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: rgba(221, 182, 94, 0.055);
+}
+
+.creature-stat dt {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.creature-stat-emoji {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.creature-stat dd {
+  margin: 0.375rem 0 0 1.325rem;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.creature-stat.is-upgrade-difference dt,
+.creature-stat.is-upgrade-difference dd,
+.creature-special.is-upgrade-difference h3,
+.creature-special.is-upgrade-difference p {
+  color: #a8d4ae;
+}
+
+.creature-profile-meta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.creature-profile-label,
+.creature-special h3 {
+  margin: 0 0 0.375rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.creature-profile-cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3125rem 0.625rem;
+  font-size: 0.95rem;
+}
+
+.creature-wiki-link {
+  flex: 0 0 auto;
+  color: var(--gold-bright);
+  font-size: 0.78rem;
+  text-underline-offset: 0.1875rem;
+}
+
+.creature-special {
+  margin-top: 1.25rem;
+  padding-top: 1.125rem;
+  border-top: 1px solid rgba(93, 80, 61, 0.58);
+}
+
+.creature-special p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .scheme-controls {
@@ -620,6 +753,7 @@ select,
 }
 
 .unit-card-cycle {
+  position: relative;
   display: grid;
   min-width: 0;
   padding: 1.0625rem 1.0625rem 0.5rem;
@@ -628,7 +762,27 @@ select,
   border: 0;
   outline: none;
   background: transparent;
+}
+
+.unit-card-cycle-action {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
   cursor: pointer;
+}
+
+.production-card-body > :not(.unit-card-cycle-action) {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.production-card-body > .creature-info-trigger {
+  pointer-events: auto;
 }
 
 .unit-card:hover { transform: translateY(-0.125rem); border-color: #8b7757; }
@@ -637,7 +791,7 @@ select,
   border-bottom-left-radius: 0;
 }
 .unit-slot.has-horde .unit-card:hover { transform: none; }
-.unit-card:has(.unit-card-cycle:focus-visible) {
+.unit-card:has(.unit-card-cycle-action:focus-visible) {
   outline: 0.1875rem solid rgba(221, 182, 94, 0.35);
   outline-offset: 0.1875rem;
 }
@@ -693,10 +847,38 @@ select,
 
 .creature-name {
   align-self: end;
+  justify-self: start;
   margin: 1.375rem 0 0.3125rem;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.25rem;
   font-weight: 600;
+}
+
+.creature-info-trigger {
+  max-width: 100%;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  border: 0;
+  border-radius: 0.1875rem;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: rgba(221, 182, 94, 0.5);
+  text-underline-offset: 0.1875rem;
+}
+
+.creature-info-trigger:hover,
+.creature-info-trigger:focus-visible {
+  color: var(--gold-bright);
+  text-decoration-color: currentColor;
+}
+
+.creature-info-trigger:focus-visible {
+  outline: 0.125rem solid rgba(221, 182, 94, 0.42);
+  outline-offset: 0.1875rem;
 }
 
 .creature-details {
@@ -835,6 +1017,7 @@ select,
   overflow: visible;
   border-style: dashed;
   background: rgba(42, 38, 33, 0.48);
+  cursor: text;
 }
 
 .add-dwelling-symbol {
@@ -1092,6 +1275,11 @@ select,
 }
 .results-table td { font-size: 0.9rem; }
 .results-table td strong { display: block; }
+.results-creature-name {
+  display: block;
+  color: var(--ink);
+  font-weight: 700;
+}
 .results-table td small { color: var(--muted); }
 .results-table tbody tr:last-child td { border-bottom: 0; }
 
@@ -1220,7 +1408,10 @@ select,
   .planner-controls .state-actions > button {
     flex: 1 1 auto;
   }
-  .global-total-panel { padding: 1.1875rem; }
+  .global-total-panel,
+  .creature-details-panel { padding: 1.1875rem; }
+  .creature-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .creature-profile-meta { align-items: flex-start; flex-direction: column; }
   .results-table th:nth-child(3),
   .results-table td:nth-child(3) { display: none; }
 }

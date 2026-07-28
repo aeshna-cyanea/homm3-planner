@@ -1,5 +1,6 @@
 import { For } from "solid-js";
 import type { Planner } from "./planner";
+import { CreatureDetailsProvider } from "./components/CreatureDetails";
 import { ExternalDwellings } from "./components/ExternalDwellings";
 import { PlannerControls } from "./components/PlannerControls";
 import { ExternalRecruitment } from "./components/Recruitment";
@@ -10,25 +11,27 @@ const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH;
 
 export function App(props: { planner: Planner }) {
   return (
-    <main class="app-shell">
-      <h1 class="sr-only">HotA town production</h1>
-      <div class="town-list">
-        <For each={props.planner.state.townPlans}>
-          {(plan) => (
-            <TownSection
-              planner={props.planner}
-              planId={plan.id}
-            />
-          )}
-        </For>
-      </div>
-      <div class="planner-layout external-layout">
-        <ExternalDwellings planner={props.planner} />
-        <ExternalRecruitment planner={props.planner} />
-      </div>
-      <PlannerControls planner={props.planner} />
-      <SourceFooter />
-    </main>
+    <CreatureDetailsProvider catalog={props.planner.catalog}>
+      <main class="app-shell">
+        <h1 class="sr-only">HotA town production</h1>
+        <div class="town-list">
+          <For each={props.planner.state.townPlans}>
+            {(plan) => (
+              <TownSection
+                planner={props.planner}
+                planId={plan.id}
+              />
+            )}
+          </For>
+        </div>
+        <div class="planner-layout external-layout">
+          <ExternalDwellings planner={props.planner} />
+          <ExternalRecruitment planner={props.planner} />
+        </div>
+        <PlannerControls planner={props.planner} />
+        <SourceFooter />
+      </main>
+    </CreatureDetailsProvider>
   );
 }
 

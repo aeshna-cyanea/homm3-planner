@@ -2,6 +2,7 @@ import { For, Show } from "solid-js";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
 import type { RecruitmentRow } from "../types";
+import { CreatureNameButton } from "./CreatureDetails";
 import { CostDisplay, ResourceTotals } from "./ResourceCost";
 
 export function TownRecruitment(props: { planner: Planner; planId: string }) {
@@ -99,7 +100,10 @@ export function ResultsTable(props: { id?: string; rows: RecruitmentRow[] }) {
           {(row) => (
             <tr>
               <td>
-                <strong>{row.name}</strong>
+                <CreatureNameButton
+                  class="results-creature-name"
+                  name={row.name}
+                />
                 <small>{row.detail}</small>
               </td>
               <td>

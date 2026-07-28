@@ -52,9 +52,16 @@ export function TownSearch(props: { planner: Planner }) {
           selection(event) {
             const town = event.detail.selection?.value.name;
             if (!town) return;
-            props.planner.addTown(town);
+            const planId = props.planner.addTown(town);
             input.value = "";
             input.blur();
+            requestAnimationFrame(() => {
+              document
+                .querySelector<HTMLElement>(
+                  `.town-section[data-town-id="${planId}"]`,
+                )
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
           },
         },
       },
@@ -89,7 +96,7 @@ export function TownSearch(props: { planner: Planner }) {
       class="town-search-input"
       id="add-town-search"
       type="search"
-      placeholder="press t to add a town"
+      placeholder="Search towns"
       autocomplete="off"
       aria-keyshortcuts="t"
     />

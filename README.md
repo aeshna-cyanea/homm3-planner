@@ -5,6 +5,10 @@ production across any number of towns. Each town has its own production scheme
 and recruitment subtotal, and its default label can be renamed with the pencil
 beside it. The global-total dialog aggregates every town plus recruitment at
 external dwellings. Press `T` to add a town or `P` to open the global total.
+Creature names open a compact reference dialog with their statistics, special
+abilities, recruitment cost, and Heroes 3 Wiki source. Clicking the dialog
+cycles through that dwelling's variants; upgraded values that differ from the
+base creature are shown in green.
 
 Each dwelling cycles through none, basic, and upgraded creatures. Cove's tier 3
 also cycles through its Sea Dog second upgrade. Relevant tiers show an optional
@@ -14,12 +18,15 @@ from a faction's production scheme or by searching the base dwelling creatures;
 repeated additions increment one shared dwelling count, and their growth bonus
 applies to every matching town.
 
-`public/creatures.json` contains only the fields used by the planner. Towns are
-identified by their names and contain dwellings with shared `tier` and `growth`
-values plus an ordered `variants` list. A dwelling has an optional `horde`
-object when one applies. Non-upgradable neutral creatures are stored as flat
-records under `neutral_creatures`. The fuller source dataset is preserved in
-`creatures_big.json`.
+`public/creatures.json` preserves the full creature statistics and source links
+in the structure used by the planner. Towns are identified by their names and
+contain dwellings with shared `tier` and `growth` values plus an ordered
+`variants` list. A dwelling has an optional `horde` object when one applies.
+Non-upgradable neutral creatures are stored as flat records under
+`neutral_creatures`. The original nested-upgrade source schema is preserved in
+`creatures_big.json`. The data comes from the Heroes 3 Wiki pages for the
+[creature list](https://heroes.thelazy.net/index.php/List_of_creatures) and
+[Horde buildings](https://heroes.thelazy.net/index.php/Horde_building).
 
 Install the project dependencies once:
 

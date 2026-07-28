@@ -6,10 +6,21 @@ import { ResultsTable } from "./Recruitment";
 import { TownSearch } from "./TownSearch";
 
 export function PlannerControls(props: { planner: Planner }) {
+  function focusTownSearch(event: MouseEvent): void {
+    const target = event.target as Element;
+    if (target.closest(".town-search-dropdown")) return;
+    (event.currentTarget as HTMLElement)
+      .querySelector<HTMLInputElement>("#add-town-search")
+      ?.focus();
+  }
+
   return (
     <div class="planner-controls panel">
-      <div class="add-town-control">
-        <label for="add-town-search">Add town</label>
+      <div class="add-town-control" onClick={focusTownSearch}>
+        <label class="add-town-label" for="add-town-search">
+          <span>Add town</span>
+          <kbd class="shortcut-key">T</kbd>
+        </label>
         <TownSearch planner={props.planner} />
       </div>
 
@@ -66,7 +77,7 @@ function GlobalTotalDialog(props: { planner: Planner }) {
         aria-keyshortcuts="p"
         onClick={open}
       >
-        Global Total <kbd>P</kbd>
+        Global Total <kbd class="shortcut-key">P</kbd>
       </button>
 
       <dialog
@@ -76,7 +87,7 @@ function GlobalTotalDialog(props: { planner: Planner }) {
         onClick={closeFromBackdrop}
       >
         <div class="global-total-panel">
-          <header class="global-total-header">
+          <header class="dialog-header">
             <div>
               <p class="eyebrow">All recruitment</p>
               <h2 id="global-total-title">Global weekly total</h2>

@@ -49,7 +49,7 @@ export interface Planner {
   globalRows(): RecruitmentRow[];
   globalTotals(): CostEntry[];
   resultContext(planId: string): string;
-  addTown(town: string): void;
+  addTown(town: string): string;
   removeTown(planId: string): void;
   renameTown(planId: string, label: string): string;
   changeTown(planId: string, town: string): void;
@@ -326,10 +326,12 @@ export function createPlanner(catalog: Catalog): Planner {
     },
 
     addTown(town) {
+      const planId = nextTownId(state.townPlans);
       setState("townPlans", (plans) => [
         ...plans,
-        createPlan(catalog, town, nextTownId(plans)),
+        createPlan(catalog, town, planId),
       ]);
+      return planId;
     },
 
     removeTown(planId) {

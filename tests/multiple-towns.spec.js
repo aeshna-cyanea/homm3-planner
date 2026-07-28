@@ -112,6 +112,7 @@ test("T focuses town search and Enter confirms keyboard selection", async ({
 
   const search = page.locator("#add-town-search");
   const results = page.locator(".town-search-result");
+  await expect(search).toHaveAttribute("aria-controls", /.+/);
   await page.keyboard.press("t");
   await expect(search).toBeFocused();
   await expect(results).toHaveCount(12);
@@ -132,6 +133,61 @@ test("T focuses town search and Enter confirms keyboard selection", async ({
   await expect(addedTown.locator("h2")).toHaveText("Town 2");
   await expect(addedTown.locator(".town-section-header .eyebrow")).toHaveText("Cove");
   await expect(search).toHaveValue("");
+});
+
+test("add controls show keycaps and their full surfaces focus the search", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  const townControl = page.locator(".add-town-control");
+  const townSearch = page.locator("#add-town-search");
+  const dwellingCard = page.locator(".add-dwelling-card");
+  const dwellingSearch = page.locator("#external-dwelling-search");
+
+  await expect(townControl.locator(".shortcut-key")).toHaveText("T");
+  await expect(dwellingCard.locator(".shortcut-key")).toHaveText("/");
+  await expect(page.locator(".global-total-button .shortcut-key")).toHaveText("P");
+  await expect(townSearch).toHaveAttribute("placeholder", "Search towns");
+  await expect(dwellingSearch).toHaveAttribute("placeholder", "Search creatures");
+
+  const dwellingCardBox = await dwellingCard.boundingBox();
+  await dwellingCard.click({
+    position: { x: 5, y: dwellingCardBox.height - 5 },
+  });
+  await expect(dwellingSearch).toBeFocused();
+
+  const townControlBox = await townControl.boundingBox();
+  await townControl.click({
+    position: { x: townControlBox.width - 5, y: 5 },
+  });
+  await expect(townSearch).toBeFocused();
+});
+
+test("adding a town smoothly scrolls to the new town", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    window.__newTownScroll = null;
+    Element.prototype.scrollIntoView = function (options) {
+      if (!this.matches(".town-section")) return;
+      window.__newTownScroll = {
+        id: this.getAttribute("data-town-id"),
+        behavior: options?.behavior,
+        block: options?.block,
+      };
+    };
+  });
+
+  await addTown(page, "Cove");
+
+  await expect
+    .poll(() => page.evaluate(() => window.__newTownScroll))
+    .toEqual({
+      id: "town-2",
+      behavior: "smooth",
+      block: "start",
+    });
 });
 
 test("town labels can be edited independently from their type and persist", async ({
@@ -166,6 +222,10 @@ test("P opens global totals without hijacking form fields", async ({ page }) => 
   await page.goto("/");
 
   const dialog = page.locator(".global-total-dialog");
+  await expect(page.locator("#add-town-search")).toHaveAttribute(
+    "aria-controls",
+    /.+/,
+  );
   await page.keyboard.press("p");
   await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");

@@ -3,6 +3,7 @@ import type {
   CatalogDwelling,
   Creature,
   CreatureData,
+  CreatureProfile,
   Dwelling,
   HordeBuilding,
   Town,
@@ -39,6 +40,39 @@ export function townByName(catalog: Catalog, name: string): Town | undefined {
   return catalog.towns.find((town) => town.name === name);
 }
 
+export function creatureProfile(
+  catalog: Catalog,
+  name: string,
+): CreatureProfile | undefined {
+  for (const town of catalog.towns) {
+    for (const dwelling of town.dwellings) {
+      const variantIndex = dwelling.variants.findIndex(
+        (creature) => creature.name === name,
+      );
+      if (variantIndex >= 0) {
+        return {
+          creature: dwelling.variants[variantIndex],
+          baseCreature: dwelling.variants[0],
+          variants: dwelling.variants,
+          variantIndex,
+          factionName: town.name,
+          tier: dwelling.tier,
+          variant: variantName(variantIndex),
+        };
+      }
+    }
+  }
+
+  const neutral = catalog.dwellingCatalog.get(name);
+  return neutral?.factionName === "Neutral"
+    ? {
+        creature: neutral.creature,
+        factionName: neutral.factionName,
+        tier: neutral.tier,
+      }
+    : undefined;
+}
+
 export function basicCreature(dwelling: Dwelling): Creature {
   return dwelling.variants[0];
 }
@@ -70,4 +104,9 @@ function indexDwelling(
     tier: dwelling.tier,
     growth: dwelling.growth,
   });
+}
+
+function variantName(index: number): CreatureProfile["variant"] {
+  if (index === 0) return "Basic";
+  return index === 1 ? "Upgraded" : "Second upgrade";
 }

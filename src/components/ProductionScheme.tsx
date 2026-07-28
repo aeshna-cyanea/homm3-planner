@@ -4,6 +4,7 @@ import { FORTIFICATION_COPY } from "../planner";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
 import type { Dwelling } from "../types";
+import { CreatureNameButton } from "./CreatureDetails";
 import { CostDisplay } from "./ResourceCost";
 
 export function ProductionScheme(props: { planner: Planner; planId: string }) {
@@ -125,14 +126,15 @@ function DwellingCard(props: {
   return (
     <div class="unit-slot" classList={{ "has-horde": Boolean(horde()) }}>
       <div class="unit-card" data-stage={selection()}>
-        <button
-          class="unit-card-cycle"
-          type="button"
-          data-slot={props.index}
-          aria-label={props.planner.cardAriaLabel(props.planId, props.index)}
-          onClick={() =>
-            props.planner.cycleDwelling(props.planId, props.index)}
-        >
+        <div class="unit-card-cycle production-card-body">
+          <button
+            class="unit-card-cycle-action"
+            type="button"
+            data-slot={props.index}
+            aria-label={props.planner.cardAriaLabel(props.planId, props.index)}
+            onClick={() =>
+              props.planner.cycleDwelling(props.planId, props.index)}
+          />
           <span class="card-top">
             <span class="tier-label">Tier {props.dwelling.tier}</span>
             <span
@@ -141,9 +143,10 @@ function DwellingCard(props: {
               title={props.planner.stageName(selection())}
             />
           </span>
-          <span class="creature-name">
-            {props.planner.creatureName(props.planId, props.index)}
-          </span>
+          <CreatureNameButton
+            class="creature-name"
+            name={props.planner.creatureName(props.planId, props.index)}
+          />
           <span class="creature-details">
             <span class="production-detail">
               <strong>
@@ -155,7 +158,7 @@ function DwellingCard(props: {
               <CostDisplay cost={detail().cost} />
             </span>
           </span>
-        </button>
+        </div>
 
         <div class="external-dwelling-control">
           <span class="external-dwelling-icon" aria-hidden="true">🏠</span>

@@ -2,6 +2,7 @@ import { For } from "solid-js";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
 import type { ExternalDwellingCard as Card } from "../types";
+import { CreatureNameButton } from "./CreatureDetails";
 import { DwellingSearch } from "./DwellingSearch";
 import { CostDisplay } from "./ResourceCost";
 
@@ -73,7 +74,10 @@ function ExternalDwellingCard(props: { planner: Planner; card: Card }) {
               </svg>
             </button>
           </span>
-          <span class="creature-name">{props.card.creature.name}</span>
+          <CreatureNameButton
+            class="creature-name"
+            name={props.card.creature.name}
+          />
           <span class="creature-details">
             <span class="production-detail">
               <strong>{formatNumber(props.card.production)}</strong>/week,{" "}

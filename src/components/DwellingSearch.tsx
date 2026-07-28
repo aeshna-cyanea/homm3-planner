@@ -87,15 +87,24 @@ export function DwellingSearch(props: { planner: Planner }) {
     input.focus();
   }
 
+  function focusFromCard(event: MouseEvent): void {
+    const target = event.target as Element;
+    if (target.closest(".autocomplete-dropdown")) return;
+    input.focus();
+  }
+
   return (
     <div class="unit-slot external-dwelling-slot add-dwelling-slot">
-      <div class="unit-card add-dwelling-card">
+      <div class="unit-card add-dwelling-card" onClick={focusFromCard}>
         <div class="unit-card-cycle add-dwelling-card-body">
           <span class="card-top">
             <span class="tier-label">New external dwelling</span>
             <span class="add-dwelling-symbol" aria-hidden="true">+</span>
           </span>
-          <span class="creature-name">Add a dwelling</span>
+          <span class="creature-name add-dwelling-name">
+            <span>Add a dwelling</span>
+            <kbd class="shortcut-key">/</kbd>
+          </span>
           <label class="sr-only" for="external-dwelling-search">
             Search creatures
           </label>
@@ -104,8 +113,9 @@ export function DwellingSearch(props: { planner: Planner }) {
             class="external-dwelling-search-source"
             id="external-dwelling-search"
             type="search"
-            placeholder="press / to search"
+            placeholder="Search creatures"
             autocomplete="off"
+            aria-keyshortcuts="/"
             aria-describedby="external-search-note"
           />
           <small class="external-search-note" id="external-search-note">
