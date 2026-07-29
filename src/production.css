@@ -354,6 +354,7 @@ h2 {
 .add-town-control {
   display: grid;
   flex: 0 1 18rem;
+  min-width: 9.5rem;
   gap: 0.5rem;
   color: var(--muted);
   font-size: 0.73rem;
@@ -387,8 +388,9 @@ h2 {
 .planner-controls .state-actions > button {
   flex: 1 1 auto;
   min-width: 0;
+  height: 3rem;
   padding-inline: clamp(0.25rem, 1.35cqi, 0.9375rem);
-  font-size: clamp(0.62rem, calc(0.8rem + 0.5cqi), 1rem);
+  font-size: clamp(0.62rem, calc(0.5rem + 0.75cqi), 0.875rem);
 }
 
 .global-total-button {
@@ -1439,7 +1441,7 @@ select,
     position: sticky;
     top: 1.375rem;
     grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 2;
     align-self: start;
     margin-top: 0;
   }

@@ -579,15 +579,30 @@ test("state actions scale smoothly and stay on one line", async ({ page }) => {
       const buttons = [...actions.querySelectorAll(":scope > button")];
       const globalTotal = controls.querySelector("#open-global-total");
       const shortcut = globalTotal.querySelector(".shortcut-key");
+      const townSearch = controls.querySelector("#add-town-search");
       const actionsBox = actions.getBoundingClientRect();
       const globalTotalBox = globalTotal.getBoundingClientRect();
       const shortcutBox = shortcut.getBoundingClientRect();
+      const townSearchBox = townSearch.getBoundingClientRect();
+      const townSearchStyle = getComputedStyle(townSearch);
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = townSearchStyle.font;
+      const placeholderWidth = context.measureText(townSearch.placeholder).width;
+      const placeholderSpace =
+        placeholderWidth +
+        Number.parseFloat(townSearchStyle.paddingLeft) +
+        Number.parseFloat(townSearchStyle.paddingRight) +
+        Number.parseFloat(townSearchStyle.borderLeftWidth) +
+        Number.parseFloat(townSearchStyle.borderRightWidth);
 
       return {
         width,
         documentWidth: document.documentElement.scrollWidth,
         fontSize: Number.parseFloat(getComputedStyle(globalTotal).fontSize),
         buttonTops: buttons.map((button) => button.getBoundingClientRect().top),
+        buttonHeights: buttons.map((button) => button.getBoundingClientRect().height),
+        townSearchHeight: townSearchBox.height,
         buttonsContained: buttons.every((button) => {
           const box = button.getBoundingClientRect();
           return box.left >= actionsBox.left && box.right <= actionsBox.right;
@@ -595,15 +610,21 @@ test("state actions scale smoothly and stay on one line", async ({ page }) => {
         shortcutContained:
           shortcutBox.left >= globalTotalBox.left &&
           shortcutBox.right <= globalTotalBox.right,
+        placeholderContained: townSearchBox.width >= placeholderSpace,
       };
     }, width));
   }
 
   for (const measurement of measurements) {
-    expect(measurement.documentWidth).toBe(measurement.width);
-    expect(new Set(measurement.buttonTops).size).toBe(1);
-    expect(measurement.buttonsContained).toBe(true);
-    expect(measurement.shortcutContained).toBe(true);
+    const context = `${measurement.width}px controls`;
+    expect(measurement.documentWidth, context).toBe(measurement.width);
+    expect(new Set(measurement.buttonTops).size, context).toBe(1);
+    for (const buttonHeight of measurement.buttonHeights) {
+      expect(buttonHeight, context).toBeCloseTo(measurement.townSearchHeight, 1);
+    }
+    expect(measurement.buttonsContained, context).toBe(true);
+    expect(measurement.shortcutContained, context).toBe(true);
+    expect(measurement.placeholderContained, context).toBe(true);
   }
 
   const fontSizes = measurements.map(({ fontSize }) => fontSize);
@@ -715,10 +736,11 @@ test("recruitment wraps before the scheme drops below three columns", async ({ p
   await page.setViewportSize({ width: 1060, height: 700 });
   const splitInputs = await firstTown.locator(".planner-inputs").boundingBox();
   const splitResults = await firstTown.locator(".results-column").boundingBox();
+  const splitScheme = await firstTown.locator(".town-scheme-content").boundingBox();
   const splitHeader = await firstTown.locator(".town-section-header").boundingBox();
   const firstCard = await page.locator(".unit-slot").first().boundingBox();
   const thirdCard = await page.locator(".unit-slot").nth(2).boundingBox();
-  expect(splitResults.y).toBe(splitHeader.y);
+  expect(splitResults.y).toBe(splitScheme.y);
   expect(splitInputs.x).toBe(splitHeader.x);
   expect(splitInputs.width).toBe(splitHeader.width);
   expect(thirdCard.y).toBe(firstCard.y);
