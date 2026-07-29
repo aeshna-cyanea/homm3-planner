@@ -450,7 +450,7 @@ for (const viewport of viewports) {
     if (viewport.width === 1100) {
       expect(thirdCard.y).toBe(firstCard.y);
       expect(fourthCard.y).toBeGreaterThan(firstCard.y);
-      await expect(page.locator('[data-town-results="town-1"]')).toHaveCSS(
+      await expect(page.locator(".town-results-content")).toHaveCSS(
         "position",
         "sticky",
       );
@@ -568,6 +568,49 @@ for (const viewport of viewports) {
   });
 }
 
+test("state actions scale smoothly and stay on one line", async ({ page }) => {
+  await page.goto("/index.html");
+
+  const measurements = [];
+  for (const width of [320, 520, 521, 600, 800, 1100]) {
+    await page.setViewportSize({ width, height: 900 });
+    measurements.push(await page.locator(".planner-controls").evaluate((controls, width) => {
+      const actions = controls.querySelector(".state-actions");
+      const buttons = [...actions.querySelectorAll(":scope > button")];
+      const globalTotal = controls.querySelector("#open-global-total");
+      const shortcut = globalTotal.querySelector(".shortcut-key");
+      const actionsBox = actions.getBoundingClientRect();
+      const globalTotalBox = globalTotal.getBoundingClientRect();
+      const shortcutBox = shortcut.getBoundingClientRect();
+
+      return {
+        width,
+        documentWidth: document.documentElement.scrollWidth,
+        fontSize: Number.parseFloat(getComputedStyle(globalTotal).fontSize),
+        buttonTops: buttons.map((button) => button.getBoundingClientRect().top),
+        buttonsContained: buttons.every((button) => {
+          const box = button.getBoundingClientRect();
+          return box.left >= actionsBox.left && box.right <= actionsBox.right;
+        }),
+        shortcutContained:
+          shortcutBox.left >= globalTotalBox.left &&
+          shortcutBox.right <= globalTotalBox.right,
+      };
+    }, width));
+  }
+
+  for (const measurement of measurements) {
+    expect(measurement.documentWidth).toBe(measurement.width);
+    expect(new Set(measurement.buttonTops).size).toBe(1);
+    expect(measurement.buttonsContained).toBe(true);
+    expect(measurement.shortcutContained).toBe(true);
+  }
+
+  const fontSizes = measurements.map(({ fontSize }) => fontSize);
+  expect(fontSizes).toEqual([...fontSizes].sort((left, right) => left - right));
+  expect(new Set(fontSizes).size).toBeGreaterThan(3);
+});
+
 test("fortification button cycles without overflowing at 528px", async ({ page }) => {
   await page.setViewportSize({ width: 528, height: 900 });
   await page.goto("/index.html");
@@ -602,7 +645,7 @@ test("recruitment column follows desktop scrolling only", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("#town-select")).toBeEnabled();
 
-  const resultsColumn = page.locator('[data-town-results="town-1"]');
+  const resultsColumn = page.locator(".town-results-content");
   await expect(resultsColumn).toHaveCSS("position", "sticky");
   await page.evaluate(() => window.scrollTo(0, 300));
   const desktopBox = await resultsColumn.boundingBox();
@@ -672,9 +715,12 @@ test("recruitment wraps before the scheme drops below three columns", async ({ p
   await page.setViewportSize({ width: 1060, height: 700 });
   const splitInputs = await firstTown.locator(".planner-inputs").boundingBox();
   const splitResults = await firstTown.locator(".results-column").boundingBox();
+  const splitHeader = await firstTown.locator(".town-section-header").boundingBox();
   const firstCard = await page.locator(".unit-slot").first().boundingBox();
   const thirdCard = await page.locator(".unit-slot").nth(2).boundingBox();
-  expect(splitResults.y).toBe(splitInputs.y);
+  expect(splitResults.y).toBe(splitHeader.y);
+  expect(splitInputs.x).toBe(splitHeader.x);
+  expect(splitInputs.width).toBe(splitHeader.width);
   expect(thirdCard.y).toBe(firstCard.y);
 });
 

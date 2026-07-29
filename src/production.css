@@ -171,9 +171,14 @@ h2 {
 .town-list {
   display: grid;
   gap: 2.75rem;
+  container-name: town-list;
+  container-type: inline-size;
 }
 
 .town-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
   scroll-margin-block-start: 1.5rem;
 }
 
@@ -321,9 +326,13 @@ h2 {
   margin-top: 0;
 }
 
-.town-scheme-content,
 .town-results-content {
-  display: contents;
+  min-width: 0;
+  margin-top: 1.375rem;
+}
+
+.town-results-content[data-empty="true"] {
+  display: none;
 }
 
 .results-column[data-empty="true"] {
@@ -334,10 +343,12 @@ h2 {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  flex-wrap:wrap;
+  flex-wrap: nowrap;
   gap: 1.375rem;
   margin-top: 1.375rem;
   padding: 1.25rem;
+  container-name: planner-controls;
+  container-type: inline-size;
 }
 
 .add-town-control {
@@ -367,7 +378,17 @@ h2 {
 }
 
 .planner-controls .state-actions {
+  flex: 0 0 auto;
+  min-width: 0;
+  gap: clamp(0.25rem, calc(0.125rem + 0.5cqi), 0.5rem);
   margin-top: 0;
+}
+
+.planner-controls .state-actions > button {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-inline: clamp(0.25rem, 1.35cqi, 0.9375rem);
+  font-size: clamp(0.62rem, calc(0.8rem + 0.5cqi), 1rem);
 }
 
 .global-total-button {
@@ -1401,6 +1422,33 @@ select,
   }
 }
 
+@container town-list (min-width: 63.625rem) {
+  .town-section {
+    grid-template-columns: minmax(0, 1fr) 24.375rem;
+    column-gap: 1.375rem;
+  }
+
+  .town-section-header,
+  .town-scheme-content {
+    grid-column: 1;
+  }
+
+  .town-results-content,
+  .town-results-content[data-empty="true"] {
+    display: block;
+    position: sticky;
+    top: 1.375rem;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    margin-top: 0;
+  }
+
+  .town-results-content .results-column[data-empty="true"] {
+    display: block;
+  }
+}
+
 @container planner-inputs (max-width: 46.375rem) {
   .scheme-controls { gap: 1.125rem; }
 }
@@ -1442,7 +1490,7 @@ select,
   }
   .planner-controls .state-actions {
     justify-content: stretch;
-    gap: 0.25rem;
+    width: 100%;
   }
   .global-total-panel,
   .creature-details-panel { padding: 1.1875rem; }
