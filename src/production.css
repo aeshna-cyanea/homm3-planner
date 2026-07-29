@@ -317,6 +317,11 @@ h2 {
   margin-top: 0;
 }
 
+.town-scheme-content,
+.town-results-content {
+  display: contents;
+}
+
 .results-column[data-empty="true"] {
   display: none;
 }

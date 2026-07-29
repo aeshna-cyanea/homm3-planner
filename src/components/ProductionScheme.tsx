@@ -15,7 +15,7 @@ import { CostDisplay } from "./ResourceCost";
 export function ProductionScheme(props: { planner: Planner; planId: string }) {
   return (
     <section
-      class="scheme-section production-scheme-section panel planner-inputs"
+      class="scheme-section production-scheme-section panel"
       id={domId("town-selection", props.planId)}
       data-town-id={props.planId}
       aria-label={`${props.planner.townLabel(props.planId)} production scheme`}

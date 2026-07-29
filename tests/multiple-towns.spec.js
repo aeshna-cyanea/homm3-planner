@@ -87,9 +87,12 @@ test("town controls remain unique, collapsible, removable, and persistent", asyn
 
   const firstTown = towns.first();
   await firstTown.getByRole("button", { name: "Collapse" }).click();
-  await expect(firstTown.locator(".town-layout")).toBeHidden();
+  await expect(firstTown.locator(".production-scheme-section")).toBeHidden();
+  await expect(firstTown.locator(".results-column")).toBeHidden();
+  await expect(firstTown.locator(".town-section-header")).toBeVisible();
   await firstTown.getByRole("button", { name: "Expand" }).click();
-  await expect(firstTown.locator(".town-layout")).toBeVisible();
+  await expect(firstTown.locator(".production-scheme-section")).toBeVisible();
+  await expect(firstTown.locator(".results-column")).toBeVisible();
 
   await page.locator("#save-state").click();
   await page.reload();

@@ -388,6 +388,8 @@ for (const viewport of viewports) {
     );
 
     const schemePanel = await page.locator(".production-scheme-section").boundingBox();
+    const townHeader = await page.locator(".town-section-header").boundingBox();
+    expect(townHeader.width).toBeCloseTo(schemePanel.width, 1);
     const fortificationButton = await page.locator("#fortification-cycle").boundingBox();
     expect(fortificationButton.y + fortificationButton.height).toBeLessThanOrEqual(
       schemePanel.y + schemePanel.height,
