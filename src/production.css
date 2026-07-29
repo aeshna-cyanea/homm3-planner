@@ -317,6 +317,10 @@ h2 {
   margin-top: 0;
 }
 
+.results-column[data-empty="true"] {
+  display: none;
+}
+
 .planner-controls {
   display: flex;
   align-items: flex-end;
@@ -1380,6 +1384,10 @@ select,
     position: sticky;
     top: 1.375rem;
     align-self: start;
+  }
+
+  .results-column[data-empty="true"] {
+    display: block;
   }
 }
 

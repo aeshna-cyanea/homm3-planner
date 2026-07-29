@@ -448,7 +448,10 @@ for (const viewport of viewports) {
     if (viewport.width === 1100) {
       expect(thirdCard.y).toBe(firstCard.y);
       expect(fourthCard.y).toBeGreaterThan(firstCard.y);
-      await expect(page.locator(".results-column")).toHaveCSS("position", "sticky");
+      await expect(page.locator('[data-town-results="town-1"]')).toHaveCSS(
+        "position",
+        "sticky",
+      );
     }
 
     const firstCardBody = await page.locator(".unit-card").nth(0).boundingBox();
@@ -597,7 +600,7 @@ test("recruitment column follows desktop scrolling only", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("#town-select")).toBeEnabled();
 
-  const resultsColumn = page.locator(".results-column");
+  const resultsColumn = page.locator('[data-town-results="town-1"]');
   await expect(resultsColumn).toHaveCSS("position", "sticky");
   await page.evaluate(() => window.scrollTo(0, 300));
   const desktopBox = await resultsColumn.boundingBox();
@@ -700,12 +703,18 @@ test("external dwellings add to base growth and reset independently", async ({ p
   const firstSlot = page.locator(".unit-slot").first();
   const count = firstSlot.locator(".external-dwelling-input");
   const externalResults = page.locator("#external-results-section");
-  await expect(externalResults).toBeHidden();
+  const emptyExternalResults = page.locator("#external-empty-results");
+  await expect(externalResults).toBeVisible();
+  await expect(emptyExternalResults).toHaveText(
+    "Add an external dwelling to begin this production plan.",
+  );
+  await expect(page.locator("#external-results-table-wrap")).toBeHidden();
 
   await firstSlot.locator('[data-external-action="increment"]').click();
   await expect(count).toHaveValue("1");
   await expect(firstSlot.locator(".production-detail strong")).toHaveText("16");
   await expect(externalResults).toBeVisible();
+  await expect(emptyExternalResults).toBeHidden();
   await expect(page.locator("#external-resource-totals")).toHaveText("0 gold");
   await expect(page.locator("#external-results-body tr")).toHaveCount(1);
   const externalRow = page.locator("#external-results-body tr").first();
@@ -747,7 +756,51 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(count).toHaveValue("");
   await expect(count).toHaveAttribute("placeholder", "0");
   await expect(firstSlot.locator(".production-detail strong")).toHaveText("22");
+  await expect(externalResults).toBeVisible();
+  await expect(emptyExternalResults).toBeVisible();
+});
+
+test("empty external subtotal hides only in the single-column layout", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 900, height: 900 });
+  await page.goto("/index.html");
+
+  const externalResults = page.locator("#external-results-section");
+  const firstSlot = page.locator("#unit-grid .unit-slot").first();
   await expect(externalResults).toBeHidden();
+
+  await firstSlot.locator('[data-external-action="increment"]').click();
+  await expect(externalResults).toBeVisible();
+
+  await firstSlot.locator('[data-external-action="reset"]').click();
+  await expect(externalResults).toBeHidden();
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(externalResults).toBeVisible();
+  await expect(page.locator("#external-empty-results")).toBeVisible();
+});
+
+test("empty town subtotal hides only in the single-column layout", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 900, height: 900 });
+  await page.goto("/index.html");
+
+  const townResults = page.locator('[data-town-results="town-1"]');
+  const firstCard = page.locator("#unit-grid .unit-card-cycle-action").first();
+  await expect(townResults).toBeVisible();
+
+  await firstCard.press("Enter");
+  await firstCard.press("Enter");
+  await expect(townResults).toBeHidden();
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(townResults).toBeVisible();
+  await expect(page.locator("#empty-results")).toBeVisible();
+
+  await firstCard.press("Enter");
+  await expect(page.locator("#results-table-wrap")).toBeVisible();
 });
 
 test("external dwelling cards stay synchronized across towns", async ({ page }) => {
@@ -808,7 +861,8 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
 
   await externalCard.locator(".external-remove-button").click();
   await expect(externalGrid.locator(".external-dwelling-card")).toHaveCount(0);
-  await expect(page.locator("#external-results-section")).toBeHidden();
+  await expect(page.locator("#external-results-section")).toBeVisible();
+  await expect(page.locator("#external-empty-results")).toBeVisible();
 
   await page.locator("#town-select").selectOption("Inferno");
   await expect(

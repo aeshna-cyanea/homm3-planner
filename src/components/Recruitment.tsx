@@ -10,7 +10,11 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
   const id = (name: string) => domId(name, props.planId);
 
   return (
-    <div class="results-column" data-town-results={props.planId}>
+    <div
+      class="results-column"
+      data-town-results={props.planId}
+      data-empty={rows().length === 0}
+    >
       <section class="results-section panel" aria-labelledby={id("results-title")}>
         <div class="section-heading">
           <div>
@@ -47,40 +51,54 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
 }
 
 export function ExternalRecruitment(props: { planner: Planner }) {
+  const rows = () => props.planner.externalRows();
+
   return (
-    <Show when={props.planner.externalRows().length > 0}>
-      <div class="results-column external-results-column">
-        <section
-          class="results-section panel"
-          id="external-results-section"
-          aria-labelledby="external-results-title"
-        >
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow" id="external-results-title">
-                External subtotal
-              </p>
+    <div
+      class="results-column external-results-column"
+      data-empty={rows().length === 0}
+    >
+      <section
+        class="results-section panel"
+        id="external-results-section"
+        aria-labelledby="external-results-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow" id="external-results-title">
+              External subtotal
+            </p>
+            <Show when={rows().length > 0}>
               <div class="totals" aria-live="polite">
                 <ResourceTotals
                   id="external-resource-totals"
                   entries={props.planner.externalTotals()}
                 />
               </div>
-            </div>
-            <p class="result-context" id="external-result-context">
-              Recruitment at external dwellings
-            </p>
+            </Show>
           </div>
+          <p class="result-context" id="external-result-context">
+            Recruitment at external dwellings
+          </p>
+        </div>
 
-          <div class="results-table-wrap">
+        <Show
+          when={rows().length > 0}
+          fallback={
+            <div class="empty-results" id="external-empty-results">
+              Add an external dwelling to begin this production plan.
+            </div>
+          }
+        >
+          <div class="results-table-wrap" id="external-results-table-wrap">
             <ResultsTable
               id="external-results-body"
-              rows={props.planner.externalRows()}
+              rows={rows()}
             />
           </div>
-        </section>
-      </div>
-    </Show>
+        </Show>
+      </section>
+    </div>
   );
 }
 
