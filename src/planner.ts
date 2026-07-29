@@ -224,6 +224,10 @@ export function createPlanner(catalog: Catalog): Planner {
             recruitments: dwelling.recruitments.map((recruitment) => ({
               ...recruitment,
               production: recruitment.growth * entry.count,
+              unitCost: externalRecruitmentCost(
+                recruitment.creature.cost,
+                recruitment.creature.level,
+              ),
             })),
             production: dwelling.recruitments.reduce(
               (total, recruitment) =>
@@ -243,10 +247,10 @@ export function createPlanner(catalog: Catalog): Planner {
           `${dwellingLabel(card.name, recruitment.tier)} · ` +
           `${card.count} external dwelling${card.count === 1 ? "" : "s"}`,
         production: recruitment.production,
-        unitCost: recruitment.creature.cost,
-        weeklyCost: multiplyCost(
-          recruitment.creature.cost,
-          recruitment.production,
+        unitCost: recruitment.unitCost,
+        weeklyCost: externalRecruitmentCost(
+          multiplyCost(recruitment.unitCost, recruitment.production),
+          recruitment.creature.level,
         ),
       }))),
   );
@@ -368,8 +372,12 @@ export function createPlanner(catalog: Catalog): Planner {
     productionTotals,
     externalDwellingCards,
     externalRows,
-    externalTotals: createMemo(() =>
-      totalCosts(externalRows().map((row) => row.weeklyCost))),
+    externalTotals: createMemo(() => {
+      const totals = totalCosts(externalRows().map((row) => row.weeklyCost));
+      return totals.length > 0 || externalRows().length === 0
+        ? totals
+        : [["gold", 0] as CostEntry];
+    }),
     globalRows,
     globalTotals: createMemo(() =>
       totalCosts(globalRows().map((row) => row.weeklyCost))),
@@ -579,6 +587,10 @@ function restoreState(
 
 function dwellingsFor(catalog: Catalog, plan: TownPlan): Dwelling[] {
   return townByName(catalog, plan.town)?.dwellings ?? [];
+}
+
+function externalRecruitmentCost(cost: Cost, level: number): Cost {
+  return level === 1 ? { ...cost, gold: 0 } : cost;
 }
 
 function aggregateRows(

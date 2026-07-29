@@ -173,7 +173,9 @@ export interface ExternalDwellingCard {
   id: string;
   name: string;
   count: number;
-  recruitments: Array<ExternalRecruitment & { production: number }>;
+  recruitments: Array<
+    ExternalRecruitment & { production: number; unitCost: Cost }
+  >;
   production: number;
 }
 

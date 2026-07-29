@@ -15,7 +15,13 @@ export function ResourceSymbol(props: { resource: Resource }) {
 }
 
 export function CostDisplay(props: { cost: Cost }) {
-  const entries = () => costEntries(props.cost);
+  const entries = (): CostEntry[] => {
+    const cost = props.cost ?? {};
+    const positiveEntries = costEntries(cost);
+    return cost.gold === 0
+      ? [["gold", 0], ...positiveEntries]
+      : positiveEntries;
+  };
   return (
     <For each={entries()}>
       {(entry, index) => (

@@ -180,7 +180,7 @@ test("creature names open details without interfering with keyboard cycling", as
   await expect(dialog).toBeVisible();
   await expect(dialog.locator("h2")).toHaveText("Pikeman");
   await expect(dialog.locator(".eyebrow")).toHaveText(
-    "Castle · Guardhouse ➀ · Basic",
+    "Castle · ➀ Guardhouse · Basic",
   );
   await expect(dialog.locator('[data-stat="attack"]')).toContainText("⚔️Attack4");
   await expect(dialog.locator('[data-stat="defense"]')).toContainText("🛡️Defense5");
@@ -706,15 +706,15 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(count).toHaveValue("1");
   await expect(firstSlot.locator(".production-detail strong")).toHaveText("16");
   await expect(externalResults).toBeVisible();
-  await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
+  await expect(page.locator("#external-resource-totals")).toHaveText("0 gold");
   await expect(page.locator("#external-results-body tr")).toHaveCount(1);
   const externalRow = page.locator("#external-results-body tr").first();
   await expect(externalRow.locator("td").nth(0)).toContainText(
-    "ImpImp Crucible ➀ · 1 external dwelling",
+    "Imp➀ Imp Crucible · 1 external dwelling",
   );
   await expect(externalRow.locator("td").nth(1)).toHaveText("15 units");
-  await expect(externalRow.locator("td").nth(2)).toHaveText("50 gold");
-  await expect(externalRow.locator("td").nth(3)).toHaveText("750 gold");
+  await expect(externalRow.locator("td").nth(2)).toHaveText("0 gold");
+  await expect(externalRow.locator("td").nth(3)).toHaveText("0 gold");
   const weeklyBox = await page.locator(".results-column > .results-section").first().boundingBox();
   const externalBox = await externalResults.boundingBox();
   expect(externalBox.x).toBe(weeklyBox.x);
@@ -723,7 +723,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await firstSlot.locator(".unit-card-cycle-action").press("Enter");
   await expect(firstSlot.locator(".creature-name")).toHaveText("Familiar");
   await expect(page.locator("#external-results-body tr").first()).toContainText("Imp");
-  await expect(page.locator("#external-resource-totals")).toHaveText("750 gold");
+  await expect(page.locator("#external-resource-totals")).toHaveText("0 gold");
 
   await page.locator("#fortification-cycle").click();
   await expect(page.locator("#fortification-cycle")).toHaveAttribute(
@@ -738,7 +738,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(count).toHaveValue("3");
   await expect(firstSlot.locator(".production-detail strong")).toHaveText("27");
   await expect(page.locator("#external-results-body tr").first()).toContainText("45 units");
-  await expect(page.locator("#external-resource-totals")).toHaveText("2,250 gold");
+  await expect(page.locator("#external-resource-totals")).toHaveText("0 gold");
   await expect(externalResults).toHaveScreenshot("external-recruitment-panel.png", {
     animations: "disabled",
   });
@@ -780,6 +780,7 @@ test("external dwelling cards stay synchronized across towns", async ({ page }) 
   ).toBeDisabled();
   await expect(externalCard.locator('[data-external-action="reset"]')).toHaveCount(0);
   await expect(externalCard.locator(".production-detail strong")).toHaveText("15");
+  await expect(externalCard.locator(".cost-detail")).toHaveText("0 gold");
 
   await externalCard.locator('[data-external-card-action="increment"]').click();
   await expect(schemeSlot.locator(".external-dwelling-input")).toHaveValue("2");
@@ -855,7 +856,7 @@ test("creature search adds and increments external dwellings", async ({ page }) 
     .locator(".external-dwelling-dropdown .external-search-result")
     .filter({ hasText: "Imp" });
   await expect(impOption).toBeVisible();
-  await expect(impOption).toContainText("Imp Crucible ➀");
+  await expect(impOption).toContainText("➀ Imp Crucible");
   await expect(page.locator(".external-dwelling-dropdown")).toHaveScreenshot(
     "external-dwelling-search-dropdown.png",
     { animations: "disabled" },
@@ -891,7 +892,7 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   const dialog = page.locator(".creature-details-dialog");
   await expect(dialog.locator("h2")).toHaveText("Azure Dragon");
   await expect(dialog.locator(".eyebrow")).toHaveText(
-    "Neutral · Frozen Cliffs ➆",
+    "Neutral · ➆ Frozen Cliffs",
   );
   await expect(dialog.locator(".creature-variant-cycle-button")).toHaveCount(0);
   await dialog.getByRole("button", { name: "Close" }).click();
@@ -912,15 +913,15 @@ test("shared dwelling aliases recruit and boost every associated creature", asyn
   await expect(results).toHaveCount(3);
   expect(await results.locator("strong").allTextContents()).toEqual(
     expect.arrayContaining([
-      "Altar of Air ➁",
-      "Air Elemental Conflux ➁",
-      "Elemental Conflux ➁➂➃➄",
+      "➁ Altar of Air",
+      "➁ Air Elemental Conflux",
+      "➁➂➃➄ Elemental Conflux",
     ]),
   );
 
   await searchInput.fill("Elemental Conflux");
   const sharedOption = results.filter({
-    hasText: /^Elemental Conflux ➁➂➃➄/,
+    hasText: /^➁➂➃➄ Elemental Conflux/,
   });
   await expect(sharedOption).toHaveCount(1);
   await sharedOption.click();
@@ -929,7 +930,7 @@ test("shared dwelling aliases recruit and boost every associated creature", asyn
     '.external-dwelling-card[data-dwelling-id="elemental_conflux"]',
   );
   await expect(card.locator(".tier-label")).toHaveText(
-    "Elemental Conflux ➁➂➃➄",
+    "➁➂➃➄ Elemental Conflux",
   );
   await expect(card.locator(".creature-name")).toContainText(
     "Air Elemental · Water Elemental · Fire Elemental · Earth Elemental",
@@ -1015,7 +1016,7 @@ test("creature search opens above and reverses when space below is limited", asy
   const results = dropdown.locator(".external-search-result");
   await expect(dropdown).toHaveClass(/is-above/);
   expect(await results.count()).toBeGreaterThan(1);
-  await expect(results.last().locator("strong")).toHaveText("Dragon Cliffs ➆");
+  await expect(results.last().locator("strong")).toHaveText("➆ Dragon Cliffs");
 
   const inputBox = await searchInput.boundingBox();
   const dropdownBox = await dropdown.boundingBox();
@@ -1043,7 +1044,7 @@ test("creature search opens above and reverses when space below is limited", asy
   const nearestResultName = visualResultNames.at(-1);
   expect(topmostResultName).toBe(await results.first().locator("strong").innerText());
   expect(nearestResultName).toBe(await results.last().locator("strong").innerText());
-  expect(nearestResultName).toBe("Dragon Cliffs ➆");
+  expect(nearestResultName).toBe("➆ Dragon Cliffs");
   expect(topmostResultName).not.toBe(nearestResultName);
 
   await searchInput.press("ArrowDown");

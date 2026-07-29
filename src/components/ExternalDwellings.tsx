@@ -96,7 +96,7 @@ function ExternalDwellingCard(props: { planner: Planner; card: Card }) {
             <Show when={props.card.recruitments.length === 1}>
               {", "}
               <span class="cost-detail">
-                <CostDisplay cost={props.card.recruitments[0].creature.cost} />
+                <CostDisplay cost={props.card.recruitments[0].unitCost} />
               </span>
             </Show>
           </span>

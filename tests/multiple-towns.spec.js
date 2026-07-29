@@ -64,7 +64,7 @@ test("towns have independent schemes and external bonuses apply to every match",
     "Town 1 · Town 3 · External dwellings",
   );
   await expect(pikeman.locator("td").nth(1)).toHaveText("51 units");
-  await expect(pikeman.locator("td").nth(3)).toHaveText("3,060 gold");
+  await expect(pikeman.locator("td").nth(3)).toHaveText("2,220 gold");
   await expect(dialog).toHaveScreenshot("global-total-dialog.png", {
     animations: "disabled",
   });
