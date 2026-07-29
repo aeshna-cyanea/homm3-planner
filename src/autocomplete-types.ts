@@ -43,6 +43,7 @@ export interface AutoCompleteConfig<T> {
     src: T[];
     keys: (keyof T & string)[];
     cache?: boolean;
+    filter?: (results: AutoCompleteResult<T>[]) => AutoCompleteResult<T>[];
   };
   threshold?: number;
   resultsList?: {

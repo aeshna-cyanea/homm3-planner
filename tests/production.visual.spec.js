@@ -15,6 +15,8 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
     "schema_version",
     "ruleset",
     "source_url",
+    "external_dwelling_source_url",
+    "external_dwellings",
     "horde_building_source_url",
     "creature_count",
     "fortification_building_count",
@@ -33,6 +35,10 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
     "id", "name", "level", "attack", "defense", "damage", "health", "speed",
     "growth", "ai_value", "cost", "special", "wiki_url",
   ];
+  const creatureKeys = (creature) => [
+    ...fullCreatureKeys,
+    ...(creature.external_dwelling_ids ? ["external_dwelling_ids"] : []),
+  ];
   let creatureCount = 0;
   for (const town of creatureData.towns) {
     expect(town).not.toHaveProperty("id");
@@ -41,9 +47,12 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
       expect(Object.keys(dwelling).every((key) => [
         "tier", "growth", "variants", "horde",
       ].includes(key))).toBe(true);
+      expect(dwelling.variants[0].external_dwelling_ids).toEqual(
+        expect.arrayContaining([expect.any(String)]),
+      );
       expect(dwelling.variants.length).toBeGreaterThanOrEqual(2);
       for (const creature of dwelling.variants) {
-        expect(Object.keys(creature)).toEqual(fullCreatureKeys);
+        expect(Object.keys(creature)).toEqual(creatureKeys(creature));
         expect(creature).not.toHaveProperty("upgraded_creature");
         expect(creature).not.toHaveProperty("horde_building");
         creatureCount += 1;
@@ -52,7 +61,18 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
   }
   for (const creature of creatureData.neutral_creatures) {
     expect(creature).not.toHaveProperty("variants");
-    expect(Object.keys(creature)).toEqual([...fullCreatureKeys, "tier"]);
+    expect(Object.keys(creature)).toEqual([
+      ...fullCreatureKeys,
+      "tier",
+      ...(creature.external_dwelling_ids ? ["external_dwelling_ids"] : []),
+    ]);
+    if (creature.name === "Steel Golem") {
+      expect(creature).not.toHaveProperty("external_dwelling_ids");
+    } else {
+      expect(creature.external_dwelling_ids).toEqual(
+        expect.arrayContaining([expect.any(String)]),
+      );
+    }
     creatureCount += 1;
   }
   expect(creatureCount).toBe(creatureData.creature_count);
@@ -83,6 +103,69 @@ test("Horde buildings are embedded on town dwellings", () => {
   expect(hordeBuildingCount).toBe(16);
 });
 
+test("external dwellings are normalized and referenced by recruitable creatures", () => {
+  const dwellingFor = (townName, creatureName) =>
+    creatureData.towns
+      .find((town) => town.name === townName)
+      .dwellings.find((dwelling) =>
+        dwelling.variants.some((creature) => creature.name === creatureName));
+  const neutralCreature = (name) =>
+    creatureData.neutral_creatures.find((creature) => creature.name === name);
+  const externalDwellingIds = [
+    ...creatureData.towns.flatMap((town) =>
+      town.dwellings.flatMap((dwelling) =>
+        dwelling.variants.flatMap(
+          (creature) => creature.external_dwelling_ids ?? [],
+        ))),
+    ...creatureData.neutral_creatures.flatMap(
+      (creature) => creature.external_dwelling_ids ?? [],
+    ),
+  ];
+
+  expect(creatureData.external_dwelling_source_url).toBe(
+    "https://heroes.thelazy.net/index.php/Creature_dwelling",
+  );
+  expect(creatureData.external_dwellings).toHaveProperty(
+    "guardhouse.name",
+    "Guardhouse",
+  );
+  expect(creatureData.external_dwellings).toHaveProperty(
+    "elemental_conflux.name",
+    "Elemental Conflux",
+  );
+  expect(Object.keys(creatureData.external_dwellings)).toHaveLength(106);
+  expect(
+    dwellingFor("Castle", "Pikeman").variants[0].external_dwelling_ids,
+  ).toEqual([
+    "guardhouse",
+  ]);
+  expect(
+    dwellingFor("Conflux", "Air Elemental").variants[0].external_dwelling_ids,
+  ).toEqual([
+    "altar_of_air",
+    "air_elemental_conflux",
+    "elemental_conflux",
+  ]);
+  expect(
+    dwellingFor("Factory", "Halfling").variants[0].external_dwelling_ids,
+  ).toEqual([
+    "halfling_adobe",
+    "thatched_hut",
+  ]);
+  expect(
+    dwellingFor("Tower", "Iron Golem").variants[1].external_dwelling_ids,
+  ).toEqual([
+    "golem_factory",
+  ]);
+  expect(neutralCreature("Gold Golem").external_dwelling_ids).toEqual([
+    "golem_factory",
+  ]);
+  expect(neutralCreature("Steel Golem")).not.toHaveProperty(
+    "external_dwelling_ids",
+  );
+  expect(externalDwellingIds).toHaveLength(112);
+});
+
 test("creature names open details without interfering with keyboard cycling", async ({
   page,
 }) => {
@@ -96,7 +179,9 @@ test("creature names open details without interfering with keyboard cycling", as
   const dialog = page.locator(".creature-details-dialog");
   await expect(dialog).toBeVisible();
   await expect(dialog.locator("h2")).toHaveText("Pikeman");
-  await expect(dialog.locator(".eyebrow")).toHaveText("Castle · Tier 1 · Basic");
+  await expect(dialog.locator(".eyebrow")).toHaveText(
+    "Castle · Guardhouse ➀ · Basic",
+  );
   await expect(dialog.locator('[data-stat="attack"]')).toContainText("⚔️Attack4");
   await expect(dialog.locator('[data-stat="defense"]')).toContainText("🛡️Defense5");
   await expect(dialog.locator('[data-stat="damage"]')).toContainText("🎲Damage1–3");
@@ -625,7 +710,7 @@ test("external dwellings add to base growth and reset independently", async ({ p
   await expect(page.locator("#external-results-body tr")).toHaveCount(1);
   const externalRow = page.locator("#external-results-body tr").first();
   await expect(externalRow.locator("td").nth(0)).toContainText(
-    "ImpTier 1 · Basic · 1 external dwelling",
+    "ImpImp Crucible ➀ · 1 external dwelling",
   );
   await expect(externalRow.locator("td").nth(1)).toHaveText("15 units");
   await expect(externalRow.locator("td").nth(2)).toHaveText("50 gold");
@@ -770,14 +855,16 @@ test("creature search adds and increments external dwellings", async ({ page }) 
     .locator(".external-dwelling-dropdown .external-search-result")
     .filter({ hasText: "Imp" });
   await expect(impOption).toBeVisible();
-  await expect(impOption).toContainText("Tier 1");
+  await expect(impOption).toContainText("Imp Crucible ➀");
   await expect(page.locator(".external-dwelling-dropdown")).toHaveScreenshot(
     "external-dwelling-search-dropdown.png",
     { animations: "disabled" },
   );
   await impOption.click();
 
-  const impCard = externalGrid.locator('.external-dwelling-card[data-creature-name="Imp"]');
+  const impCard = externalGrid.locator(
+    '.external-dwelling-card[data-dwelling-id="imp_crucible"]',
+  );
   await expect(impCard).toHaveCount(1);
   await expect(impCard.locator(".external-card-count-input")).toHaveValue("1");
 
@@ -797,15 +884,87 @@ test("creature search adds and increments external dwellings", async ({ page }) 
   await expect(azureOption).toBeVisible();
   await azureOption.click();
   const azureCard = externalGrid.locator(
-    '.external-dwelling-card[data-creature-name="Azure Dragon"]',
+    '.external-dwelling-card[data-dwelling-id="frozen_cliffs"]',
   );
   await expect(azureCard).toHaveCount(1);
   await azureCard.locator(".creature-info-trigger").click();
   const dialog = page.locator(".creature-details-dialog");
   await expect(dialog.locator("h2")).toHaveText("Azure Dragon");
-  await expect(dialog.locator(".eyebrow")).toHaveText("Neutral · Tier 7");
+  await expect(dialog.locator(".eyebrow")).toHaveText(
+    "Neutral · Frozen Cliffs ➆",
+  );
   await expect(dialog.locator(".creature-variant-cycle-button")).toHaveCount(0);
   await dialog.getByRole("button", { name: "Close" }).click();
+});
+
+test("shared dwelling aliases recruit and boost every associated creature", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/index.html");
+
+  const searchInput = page.locator("#external-dwelling-search");
+  const results = page.locator(
+    ".external-dwelling-dropdown .external-search-result",
+  );
+
+  await searchInput.fill("Air Elemental");
+  await expect(results).toHaveCount(3);
+  expect(await results.locator("strong").allTextContents()).toEqual(
+    expect.arrayContaining([
+      "Altar of Air ➁",
+      "Air Elemental Conflux ➁",
+      "Elemental Conflux ➁➂➃➄",
+    ]),
+  );
+
+  await searchInput.fill("Elemental Conflux");
+  const sharedOption = results.filter({
+    hasText: /^Elemental Conflux ➁➂➃➄/,
+  });
+  await expect(sharedOption).toHaveCount(1);
+  await sharedOption.click();
+
+  const card = page.locator(
+    '.external-dwelling-card[data-dwelling-id="elemental_conflux"]',
+  );
+  await expect(card.locator(".tier-label")).toHaveText(
+    "Elemental Conflux ➁➂➃➄",
+  );
+  await expect(card.locator(".creature-name")).toContainText(
+    "Air Elemental · Water Elemental · Fire Elemental · Earth Elemental",
+  );
+  await expect(card.locator(".production-detail strong")).toHaveText("21");
+
+  await page.locator("#town-select").selectOption("Conflux");
+  const elementalSlots = page.locator("#unit-grid .unit-slot");
+  for (const [slot, production] of [[1, "7"], [2, "7"], [3, "6"], [4, "5"]]) {
+    await expect(
+      elementalSlots.nth(slot).locator(".external-dwelling-input"),
+    ).toHaveValue("1");
+    await expect(
+      elementalSlots.nth(slot).locator(".production-detail strong"),
+    ).toHaveText(production);
+  }
+
+  const externalRows = page.locator("#external-results-body tr");
+  await expect(externalRows).toHaveCount(4);
+  for (const [creature, production] of [
+    ["Air Elemental", "6 units"],
+    ["Water Elemental", "6 units"],
+    ["Fire Elemental", "5 units"],
+    ["Earth Elemental", "4 units"],
+  ]) {
+    const row = externalRows.filter({ hasText: creature });
+    await expect(row.locator("td").nth(1)).toHaveText(production);
+  }
+
+  await card.locator('[data-external-card-action="increment"]').click();
+  for (const slot of [1, 2, 3, 4]) {
+    await expect(
+      elementalSlots.nth(slot).locator(".external-dwelling-input"),
+    ).toHaveValue("2");
+  }
 });
 
 test("slash focuses creature search without hijacking text entry", async ({ page }) => {
@@ -819,6 +978,23 @@ test("slash focuses creature search without hijacking text entry", async ({ page
   await searchInput.fill("Imp");
   await searchInput.press("/");
   await expect(searchInput).toHaveValue("Imp/");
+});
+
+test("Escape clears then blurs every search input", async ({ page }) => {
+  await page.goto("/index.html");
+
+  for (const selector of ["#external-dwelling-search", "#add-town-search"]) {
+    const searchInput = page.locator(selector);
+    await searchInput.focus();
+    await searchInput.fill("a");
+
+    await searchInput.press("Escape");
+    await expect(searchInput).toHaveValue("");
+    await expect(searchInput).toBeFocused();
+
+    await searchInput.press("Escape");
+    await expect(searchInput).not.toBeFocused();
+  }
 });
 
 test("creature search opens above and reverses when space below is limited", async ({
@@ -839,7 +1015,7 @@ test("creature search opens above and reverses when space below is limited", asy
   const results = dropdown.locator(".external-search-result");
   await expect(dropdown).toHaveClass(/is-above/);
   expect(await results.count()).toBeGreaterThan(1);
-  await expect(results.last().locator("strong")).toHaveText("Green Dragon");
+  await expect(results.last().locator("strong")).toHaveText("Dragon Cliffs ➆");
 
   const inputBox = await searchInput.boundingBox();
   const dropdownBox = await dropdown.boundingBox();
@@ -867,15 +1043,15 @@ test("creature search opens above and reverses when space below is limited", asy
   const nearestResultName = visualResultNames.at(-1);
   expect(topmostResultName).toBe(await results.first().locator("strong").innerText());
   expect(nearestResultName).toBe(await results.last().locator("strong").innerText());
-  expect(nearestResultName).toBe("Green Dragon");
+  expect(nearestResultName).toBe("Dragon Cliffs ➆");
   expect(topmostResultName).not.toBe(nearestResultName);
 
   await searchInput.press("ArrowDown");
   await expect(results.last()).toHaveAttribute("aria-selected", "true");
   await searchInput.press("Enter");
   const addedCard = externalGrid.locator(".external-dwelling-card");
-  await expect(addedCard).toHaveAttribute("data-creature-name", nearestResultName);
-  await expect(addedCard).not.toHaveAttribute("data-creature-name", topmostResultName);
+  await expect(addedCard).toHaveAttribute("data-dwelling-id", "dragon_cliffs");
+  await expect(addedCard).toHaveAttribute("data-dwelling-name", "Dragon Cliffs");
 
   await searchInput.evaluate((input) => {
     const bounds = input.getBoundingClientRect();
@@ -991,7 +1167,7 @@ test("planner state persists across reloads", async ({ page }) => {
     }),
   );
   expect(savedState.externalDwellings).toEqual([
-    { basicCreature: "Griffin", count: 2 },
+    { id: "griffin_tower", count: 2 },
   ]);
 
   await page.reload();

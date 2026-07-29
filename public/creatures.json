@@ -1,7 +1,328 @@
 {
-  "schema_version": 6,
+  "schema_version": 8,
   "ruleset": "heroes_iii_horn_of_the_abyss",
   "source_url": "https://heroes.thelazy.net/index.php/List_of_creatures",
+  "external_dwelling_source_url": "https://heroes.thelazy.net/index.php/Creature_dwelling",
+  "external_dwellings": {
+    "guardhouse": {
+      "name": "Guardhouse"
+    },
+    "archers_tower": {
+      "name": "Archers' Tower"
+    },
+    "griffin_tower": {
+      "name": "Griffin Tower"
+    },
+    "barracks": {
+      "name": "Barracks"
+    },
+    "monastery": {
+      "name": "Monastery"
+    },
+    "training_grounds": {
+      "name": "Training Grounds"
+    },
+    "portal_of_glory": {
+      "name": "Portal of Glory"
+    },
+    "centaur_stables": {
+      "name": "Centaur Stables"
+    },
+    "dwarf_cottage": {
+      "name": "Dwarf Cottage"
+    },
+    "homestead": {
+      "name": "Homestead"
+    },
+    "enchanted_spring": {
+      "name": "Enchanted Spring"
+    },
+    "dendroid_arches": {
+      "name": "Dendroid Arches"
+    },
+    "unicorn_glade": {
+      "name": "Unicorn Glade"
+    },
+    "dragon_cliffs": {
+      "name": "Dragon Cliffs"
+    },
+    "workshop": {
+      "name": "Workshop"
+    },
+    "parapet": {
+      "name": "Parapet"
+    },
+    "golem_factory": {
+      "name": "Golem Factory"
+    },
+    "mage_tower": {
+      "name": "Mage Tower"
+    },
+    "altar_of_wishes": {
+      "name": "Altar of Wishes"
+    },
+    "golden_pavilion": {
+      "name": "Golden Pavilion"
+    },
+    "cloud_temple": {
+      "name": "Cloud Temple"
+    },
+    "imp_crucible": {
+      "name": "Imp Crucible"
+    },
+    "hall_of_sins": {
+      "name": "Hall of Sins"
+    },
+    "kennels": {
+      "name": "Kennels"
+    },
+    "demon_gate": {
+      "name": "Demon Gate"
+    },
+    "hell_hole": {
+      "name": "Hell Hole"
+    },
+    "fire_lake": {
+      "name": "Fire Lake"
+    },
+    "forsaken_palace": {
+      "name": "Forsaken Palace"
+    },
+    "cursed_temple": {
+      "name": "Cursed Temple"
+    },
+    "graveyard": {
+      "name": "Graveyard"
+    },
+    "tomb_of_souls": {
+      "name": "Tomb of Souls"
+    },
+    "estate": {
+      "name": "Estate"
+    },
+    "mausoleum": {
+      "name": "Mausoleum"
+    },
+    "hall_of_darkness": {
+      "name": "Hall of Darkness"
+    },
+    "dragon_vault": {
+      "name": "Dragon Vault"
+    },
+    "warren": {
+      "name": "Warren"
+    },
+    "harpy_loft": {
+      "name": "Harpy Loft"
+    },
+    "pillar_of_eyes": {
+      "name": "Pillar of Eyes"
+    },
+    "chapel_of_stilled_voices": {
+      "name": "Chapel of Stilled Voices"
+    },
+    "labyrinth": {
+      "name": "Labyrinth"
+    },
+    "manticore_lair": {
+      "name": "Manticore Lair"
+    },
+    "dragon_cave": {
+      "name": "Dragon Cave"
+    },
+    "goblin_barracks": {
+      "name": "Goblin Barracks"
+    },
+    "wolf_pen": {
+      "name": "Wolf Pen"
+    },
+    "orc_tower": {
+      "name": "Orc Tower"
+    },
+    "ogre_fort": {
+      "name": "Ogre Fort"
+    },
+    "cliff_nest": {
+      "name": "Cliff Nest"
+    },
+    "cyclops_cave": {
+      "name": "Cyclops Cave"
+    },
+    "behemoth_crag": {
+      "name": "Behemoth Crag"
+    },
+    "gnoll_hut": {
+      "name": "Gnoll Hut"
+    },
+    "lizard_den": {
+      "name": "Lizard Den"
+    },
+    "serpent_fly_hive": {
+      "name": "Serpent Fly Hive"
+    },
+    "basilisk_pit": {
+      "name": "Basilisk Pit"
+    },
+    "gorgon_lair": {
+      "name": "Gorgon Lair"
+    },
+    "wyvern_nest": {
+      "name": "Wyvern Nest"
+    },
+    "hydra_pond": {
+      "name": "Hydra Pond"
+    },
+    "magic_lantern": {
+      "name": "Magic Lantern"
+    },
+    "altar_of_air": {
+      "name": "Altar of Air"
+    },
+    "air_elemental_conflux": {
+      "name": "Air Elemental Conflux"
+    },
+    "elemental_conflux": {
+      "name": "Elemental Conflux"
+    },
+    "altar_of_water": {
+      "name": "Altar of Water"
+    },
+    "water_elemental_conflux": {
+      "name": "Water Elemental Conflux"
+    },
+    "altar_of_fire": {
+      "name": "Altar of Fire"
+    },
+    "fire_elemental_conflux": {
+      "name": "Fire Elemental Conflux"
+    },
+    "altar_of_earth": {
+      "name": "Altar of Earth"
+    },
+    "earth_elemental_conflux": {
+      "name": "Earth Elemental Conflux"
+    },
+    "altar_of_thought": {
+      "name": "Altar of Thought"
+    },
+    "pyre": {
+      "name": "Pyre"
+    },
+    "nymph_waterfall": {
+      "name": "Nymph Waterfall"
+    },
+    "shack": {
+      "name": "Shack"
+    },
+    "frigate": {
+      "name": "Frigate"
+    },
+    "nest": {
+      "name": "Nest"
+    },
+    "tower_of_the_seas": {
+      "name": "Tower of the Seas"
+    },
+    "nix_fort": {
+      "name": "Nix Fort"
+    },
+    "maelstrom": {
+      "name": "Maelstrom"
+    },
+    "halfling_adobe": {
+      "name": "Halfling Adobe"
+    },
+    "thatched_hut": {
+      "name": "Thatched Hut"
+    },
+    "foundry": {
+      "name": "Foundry"
+    },
+    "ranch": {
+      "name": "Ranch"
+    },
+    "manufactory": {
+      "name": "Manufactory"
+    },
+    "catacombs": {
+      "name": "Catacombs"
+    },
+    "watchtower": {
+      "name": "Watchtower"
+    },
+    "serpentarium": {
+      "name": "Serpentarium"
+    },
+    "gantry": {
+      "name": "Gantry"
+    },
+    "colliery": {
+      "name": "Colliery"
+    },
+    "frigid_spur": {
+      "name": "Frigid Spur"
+    },
+    "hall_of_the_bold": {
+      "name": "Hall of the Bold"
+    },
+    "mountain_embassy": {
+      "name": "Mountain Embassy"
+    },
+    "shaman_fane": {
+      "name": "Shaman Fane"
+    },
+    "mammoth_stalls": {
+      "name": "Mammoth Stalls"
+    },
+    "frosthome": {
+      "name": "Frosthome"
+    },
+    "hovel": {
+      "name": "Hovel"
+    },
+    "boar_glen": {
+      "name": "Boar Glen"
+    },
+    "rogue_cavern": {
+      "name": "Rogue Cavern"
+    },
+    "alehouse": {
+      "name": "Alehouse"
+    },
+    "tomb_of_curses": {
+      "name": "Tomb of Curses"
+    },
+    "nomad_tent": {
+      "name": "Nomad Tent"
+    },
+    "treetop_tower": {
+      "name": "Treetop Tower"
+    },
+    "wineyard": {
+      "name": "Wineyard"
+    },
+    "troll_bridge": {
+      "name": "Troll Bridge"
+    },
+    "ziggurat": {
+      "name": "Ziggurat"
+    },
+    "enchanter_s_hollow": {
+      "name": "Enchanter's Hollow"
+    },
+    "magic_forest": {
+      "name": "Magic Forest"
+    },
+    "sulfurous_lair": {
+      "name": "Sulfurous Lair"
+    },
+    "crystal_cave": {
+      "name": "Crystal Cave"
+    },
+    "frozen_cliffs": {
+      "name": "Frozen Cliffs"
+    }
+  },
   "horde_building_source_url": "https://heroes.thelazy.net/index.php/Horde_building",
   "creature_count": 189,
   "fortification_building_count": 2,
@@ -53,7 +374,10 @@
                 "gold": 60
               },
               "special": "Immune to Jousting",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Pikeman"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Pikeman",
+              "external_dwelling_ids": [
+                "guardhouse"
+              ]
             },
             {
               "id": "halberdier",
@@ -99,7 +423,10 @@
                 "gold": 100
               },
               "special": "Ranged (12 shots)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Archer"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Archer",
+              "external_dwelling_ids": [
+                "archers_tower"
+              ]
             },
             {
               "id": "marksman",
@@ -145,7 +472,10 @@
                 "gold": 200
               },
               "special": "Flying, Two retaliations",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Griffin"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Griffin",
+              "external_dwelling_ids": [
+                "griffin_tower"
+              ]
             },
             {
               "id": "royal_griffin",
@@ -200,7 +530,10 @@
                 "gold": 300
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Swordsman"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Swordsman",
+              "external_dwelling_ids": [
+                "barracks"
+              ]
             },
             {
               "id": "crusader",
@@ -246,7 +579,10 @@
                 "gold": 400
               },
               "special": "Ranged (12 shots)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Monk"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Monk",
+              "external_dwelling_ids": [
+                "monastery"
+              ]
             },
             {
               "id": "zealot",
@@ -292,7 +628,10 @@
                 "gold": 1000
               },
               "special": "Jousting",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Cavalier"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Cavalier",
+              "external_dwelling_ids": [
+                "training_grounds"
+              ]
             },
             {
               "id": "champion",
@@ -339,7 +678,10 @@
                 "gem": 1
               },
               "special": "Flying, Hates Devils, Morale +1",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Angel"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Angel",
+              "external_dwelling_ids": [
+                "portal_of_glory"
+              ]
             },
             {
               "id": "archangel",
@@ -391,7 +733,10 @@
                 "gold": 70
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Centaur"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Centaur",
+              "external_dwelling_ids": [
+                "centaur_stables"
+              ]
             },
             {
               "id": "centaur_captain",
@@ -437,7 +782,10 @@
                 "gold": 120
               },
               "special": "Resistance (+20%)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Dwarf"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Dwarf",
+              "external_dwelling_ids": [
+                "dwarf_cottage"
+              ]
             },
             {
               "id": "battle_dwarf",
@@ -492,7 +840,10 @@
                 "gold": 200
               },
               "special": "Ranged (24 shots)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Wood_Elf"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Wood_Elf",
+              "external_dwelling_ids": [
+                "homestead"
+              ]
             },
             {
               "id": "grand_elf",
@@ -538,7 +889,10 @@
                 "gold": 250
               },
               "special": "Flying, Magic damper",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Pegasus"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Pegasus",
+              "external_dwelling_ids": [
+                "enchanted_spring"
+              ]
             },
             {
               "id": "silver_pegasus",
@@ -584,7 +938,10 @@
                 "gold": 350
               },
               "special": "Binding",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Dendroid_Guard"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Dendroid_Guard",
+              "external_dwelling_ids": [
+                "dendroid_arches"
+              ]
             },
             {
               "id": "dendroid_soldier",
@@ -639,7 +996,10 @@
                 "gold": 850
               },
               "special": "Blinding attack, Aura of Resistance (+20%)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Unicorn"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Unicorn",
+              "external_dwelling_ids": [
+                "unicorn_glade"
+              ]
             },
             {
               "id": "war_unicorn",
@@ -686,7 +1046,10 @@
                 "crystal": 1
               },
               "special": "Dragon, Flying, Breath attack, 1-3 lvl spells immunity",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Green_Dragon"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Green_Dragon",
+              "external_dwelling_ids": [
+                "dragon_cliffs"
+              ]
             },
             {
               "id": "gold_dragon",
@@ -738,7 +1101,10 @@
                 "gold": 30
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Gremlin"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Gremlin",
+              "external_dwelling_ids": [
+                "workshop"
+              ]
             },
             {
               "id": "master_gremlin",
@@ -784,7 +1150,10 @@
                 "gold": 130
               },
               "special": "Bloodless, Flying",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Stone_Gargoyle"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Stone_Gargoyle",
+              "external_dwelling_ids": [
+                "parapet"
+              ]
             },
             {
               "id": "obsidian_gargoyle",
@@ -839,7 +1208,10 @@
                 "gold": 150
               },
               "special": "Unliving, Spell damage resistance +50%",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Stone_Golem"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Stone_Golem",
+              "external_dwelling_ids": [
+                "golem_factory"
+              ]
             },
             {
               "id": "iron_golem",
@@ -859,7 +1231,10 @@
                 "gold": 200
               },
               "special": "Unliving, Spell damage resistance +75%",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Iron_Golem"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Iron_Golem",
+              "external_dwelling_ids": [
+                "golem_factory"
+              ]
             }
           ]
         },
@@ -885,7 +1260,10 @@
                 "gold": 350
               },
               "special": "Ranged (24 shots), No melee penalty, No obstacle penalty, Magic channeler",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Mage"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Mage",
+              "external_dwelling_ids": [
+                "mage_tower"
+              ]
             },
             {
               "id": "arch_mage",
@@ -931,7 +1309,10 @@
                 "gold": 550
               },
               "special": "Flying, Hates Efreet and Efreet Sultans",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Genie"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Genie",
+              "external_dwelling_ids": [
+                "altar_of_wishes"
+              ]
             },
             {
               "id": "master_genie",
@@ -977,7 +1358,10 @@
                 "gold": 1100
               },
               "special": "No enemy retaliation",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Naga"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Naga",
+              "external_dwelling_ids": [
+                "golden_pavilion"
+              ]
             },
             {
               "id": "naga_queen",
@@ -1024,7 +1408,10 @@
                 "gem": 1
               },
               "special": "Mind spells immunity",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Giant"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Giant",
+              "external_dwelling_ids": [
+                "cloud_temple"
+              ]
             },
             {
               "id": "titan",
@@ -1076,7 +1463,10 @@
                 "gold": 50
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Imp"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Imp",
+              "external_dwelling_ids": [
+                "imp_crucible"
+              ]
             },
             {
               "id": "familiar",
@@ -1131,7 +1521,10 @@
                 "gold": 125
               },
               "special": "Ranged (12 shots)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Gog"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Gog",
+              "external_dwelling_ids": [
+                "hall_of_sins"
+              ]
             },
             {
               "id": "magog",
@@ -1177,7 +1570,10 @@
                 "gold": 200
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Hell_Hound"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Hell_Hound",
+              "external_dwelling_ids": [
+                "kennels"
+              ]
             },
             {
               "id": "cerberus",
@@ -1232,7 +1628,10 @@
                 "gold": 250
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Demon"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Demon",
+              "external_dwelling_ids": [
+                "demon_gate"
+              ]
             },
             {
               "id": "horned_demon",
@@ -1278,7 +1677,10 @@
                 "gold": 500
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Pit_Fiend"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Pit_Fiend",
+              "external_dwelling_ids": [
+                "hell_hole"
+              ]
             },
             {
               "id": "pit_lord",
@@ -1324,7 +1726,10 @@
                 "gold": 900
               },
               "special": "Flying, Fire immunity, Hates Genies",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Efreeti"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Efreeti",
+              "external_dwelling_ids": [
+                "fire_lake"
+              ]
             },
             {
               "id": "efreet_sultan",
@@ -1371,7 +1776,10 @@
                 "mercury": 1
               },
               "special": "Teleporting, No enemy retaliation, Luck -1, Hates Angels",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Devil"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Devil",
+              "external_dwelling_ids": [
+                "forsaken_palace"
+              ]
             },
             {
               "id": "arch_devil",
@@ -1423,7 +1831,10 @@
                 "gold": 60
               },
               "special": "Undead",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Skeleton"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Skeleton",
+              "external_dwelling_ids": [
+                "cursed_temple"
+              ]
             },
             {
               "id": "skeleton_warrior",
@@ -1478,7 +1889,10 @@
                 "gold": 100
               },
               "special": "Undead",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Walking_Dead"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Walking_Dead",
+              "external_dwelling_ids": [
+                "graveyard"
+              ]
             },
             {
               "id": "zombie",
@@ -1524,7 +1938,10 @@
                 "gold": 200
               },
               "special": "Undead, Flying, Regeneration",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Wight"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Wight",
+              "external_dwelling_ids": [
+                "tomb_of_souls"
+              ]
             },
             {
               "id": "wraith",
@@ -1570,7 +1987,10 @@
                 "gold": 360
               },
               "special": "Undead, Flying, No enemy retaliation",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Vampire"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Vampire",
+              "external_dwelling_ids": [
+                "estate"
+              ]
             },
             {
               "id": "vampire_lord",
@@ -1616,7 +2036,10 @@
                 "gold": 550
               },
               "special": "Ranged (12 shots), Undead, Death cloud",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Lich"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Lich",
+              "external_dwelling_ids": [
+                "mausoleum"
+              ]
             },
             {
               "id": "power_lich",
@@ -1662,7 +2085,10 @@
                 "gold": 1200
               },
               "special": "Undead, Curse",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Black_Knight"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Black_Knight",
+              "external_dwelling_ids": [
+                "hall_of_darkness"
+              ]
             },
             {
               "id": "dread_knight",
@@ -1708,7 +2134,10 @@
                 "gold": 1800
               },
               "special": "Dragon, Undead, Flying, Morale -1",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Bone_Dragon"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Bone_Dragon",
+              "external_dwelling_ids": [
+                "dragon_vault"
+              ]
             },
             {
               "id": "ghost_dragon",
@@ -1760,7 +2189,10 @@
                 "gold": 50
               },
               "special": "Immune to Blinding and Stone gaze",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Troglodyte"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Troglodyte",
+              "external_dwelling_ids": [
+                "warren"
+              ]
             },
             {
               "id": "infernal_troglodyte",
@@ -1815,7 +2247,10 @@
                 "gold": 130
               },
               "special": "Flying, Strike and return",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Harpy"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Harpy",
+              "external_dwelling_ids": [
+                "harpy_loft"
+              ]
             },
             {
               "id": "harpy_hag",
@@ -1861,7 +2296,10 @@
                 "gold": 250
               },
               "special": "Ranged (12 shots), No melee penalty",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Beholder"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Beholder",
+              "external_dwelling_ids": [
+                "pillar_of_eyes"
+              ]
             },
             {
               "id": "evil_eye",
@@ -1907,7 +2345,10 @@
                 "gold": 300
               },
               "special": "Ranged (4 shots), No melee penalty, Petrifying attack",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Medusa"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Medusa",
+              "external_dwelling_ids": [
+                "chapel_of_stilled_voices"
+              ]
             },
             {
               "id": "medusa_queen",
@@ -1953,7 +2394,10 @@
                 "gold": 500
               },
               "special": "Positive Morale",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Minotaur"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Minotaur",
+              "external_dwelling_ids": [
+                "labyrinth"
+              ]
             },
             {
               "id": "minotaur_king",
@@ -1999,7 +2443,10 @@
                 "gold": 850
               },
               "special": "Flying",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Manticore"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Manticore",
+              "external_dwelling_ids": [
+                "manticore_lair"
+              ]
             },
             {
               "id": "scorpicore",
@@ -2046,7 +2493,10 @@
                 "sulfur": 1
               },
               "special": "Dragon, Flying, Breath attack, 1-3 lvl spells immunity",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Red_Dragon"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Red_Dragon",
+              "external_dwelling_ids": [
+                "dragon_cave"
+              ]
             },
             {
               "id": "black_dragon",
@@ -2098,7 +2548,10 @@
                 "gold": 40
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Goblin"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Goblin",
+              "external_dwelling_ids": [
+                "goblin_barracks"
+              ]
             },
             {
               "id": "hobgoblin",
@@ -2153,7 +2606,10 @@
                 "gold": 100
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Wolf_Rider"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Wolf_Rider",
+              "external_dwelling_ids": [
+                "wolf_pen"
+              ]
             },
             {
               "id": "wolf_raider",
@@ -2199,7 +2655,10 @@
                 "gold": 150
               },
               "special": "Ranged (12 shots)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Orc"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Orc",
+              "external_dwelling_ids": [
+                "orc_tower"
+              ]
             },
             {
               "id": "orc_chieftain",
@@ -2245,7 +2704,10 @@
                 "gold": 300
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Ogre"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Ogre",
+              "external_dwelling_ids": [
+                "ogre_fort"
+              ]
             },
             {
               "id": "ogre_mage",
@@ -2291,7 +2753,10 @@
                 "gold": 600
               },
               "special": "Flying",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Roc"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Roc",
+              "external_dwelling_ids": [
+                "cliff_nest"
+              ]
             },
             {
               "id": "thunderbird",
@@ -2337,7 +2802,10 @@
                 "gold": 750
               },
               "special": "Ranged (16 shots), Can attack siege walls",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Cyclops"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Cyclops",
+              "external_dwelling_ids": [
+                "cyclops_cave"
+              ]
             },
             {
               "id": "cyclops_king",
@@ -2383,7 +2851,10 @@
                 "gold": 1500
               },
               "special": "Ignores 40% of enemy defense value",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Behemoth"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Behemoth",
+              "external_dwelling_ids": [
+                "behemoth_crag"
+              ]
             },
             {
               "id": "ancient_behemoth",
@@ -2435,7 +2906,10 @@
                 "gold": 50
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Gnoll"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Gnoll",
+              "external_dwelling_ids": [
+                "gnoll_hut"
+              ]
             },
             {
               "id": "gnoll_marauder",
@@ -2490,7 +2964,10 @@
                 "gold": 110
               },
               "special": "Ranged (12 shots)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Lizardman"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Lizardman",
+              "external_dwelling_ids": [
+                "lizard_den"
+              ]
             },
             {
               "id": "lizard_warrior",
@@ -2536,7 +3013,10 @@
                 "gold": 220
               },
               "special": "Flying, Dispels beneficial spells",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Serpent_Fly"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Serpent_Fly",
+              "external_dwelling_ids": [
+                "serpent_fly_hive"
+              ]
             },
             {
               "id": "dragon_fly",
@@ -2582,7 +3062,10 @@
                 "gold": 325
               },
               "special": "Petrifying attack",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Basilisk"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Basilisk",
+              "external_dwelling_ids": [
+                "basilisk_pit"
+              ]
             },
             {
               "id": "greater_basilisk",
@@ -2628,7 +3111,10 @@
                 "gold": 525
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Gorgon"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Gorgon",
+              "external_dwelling_ids": [
+                "gorgon_lair"
+              ]
             },
             {
               "id": "mighty_gorgon",
@@ -2674,7 +3160,10 @@
                 "gold": 800
               },
               "special": "Flying",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Wyvern"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Wyvern",
+              "external_dwelling_ids": [
+                "wyvern_nest"
+              ]
             },
             {
               "id": "wyvern_monarch",
@@ -2720,7 +3209,10 @@
                 "gold": 2200
               },
               "special": "No enemy retaliation, Attacks all adjacent enemies",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Hydra"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Hydra",
+              "external_dwelling_ids": [
+                "hydra_pond"
+              ]
             },
             {
               "id": "chaos_hydra",
@@ -2772,7 +3264,10 @@
                 "gold": 25
               },
               "special": "Flying",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Pixie"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Pixie",
+              "external_dwelling_ids": [
+                "magic_lantern"
+              ]
             },
             {
               "id": "sprite",
@@ -2827,7 +3322,12 @@
                 "gold": 250
               },
               "special": "Elemental, Immune to Meteor Shower, Vulnerable to Lightning Bolt, Chain Lightning, Titan's Lightning Bolt and Armageddon, +100% to basic damage to Earth and Magma Elementals",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Air_Elemental"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Air_Elemental",
+              "external_dwelling_ids": [
+                "altar_of_air",
+                "air_elemental_conflux",
+                "elemental_conflux"
+              ]
             },
             {
               "id": "storm_elemental",
@@ -2873,7 +3373,12 @@
                 "gold": 300
               },
               "special": "Elemental, Immune to Ice Bolt and Frost Ring, Vulnerable to Fireball, Inferno and Armageddon, +100% to basic damage to Fire and Energy Elementals",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Water_Elemental"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Water_Elemental",
+              "external_dwelling_ids": [
+                "altar_of_water",
+                "water_elemental_conflux",
+                "elemental_conflux"
+              ]
             },
             {
               "id": "ice_elemental",
@@ -2919,7 +3424,12 @@
                 "gold": 350
               },
               "special": "Elemental, Fire immunity, Vulnerable to Ice Bolt and Frost Ring, +100% to basic damage to Water and Ice Elementals",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Fire_Elemental"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Fire_Elemental",
+              "external_dwelling_ids": [
+                "altar_of_fire",
+                "fire_elemental_conflux",
+                "elemental_conflux"
+              ]
             },
             {
               "id": "energy_elemental",
@@ -2965,7 +3475,12 @@
                 "gold": 400
               },
               "special": "Elemental, Immune to Lightning Bolt, Chain Lightning, Titan's Lightning Bolt and Armageddon, Vulnerable to Meteor Shower, +100% to basic damage to Air and Storm Elementals",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Earth_Elemental"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Earth_Elemental",
+              "external_dwelling_ids": [
+                "altar_of_earth",
+                "earth_elemental_conflux",
+                "elemental_conflux"
+              ]
             },
             {
               "id": "magma_elemental",
@@ -3011,7 +3526,10 @@
                 "gold": 950
               },
               "special": "Elemental, No enemy retaliation, Attacks all adjacent enemies, -50% damage to creatures with Mind spells immunity",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Psychic_Elemental"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Psychic_Elemental",
+              "external_dwelling_ids": [
+                "altar_of_thought"
+              ]
             },
             {
               "id": "magic_elemental",
@@ -3057,7 +3575,10 @@
                 "gold": 2000
               },
               "special": "Flying, Breath attack, 50% Fire resistance",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Firebird"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Firebird",
+              "external_dwelling_ids": [
+                "pyre"
+              ]
             },
             {
               "id": "phoenix",
@@ -3119,7 +3640,10 @@
                 "gold": 35
               },
               "special": "Teleporting, Immune to Ice Bolt and Frost Ring",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Nymph"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Nymph",
+              "external_dwelling_ids": [
+                "nymph_waterfall"
+              ]
             },
             {
               "id": "oceanid",
@@ -3165,7 +3689,10 @@
                 "gold": 110
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Crew_Mate"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Crew_Mate",
+              "external_dwelling_ids": [
+                "shack"
+              ]
             },
             {
               "id": "seaman",
@@ -3220,7 +3747,10 @@
                 "gold": 225
               },
               "special": "Ranged (4 shots), No melee penalty",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Pirate"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Pirate",
+              "external_dwelling_ids": [
+                "frigate"
+              ]
             },
             {
               "id": "corsair",
@@ -3286,7 +3816,10 @@
                 "gold": 275
               },
               "special": "Flying",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Stormbird"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Stormbird",
+              "external_dwelling_ids": [
+                "nest"
+              ]
             },
             {
               "id": "ayssid",
@@ -3341,7 +3874,10 @@
                 "gold": 515
               },
               "special": "Ranged (12 shots), Spellcaster (after shot, Weakness / Disrupting Ray)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Witch"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Witch",
+              "external_dwelling_ids": [
+                "tower_of_the_seas"
+              ]
             },
             {
               "id": "sorceress",
@@ -3387,7 +3923,10 @@
                 "gold": 1000
               },
               "special": "Ignores 30% of enemy attack value",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Nix"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Nix",
+              "external_dwelling_ids": [
+                "nix_fort"
+              ]
             },
             {
               "id": "nix_warrior",
@@ -3434,7 +3973,10 @@
                 "sulfur": 1
               },
               "special": "Poisonous",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Serpent"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Sea_Serpent",
+              "external_dwelling_ids": [
+                "maelstrom"
+              ]
             },
             {
               "id": "haspid",
@@ -3486,7 +4028,11 @@
                 "gold": 40
               },
               "special": "Ranged (24 shots), Positive Luck",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Halfling_(Factory)"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Halfling_(Factory)",
+              "external_dwelling_ids": [
+                "halfling_adobe",
+                "thatched_hut"
+              ]
             },
             {
               "id": "halfling_grenadier",
@@ -3532,7 +4078,10 @@
                 "gold": 140
               },
               "special": "Breath attack, Repairing (10 HP per unit)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Mechanic"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Mechanic",
+              "external_dwelling_ids": [
+                "foundry"
+              ]
             },
             {
               "id": "engineer",
@@ -3578,7 +4127,10 @@
                 "gold": 200
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Armadillo"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Armadillo",
+              "external_dwelling_ids": [
+                "ranch"
+              ]
             },
             {
               "id": "bellwether_armadillo",
@@ -3633,7 +4185,10 @@
                 "gold": 350
               },
               "special": "Mechanical, Detonation",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Automaton"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Automaton",
+              "external_dwelling_ids": [
+                "manufactory"
+              ]
             },
             {
               "id": "sentinel_automaton",
@@ -3679,7 +4234,10 @@
                 "gold": 575
               },
               "special": "Burrowing, Immune to Blinding and Stone gaze",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Sandworm"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Sandworm",
+              "external_dwelling_ids": [
+                "catacombs"
+              ]
             },
             {
               "id": "olgoi_khorkhoi",
@@ -3725,7 +4283,10 @@
                 "gold": 800
               },
               "special": "Ranged (16 shots), Preemptive shot (once per round)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Gunslinger"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Gunslinger",
+              "external_dwelling_ids": [
+                "watchtower"
+              ]
             },
             {
               "id": "bounty_hunter",
@@ -3771,7 +4332,10 @@
                 "gold": 2000
               },
               "special": "Flying, Meditation (skiping a turn)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Couatl"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Couatl",
+              "external_dwelling_ids": [
+                "serpentarium"
+              ]
             },
             {
               "id": "crimson_couatl",
@@ -3819,7 +4383,10 @@
                 "crystal": 1
               },
               "special": "Mechanical, Heat stroke",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Dreadnought"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Dreadnought",
+              "external_dwelling_ids": [
+                "gantry"
+              ]
             },
             {
               "id": "juggernaut",
@@ -3871,7 +4438,10 @@
                 "gold": 40
               },
               "special": "Generates 1 Gold per unit per day",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Kobold"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Kobold",
+              "external_dwelling_ids": [
+                "colliery"
+              ]
             },
             {
               "id": "kobold_foreman",
@@ -3917,7 +4487,10 @@
                 "gold": 135
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Mountain_Ram"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Mountain_Ram",
+              "external_dwelling_ids": [
+                "frigid_spur"
+              ]
             },
             {
               "id": "argali",
@@ -3963,7 +4536,10 @@
                 "gold": 230
               },
               "special": "Ranged (4 shots), No melee penalty",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Snow_Elf"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Snow_Elf",
+              "external_dwelling_ids": [
+                "hall_of_the_bold"
+              ]
             },
             {
               "id": "steel_elf",
@@ -4009,7 +4585,10 @@
                 "gold": 325
               },
               "special": "Recovers from negative effects in one round of combat",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Yeti"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Yeti",
+              "external_dwelling_ids": [
+                "mountain_embassy"
+              ]
             },
             {
               "id": "yeti_runemaster",
@@ -4055,7 +4634,10 @@
                 "gold": 450
               },
               "special": "Ranged (12 shots), Spellcaster (Air Shield)",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Shaman"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Shaman",
+              "external_dwelling_ids": [
+                "shaman_fane"
+              ]
             },
             {
               "id": "great_shaman",
@@ -4101,7 +4683,10 @@
                 "gold": 850
               },
               "special": "",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Mammoth"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Mammoth",
+              "external_dwelling_ids": [
+                "mammoth_stalls"
+              ]
             },
             {
               "id": "war_mammoth",
@@ -4156,7 +4741,10 @@
                 "gold": 2000
               },
               "special": "Teleports allies (once per combat), -1 enemy flying units' Speed",
-              "wiki_url": "https://heroes.thelazy.net/index.php/Jotunn"
+              "wiki_url": "https://heroes.thelazy.net/index.php/Jotunn",
+              "external_dwelling_ids": [
+                "frosthome"
+              ]
             },
             {
               "id": "jotunn_warlord",
@@ -4204,7 +4792,10 @@
       },
       "special": "",
       "wiki_url": "https://heroes.thelazy.net/index.php/Peasant",
-      "tier": 1
+      "tier": 1,
+      "external_dwelling_ids": [
+        "hovel"
+      ]
     },
     {
       "id": "boar",
@@ -4225,7 +4816,10 @@
       },
       "special": "",
       "wiki_url": "https://heroes.thelazy.net/index.php/Boar",
-      "tier": 2
+      "tier": 2,
+      "external_dwelling_ids": [
+        "boar_glen"
+      ]
     },
     {
       "id": "rogue",
@@ -4246,7 +4840,10 @@
       },
       "special": "Spying",
       "wiki_url": "https://heroes.thelazy.net/index.php/Rogue",
-      "tier": 2
+      "tier": 2,
+      "external_dwelling_ids": [
+        "rogue_cavern"
+      ]
     },
     {
       "id": "leprechaun",
@@ -4267,7 +4864,10 @@
       },
       "special": "Doubles friendly units Luck chance, Spellcaster (Fortune)",
       "wiki_url": "https://heroes.thelazy.net/index.php/Leprechaun",
-      "tier": 2
+      "tier": 2,
+      "external_dwelling_ids": [
+        "alehouse"
+      ]
     },
     {
       "id": "mummy",
@@ -4288,7 +4888,10 @@
       },
       "special": "Undead, Curse",
       "wiki_url": "https://heroes.thelazy.net/index.php/Mummy",
-      "tier": 3
+      "tier": 3,
+      "external_dwelling_ids": [
+        "tomb_of_curses"
+      ]
     },
     {
       "id": "nomad",
@@ -4309,7 +4912,10 @@
       },
       "special": "Sandwalker",
       "wiki_url": "https://heroes.thelazy.net/index.php/Nomad",
-      "tier": 3
+      "tier": 3,
+      "external_dwelling_ids": [
+        "nomad_tent"
+      ]
     },
     {
       "id": "sharpshooter",
@@ -4330,7 +4936,10 @@
       },
       "special": "Ranged (32 shots), No range and obstacle penalty",
       "wiki_url": "https://heroes.thelazy.net/index.php/Sharpshooter",
-      "tier": 4
+      "tier": 4,
+      "external_dwelling_ids": [
+        "treetop_tower"
+      ]
     },
     {
       "id": "satyr",
@@ -4351,7 +4960,10 @@
       },
       "special": "Spellcaster (Mirth)",
       "wiki_url": "https://heroes.thelazy.net/index.php/Satyr",
-      "tier": 4
+      "tier": 4,
+      "external_dwelling_ids": [
+        "wineyard"
+      ]
     },
     {
       "id": "steel_golem",
@@ -4393,7 +5005,10 @@
       },
       "special": "Regeneration",
       "wiki_url": "https://heroes.thelazy.net/index.php/Troll",
-      "tier": 5
+      "tier": 5,
+      "external_dwelling_ids": [
+        "troll_bridge"
+      ]
     },
     {
       "id": "gold_golem",
@@ -4414,7 +5029,10 @@
       },
       "special": "Unliving, Spell damage resistance (+85%)",
       "wiki_url": "https://heroes.thelazy.net/index.php/Gold_Golem",
-      "tier": 5
+      "tier": 5,
+      "external_dwelling_ids": [
+        "golem_factory"
+      ]
     },
     {
       "id": "fangarm",
@@ -4435,7 +5053,10 @@
       },
       "special": "Flying, Mind spells immunity, Unlimited retaliations, Hypnotizing attack",
       "wiki_url": "https://heroes.thelazy.net/index.php/Fangarm",
-      "tier": 5
+      "tier": 5,
+      "external_dwelling_ids": [
+        "ziggurat"
+      ]
     },
     {
       "id": "diamond_golem",
@@ -4456,7 +5077,10 @@
       },
       "special": "Unliving, Spell Damage Resistance (+95%)",
       "wiki_url": "https://heroes.thelazy.net/index.php/Diamond_Golem",
-      "tier": 6
+      "tier": 6,
+      "external_dwelling_ids": [
+        "golem_factory"
+      ]
     },
     {
       "id": "enchanter",
@@ -4477,7 +5101,10 @@
       },
       "special": "Ranged (32 shots), No melee and obstacle penalty, Spellcaster",
       "wiki_url": "https://heroes.thelazy.net/index.php/Enchanter",
-      "tier": 6
+      "tier": 6,
+      "external_dwelling_ids": [
+        "enchanter_s_hollow"
+      ]
     },
     {
       "id": "faerie_dragon",
@@ -4499,7 +5126,10 @@
       },
       "special": "Dragon, Flying, Spellcaster, Natural Magic Mirror",
       "wiki_url": "https://heroes.thelazy.net/index.php/Faerie_Dragon",
-      "tier": 7
+      "tier": 7,
+      "external_dwelling_ids": [
+        "magic_forest"
+      ]
     },
     {
       "id": "rust_dragon",
@@ -4521,7 +5151,10 @@
       },
       "special": "Dragon, Flying, Breath attack, Acid breath",
       "wiki_url": "https://heroes.thelazy.net/index.php/Rust_Dragon",
-      "tier": 7
+      "tier": 7,
+      "external_dwelling_ids": [
+        "sulfurous_lair"
+      ]
     },
     {
       "id": "crystal_dragon",
@@ -4543,7 +5176,10 @@
       },
       "special": "Dragon, Crystal generation, Magic resistance (+20%)",
       "wiki_url": "https://heroes.thelazy.net/index.php/Crystal_Dragon",
-      "tier": 7
+      "tier": 7,
+      "external_dwelling_ids": [
+        "crystal_cave"
+      ]
     },
     {
       "id": "azure_dragon",
@@ -4565,7 +5201,10 @@
       },
       "special": "Dragon, Flying, Breath attack, Fear, Fearless, 1-3 lvl spells immunity",
       "wiki_url": "https://heroes.thelazy.net/index.php/Azure_Dragon",
-      "tier": 7
+      "tier": 7,
+      "external_dwelling_ids": [
+        "frozen_cliffs"
+      ]
     }
   ]
 }

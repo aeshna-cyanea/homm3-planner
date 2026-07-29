@@ -1,5 +1,10 @@
 import { For } from "solid-js";
-import { basicCreature, hordeBuilding } from "../catalog";
+import {
+  basicCreature,
+  externalDwellingName,
+  hordeBuilding,
+} from "../catalog";
+import { dwellingLabel } from "../dwelling-label";
 import { FORTIFICATION_COPY } from "../planner";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
@@ -110,6 +115,11 @@ function DwellingCard(props: {
 }) {
   const plan = () => props.planner.plan(props.planId);
   const basic = () => basicCreature(props.dwelling);
+  const label = () =>
+    dwellingLabel(
+      externalDwellingName(props.planner.catalog, props.dwelling) ?? "Dwelling",
+      props.dwelling.tier,
+    );
   const horde = () => hordeBuilding(props.dwelling);
   const selection = () => plan().selections[props.index];
   const selected = () => props.planner.creature(props.planId, props.index);
@@ -136,7 +146,7 @@ function DwellingCard(props: {
               props.planner.cycleDwelling(props.planId, props.index)}
           />
           <span class="card-top">
-            <span class="tier-label">Tier {props.dwelling.tier}</span>
+            <span class="tier-label">{label()}</span>
             <span
               class="state-label"
               aria-hidden="true"

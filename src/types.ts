@@ -31,6 +31,7 @@ export interface Creature {
   cost: Cost;
   special: string;
   wiki_url: string;
+  external_dwelling_ids?: string[];
 }
 
 export interface HordeBuilding {
@@ -58,6 +59,10 @@ export interface NeutralCreature extends Creature {
   growth: number;
 }
 
+export interface ExternalDwellingDefinition {
+  name: string;
+}
+
 export interface FortificationBuilding {
   id: Exclude<Fortification, "fort">;
   name: string;
@@ -70,6 +75,8 @@ export interface CreatureData {
   schema_version: number;
   ruleset: string;
   source_url: string;
+  external_dwelling_source_url: string;
+  external_dwellings: Record<string, ExternalDwellingDefinition>;
   horde_building_source_url: string;
   creature_count: number;
   fortification_building_count: number;
@@ -83,11 +90,25 @@ export interface CatalogDwelling {
   creature: Creature;
   tier: number;
   growth: number;
+  externalDwellingIds: string[];
+}
+
+export interface ExternalRecruitment {
+  factionName: string;
+  creature: Creature;
+  tier: number;
+  growth: number;
+}
+
+export interface CatalogExternalDwelling extends ExternalDwellingDefinition {
+  id: string;
+  recruitments: ExternalRecruitment[];
 }
 
 export interface Catalog {
   towns: Town[];
   dwellingCatalog: Map<string, CatalogDwelling>;
+  externalDwellingCatalog: Map<string, CatalogExternalDwelling>;
   fortificationBuildings: FortificationBuilding[];
 }
 
@@ -98,6 +119,7 @@ export interface CreatureProfile {
   variantIndex?: number;
   factionName: string;
   tier: number;
+  dwellingName?: string;
   variant?: "Basic" | "Upgraded" | "Second upgrade";
 }
 
@@ -111,7 +133,7 @@ export interface TownPlan {
 }
 
 export interface ExternalDwelling {
-  basicCreature: string;
+  id: string;
   count: number;
 }
 
@@ -148,11 +170,10 @@ export interface RecruitmentRow {
 }
 
 export interface ExternalDwellingCard {
-  creatureName: string;
+  id: string;
+  name: string;
   count: number;
-  creature: Creature;
-  factionName: string;
-  tier: number;
+  recruitments: Array<ExternalRecruitment & { production: number }>;
   production: number;
 }
 

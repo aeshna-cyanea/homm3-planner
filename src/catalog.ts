@@ -1,6 +1,7 @@
 import type {
   Catalog,
   CatalogDwelling,
+  CatalogExternalDwelling,
   Creature,
   CreatureData,
   CreatureProfile,
@@ -15,9 +16,24 @@ export function buildCatalog(data: CreatureData): Catalog {
   }
 
   const dwellingCatalog = new Map<string, CatalogDwelling>();
+  const externalDwellingCatalog = new Map<string, CatalogExternalDwelling>(
+    Object.entries(data.external_dwellings ?? {}).map(([id, dwelling]) => [
+      id,
+      { id, ...dwelling, recruitments: [] },
+    ]),
+  );
   for (const town of data.towns) {
     for (const dwelling of town.dwellings) {
       indexDwelling(dwellingCatalog, town.name, basicCreature(dwelling), dwelling);
+      for (const creature of dwelling.variants) {
+        indexExternalDwellings(
+          externalDwellingCatalog,
+          creature,
+          town.name,
+          dwelling.tier,
+          dwelling.growth,
+        );
+      }
     }
   }
   for (const creature of data.neutral_creatures ?? []) {
@@ -26,12 +42,21 @@ export function buildCatalog(data: CreatureData): Catalog {
       creature,
       tier: creature.tier,
       growth: creature.growth,
+      externalDwellingIds: creature.external_dwelling_ids ?? [],
     });
+    indexExternalDwellings(
+      externalDwellingCatalog,
+      creature,
+      "Neutral",
+      creature.tier,
+      creature.growth,
+    );
   }
 
   return {
     towns: data.towns,
     dwellingCatalog,
+    externalDwellingCatalog,
     fortificationBuildings: data.fortification_buildings ?? [],
   };
 }
@@ -57,6 +82,7 @@ export function creatureProfile(
           variantIndex,
           factionName: town.name,
           tier: dwelling.tier,
+          dwellingName: externalDwellingName(catalog, dwelling),
           variant: variantName(variantIndex),
         };
       }
@@ -69,6 +95,9 @@ export function creatureProfile(
         creature: neutral.creature,
         factionName: neutral.factionName,
         tier: neutral.tier,
+        dwellingName: neutral.externalDwellingIds[0]
+          ? catalog.externalDwellingCatalog.get(neutral.externalDwellingIds[0])?.name
+          : undefined,
       }
     : undefined;
 }
@@ -88,6 +117,14 @@ export function hordeBuilding(dwelling: Dwelling): HordeBuilding | undefined {
   return dwelling.horde;
 }
 
+export function externalDwellingName(
+  catalog: Catalog,
+  dwelling: Dwelling,
+): string | undefined {
+  const id = basicCreature(dwelling).external_dwelling_ids?.[0];
+  return id ? catalog.externalDwellingCatalog.get(id)?.name : undefined;
+}
+
 export function nextSelection(dwelling: Dwelling, current: number): number {
   return current >= dwelling.variants.length - 1 ? -1 : current + 1;
 }
@@ -103,7 +140,28 @@ function indexDwelling(
     creature,
     tier: dwelling.tier,
     growth: dwelling.growth,
+    externalDwellingIds: Array.from(
+      new Set(dwelling.variants.flatMap(
+        (variant) => variant.external_dwelling_ids ?? [],
+      )),
+    ),
   });
+}
+
+function indexExternalDwellings(
+  catalog: Map<string, CatalogExternalDwelling>,
+  creature: Creature,
+  factionName: string,
+  tier: number,
+  growth: number,
+): void {
+  for (const id of creature.external_dwelling_ids ?? []) {
+    const dwelling = catalog.get(id);
+    if (!dwelling) {
+      throw new Error(`Unknown external dwelling ${id} for ${creature.name}`);
+    }
+    dwelling.recruitments.push({ creature, factionName, tier, growth });
+  }
 }
 
 function variantName(index: number): CreatureProfile["variant"] {

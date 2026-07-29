@@ -85,6 +85,12 @@ export default function createAutoCompletePositionPlugin<T>(
       return;
     }
     if (event.key === "Escape") {
+      event.preventDefault();
+      if (!instance.input.value) {
+        instance.close();
+        instance.input.blur();
+        return;
+      }
       instance.input.value = "";
       instance.input.dispatchEvent(
         new CustomEvent("clear", {

@@ -3,11 +3,13 @@ import { createStore, reconcile } from "solid-js/store";
 import type { Store } from "solid-js/store";
 import {
   basicCreature,
+  externalDwellingName,
   hordeBuilding,
   nextSelection,
   selectedCreature,
   townByName,
 } from "./catalog";
+import { dwellingLabel } from "./dwelling-label";
 import { loadSavedState, saveState } from "./persistence";
 import { multiplyCost, sumCosts, totalCosts } from "./resources";
 import type {
@@ -70,6 +72,7 @@ export interface Planner {
   adjustExternalCard(creatureName: string, action: "increment" | "decrement"): void;
   setExternalCardCount(creatureName: string, value: string | number): number;
   addExternalDwelling(creatureName: string): void;
+  removeExternalDwelling(dwellingId: string): void;
   fortificationCost(level: Fortification): Cost | undefined;
   save(): void;
   reset(): void;
@@ -137,21 +140,33 @@ export function createPlanner(catalog: Catalog): Planner {
 
   function cardAriaLabel(planId: string, dwellingIndex: number): string {
     const dwelling = dwellings(planId)[dwellingIndex];
+    const name = externalDwellingName(catalog, dwelling);
     const selection = plan(planId).selections[dwellingIndex];
     const currentState = creature(planId, dwellingIndex)
       ? `, ${stageName(selection).toLowerCase()}`
       : ", not produced";
     return (
-      `Tier ${dwelling.tier}: ${creatureName(planId, dwellingIndex)}` +
+      `${dwellingLabel(name ?? "Dwelling", dwelling.tier)}: ` +
+      `${creatureName(planId, dwellingIndex)}` +
       `${currentState}. Click for ${nextCreatureName(planId, dwellingIndex)}.`
     );
   }
 
-  function externalDwellingCount(creatureName: string): number {
+  function externalDwellingIds(creatureName: string): string[] {
+    return catalog.dwellingCatalog.get(creatureName)?.externalDwellingIds ?? [];
+  }
+
+  function namedExternalDwellingCount(dwellingId: string): number {
     return (
-      state.externalDwellings.find(
-        (dwelling) => dwelling.basicCreature === creatureName,
-      )?.count ?? 0
+      state.externalDwellings.find((dwelling) => dwelling.id === dwellingId)
+        ?.count ?? 0
+    );
+  }
+
+  function externalDwellingCount(creatureName: string): number {
+    return externalDwellingIds(creatureName).reduce(
+      (total, id) => total + namedExternalDwellingCount(id),
+      0,
     );
   }
 
@@ -180,10 +195,12 @@ export function createPlanner(catalog: Catalog): Planner {
         ? hordeBuilding(dwelling)
         : undefined;
       const production = productionFor(planId, dwellingIndex);
+      const name = externalDwellingName(catalog, dwelling);
       return [{
         name: selected.name,
         detail:
-          `Tier ${dwelling.tier} · ${stageName(currentPlan.selections[dwellingIndex])}` +
+          `${dwellingLabel(name ?? "Dwelling", dwelling.tier)} · ` +
+          `${stageName(currentPlan.selections[dwellingIndex])}` +
           (horde ? ` · ${horde.name}` : ""),
         production,
         unitCost: selected.cost,
@@ -198,30 +215,40 @@ export function createPlanner(catalog: Catalog): Planner {
 
   const externalDwellingCards = createMemo<ExternalDwellingCard[]>(() =>
     state.externalDwellings.flatMap((entry) => {
-      const dwelling = catalog.dwellingCatalog.get(entry.basicCreature);
+      const dwelling = catalog.externalDwellingCatalog.get(entry.id);
       return dwelling
         ? [{
-            creatureName: entry.basicCreature,
+            id: entry.id,
+            name: dwelling.name,
             count: entry.count,
-            creature: dwelling.creature,
-            factionName: dwelling.factionName,
-            tier: dwelling.tier,
-            production: dwelling.growth * entry.count,
+            recruitments: dwelling.recruitments.map((recruitment) => ({
+              ...recruitment,
+              production: recruitment.growth * entry.count,
+            })),
+            production: dwelling.recruitments.reduce(
+              (total, recruitment) =>
+                total + recruitment.growth * entry.count,
+              0,
+            ),
           }]
         : [];
     }),
   );
 
   const externalRows = createMemo<RecruitmentRow[]>(() =>
-    externalDwellingCards().map((card) => ({
-      name: card.creature.name,
-      detail:
-        `Tier ${card.tier} · Basic · ${card.count} external dwelling` +
-        (card.count === 1 ? "" : "s"),
-      production: card.production,
-      unitCost: card.creature.cost,
-      weeklyCost: multiplyCost(card.creature.cost, card.production),
-    })),
+    externalDwellingCards().flatMap((card) =>
+      card.recruitments.map((recruitment) => ({
+        name: recruitment.creature.name,
+        detail:
+          `${dwellingLabel(card.name, recruitment.tier)} · ` +
+          `${card.count} external dwelling${card.count === 1 ? "" : "s"}`,
+        production: recruitment.production,
+        unitCost: recruitment.creature.cost,
+        weeklyCost: multiplyCost(
+          recruitment.creature.cost,
+          recruitment.production,
+        ),
+      }))),
   );
 
   const globalRows = createMemo<RecruitmentRow[]>(() => {
@@ -241,11 +268,37 @@ export function createPlanner(catalog: Catalog): Planner {
     creatureName: string,
     value: string | number,
   ): number {
-    if (!catalog.dwellingCatalog.has(creatureName)) return 0;
+    const ids = externalDwellingIds(creatureName);
+    if (ids.length === 0) return 0;
+
+    const target = normalizedCount(value);
+    let difference = target - externalDwellingCount(creatureName);
+    if (difference > 0) {
+      setNamedExternalDwellingCount(
+        ids[0],
+        namedExternalDwellingCount(ids[0]) + difference,
+      );
+    } else {
+      for (const id of ids) {
+        if (difference === 0) break;
+        const count = namedExternalDwellingCount(id);
+        const reduction = Math.min(count, -difference);
+        setNamedExternalDwellingCount(id, count - reduction);
+        difference += reduction;
+      }
+    }
+    return externalDwellingCount(creatureName);
+  }
+
+  function setNamedExternalDwellingCount(
+    dwellingId: string,
+    value: string | number,
+  ): number {
+    if (!catalog.externalDwellingCatalog.has(dwellingId)) return 0;
 
     const count = normalizedCount(value);
     const index = state.externalDwellings.findIndex(
-      (dwelling) => dwelling.basicCreature === creatureName,
+      (dwelling) => dwelling.id === dwellingId,
     );
     if (count === 0) {
       if (index >= 0) {
@@ -257,7 +310,7 @@ export function createPlanner(catalog: Catalog): Planner {
     } else {
       setState("externalDwellings", (dwellings) => [
         ...dwellings,
-        { basicCreature: creatureName, count },
+        { id: dwellingId, count },
       ]);
     }
     return count;
@@ -275,13 +328,13 @@ export function createPlanner(catalog: Catalog): Planner {
   }
 
   function adjustExternalCard(
-    creatureName: string,
+    dwellingId: string,
     action: "increment" | "decrement",
   ): void {
-    const count = externalDwellingCount(creatureName);
+    const count = namedExternalDwellingCount(dwellingId);
     if (action === "increment" || count > 1) {
-      setExternalDwellingCount(
-        creatureName,
+      setNamedExternalDwellingCount(
+        dwellingId,
         count + (action === "increment" ? 1 : -1),
       );
     }
@@ -406,18 +459,22 @@ export function createPlanner(catalog: Catalog): Planner {
     adjustExternalDwelling,
     adjustExternalCard,
 
-    setExternalCardCount(creatureName, value) {
-      return setExternalDwellingCount(
-        creatureName,
+    setExternalCardCount(dwellingId, value) {
+      return setNamedExternalDwellingCount(
+        dwellingId,
         Math.max(1, normalizedCount(value)),
       );
     },
 
-    addExternalDwelling(creatureName) {
-      setExternalDwellingCount(
-        creatureName,
-        externalDwellingCount(creatureName) + 1,
+    addExternalDwelling(dwellingId) {
+      setNamedExternalDwellingCount(
+        dwellingId,
+        namedExternalDwellingCount(dwellingId) + 1,
       );
+    },
+
+    removeExternalDwelling(dwellingId) {
+      setNamedExternalDwellingCount(dwellingId, 0);
     },
 
     fortificationCost(level) {
@@ -512,9 +569,9 @@ function restoreState(
     externalDwellings: (snapshot.externalDwellings ?? []).flatMap((dwelling) => {
       const count = normalizedCount(dwelling?.count);
       return dwelling &&
-        catalog.dwellingCatalog.has(dwelling.basicCreature) &&
+        catalog.externalDwellingCatalog.has(dwelling.id) &&
         count > 0
-        ? [{ basicCreature: dwelling.basicCreature, count }]
+        ? [{ id: dwelling.id, count }]
         : [];
     }),
   };
