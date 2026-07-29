@@ -146,10 +146,14 @@ h2 {
 
 .state-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 1.375rem;
+}
+
+.state-actions .reset-button {
+  white-space: nowrap;
 }
 
 .reset-button:hover {
@@ -330,6 +334,7 @@ h2 {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  flex-wrap:wrap;
   gap: 1.375rem;
   margin-top: 1.375rem;
   padding: 1.25rem;
@@ -1432,14 +1437,12 @@ select,
     flex-direction: column;
   }
   .add-town-control {
-    flex-basis: auto;
+    flex: auto;
     width: 100%;
   }
   .planner-controls .state-actions {
     justify-content: stretch;
-  }
-  .planner-controls .state-actions > button {
-    flex: 1 1 auto;
+    gap: 0.25rem;
   }
   .global-total-panel,
   .creature-details-panel { padding: 1.1875rem; }

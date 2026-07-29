@@ -16,7 +16,7 @@ export function ExternalDwellings(props: { planner: Planner }) {
       <div class="section-heading">
         <div>
           <p class="eyebrow">Outside your town</p>
-          <h2 id="external-dwellings-title">External dwellings</h2>
+          <h2 id="external-dwellings-title">External&nbsp;dwellings</h2>
         </div>
         <p class="cycle-key">
           Dwellings added from the production scheme appear here.
