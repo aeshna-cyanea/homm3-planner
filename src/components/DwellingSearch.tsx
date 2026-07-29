@@ -37,7 +37,9 @@ export function DwellingSearch(props: { planner: Planner }) {
         factions: Array.from(new Set(
           dwelling.recruitments.map((recruitment) => recruitment.factionName),
         )),
-        levels: dwelling.recruitments.map((recruitment) => recruitment.level),
+        levels: dwelling.recruitments.map(
+          (recruitment) => recruitment.dwelling.level,
+        ),
       }),
     );
     const position = createAutoCompletePositionPlugin<SearchOption>({

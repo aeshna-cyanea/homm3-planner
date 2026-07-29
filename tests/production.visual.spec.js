@@ -10,7 +10,7 @@ const viewports = [
   { name: "split-two-column", width: 1100, height: 900 },
 ];
 
-test("creature data is grouped into town dwellings and neutral creatures", () => {
+test("creature data stores growth on town and neutral dwellings", () => {
   expect(Object.keys(creatureData)).toEqual([
     "schema_version",
     "ruleset",
@@ -22,7 +22,7 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
     "fortification_building_count",
     "fortification_buildings",
     "towns",
-    "neutral_creatures",
+    "neutral_dwellings",
   ]);
   expect(creatureData.creature_count).toBe(189);
   expect(creatureData.fortification_building_count).toBe(2);
@@ -33,7 +33,7 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
 
   const fullCreatureKeys = [
     "id", "name", "level", "attack", "defense", "damage", "health", "speed",
-    "growth", "ai_value", "cost", "special", "wiki_url",
+    "ai_value", "cost", "special", "wiki_url",
   ];
   const creatureKeys = (creature) => [
     ...fullCreatureKeys,
@@ -45,7 +45,7 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
     expect(Object.keys(town)).toEqual(["name", "dwellings"]);
     for (const dwelling of town.dwellings) {
       expect(Object.keys(dwelling).every((key) => [
-        "level", "growth", "variants", "horde",
+        "level", "growth", "building_cost", "upgrade_costs", "variants", "horde",
       ].includes(key))).toBe(true);
       expect(dwelling.variants[0].external_dwelling_ids).toEqual(
         expect.arrayContaining([expect.any(String)]),
@@ -53,19 +53,19 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
       expect(dwelling.variants.length).toBeGreaterThanOrEqual(2);
       for (const creature of dwelling.variants) {
         expect(Object.keys(creature)).toEqual(creatureKeys(creature));
+        expect(creature).not.toHaveProperty("growth");
         expect(creature).not.toHaveProperty("upgraded_creature");
         expect(creature).not.toHaveProperty("horde_building");
         creatureCount += 1;
       }
     }
   }
-  for (const creature of creatureData.neutral_creatures) {
-    expect(creature).not.toHaveProperty("variants");
-    expect(Object.keys(creature)).toEqual([
-      ...fullCreatureKeys,
-      "level",
-      ...(creature.external_dwelling_ids ? ["external_dwelling_ids"] : []),
-    ]);
+  for (const dwelling of creatureData.neutral_dwellings) {
+    expect(Object.keys(dwelling)).toEqual(["level", "growth", "variants"]);
+    expect(dwelling.variants).toHaveLength(1);
+    const [creature] = dwelling.variants;
+    expect(Object.keys(creature)).toEqual(creatureKeys(creature));
+    expect(creature).not.toHaveProperty("growth");
     if (creature.name === "Steel Golem") {
       expect(creature).not.toHaveProperty("external_dwelling_ids");
     } else {
@@ -110,15 +110,19 @@ test("external dwellings are normalized and referenced by recruitable creatures"
       .dwellings.find((dwelling) =>
         dwelling.variants.some((creature) => creature.name === creatureName));
   const neutralCreature = (name) =>
-    creatureData.neutral_creatures.find((creature) => creature.name === name);
+    creatureData.neutral_dwellings
+      .flatMap((dwelling) => dwelling.variants)
+      .find((creature) => creature.name === name);
   const externalDwellingIds = [
     ...creatureData.towns.flatMap((town) =>
       town.dwellings.flatMap((dwelling) =>
         dwelling.variants.flatMap(
           (creature) => creature.external_dwelling_ids ?? [],
         ))),
-    ...creatureData.neutral_creatures.flatMap(
-      (creature) => creature.external_dwelling_ids ?? [],
+    ...creatureData.neutral_dwellings.flatMap(
+      (dwelling) => dwelling.variants.flatMap(
+        (creature) => creature.external_dwelling_ids ?? [],
+      ),
     ),
   ];
 

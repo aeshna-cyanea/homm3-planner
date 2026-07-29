@@ -24,33 +24,27 @@ export function buildCatalog(data: CreatureData): Catalog {
   );
   for (const town of data.towns) {
     for (const dwelling of town.dwellings) {
-      indexDwelling(dwellingCatalog, town.name, basicCreature(dwelling), dwelling);
+      indexDwelling(dwellingCatalog, town.name, dwelling);
       for (const creature of dwelling.variants) {
         indexExternalDwellings(
           externalDwellingCatalog,
           creature,
           town.name,
-          dwelling.level,
-          dwelling.growth,
+          dwelling,
         );
       }
     }
   }
-  for (const creature of data.neutral_creatures ?? []) {
-    dwellingCatalog.set(creature.name, {
-      factionName: "Neutral",
-      creature,
-      level: creature.level,
-      growth: creature.growth,
-      externalDwellingIds: creature.external_dwelling_ids ?? [],
-    });
-    indexExternalDwellings(
-      externalDwellingCatalog,
-      creature,
-      "Neutral",
-      creature.level,
-      creature.growth,
-    );
+  for (const dwelling of data.neutral_dwellings ?? []) {
+    indexDwelling(dwellingCatalog, "Neutral", dwelling);
+    for (const variant of dwelling.variants) {
+      indexExternalDwellings(
+        externalDwellingCatalog,
+        variant,
+        "Neutral",
+        dwelling,
+      );
+    }
   }
 
   return {
@@ -81,7 +75,7 @@ export function creatureProfile(
           variants: dwelling.variants,
           variantIndex,
           factionName: town.name,
-          level: dwelling.level,
+          dwelling,
           dwellingName: externalDwellingName(catalog, dwelling),
           variant: variantName(variantIndex),
         };
@@ -92,9 +86,9 @@ export function creatureProfile(
   const neutral = catalog.dwellingCatalog.get(name);
   return neutral?.factionName === "Neutral"
     ? {
-        creature: neutral.creature,
+        creature: basicCreature(neutral.dwelling),
         factionName: neutral.factionName,
-        level: neutral.level,
+        dwelling: neutral.dwelling,
         dwellingName: neutral.externalDwellingIds[0]
           ? catalog.externalDwellingCatalog.get(neutral.externalDwellingIds[0])?.name
           : undefined,
@@ -132,14 +126,11 @@ export function nextSelection(dwelling: Dwelling, current: number): number {
 function indexDwelling(
   catalog: Map<string, CatalogDwelling>,
   factionName: string,
-  creature: Creature,
   dwelling: Dwelling,
 ): void {
-  catalog.set(creature.name, {
+  catalog.set(basicCreature(dwelling).name, {
     factionName,
-    creature,
-    level: dwelling.level,
-    growth: dwelling.growth,
+    dwelling,
     externalDwellingIds: Array.from(
       new Set(dwelling.variants.flatMap(
         (variant) => variant.external_dwelling_ids ?? [],
@@ -152,15 +143,18 @@ function indexExternalDwellings(
   catalog: Map<string, CatalogExternalDwelling>,
   creature: Creature,
   factionName: string,
-  level: number,
-  growth: number,
+  sourceDwelling: Dwelling,
 ): void {
   for (const id of creature.external_dwelling_ids ?? []) {
-    const dwelling = catalog.get(id);
-    if (!dwelling) {
+    const externalDwelling = catalog.get(id);
+    if (!externalDwelling) {
       throw new Error(`Unknown external dwelling ${id} for ${creature.name}`);
     }
-    dwelling.recruitments.push({ creature, factionName, level: level, growth });
+    externalDwelling.recruitments.push({
+      creature,
+      factionName,
+      dwelling: sourceDwelling,
+    });
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "ruleset": "heroes_iii_horn_of_the_abyss",
   "source_url": "https://heroes.thelazy.net/index.php/List_of_creatures",
   "external_dwelling_source_url": "https://heroes.thelazy.net/index.php/Creature_dwelling",
@@ -368,7 +368,6 @@
               },
               "health": 10,
               "speed": 4,
-              "growth": 14,
               "ai_value": 80,
               "cost": {
                 "gold": 60
@@ -391,7 +390,6 @@
               },
               "health": 10,
               "speed": 5,
-              "growth": 14,
               "ai_value": 115,
               "cost": {
                 "gold": 75
@@ -417,7 +415,6 @@
               },
               "health": 10,
               "speed": 4,
-              "growth": 9,
               "ai_value": 126,
               "cost": {
                 "gold": 100
@@ -440,7 +437,6 @@
               },
               "health": 10,
               "speed": 6,
-              "growth": 9,
               "ai_value": 184,
               "cost": {
                 "gold": 150
@@ -466,7 +462,6 @@
               },
               "health": 25,
               "speed": 6,
-              "growth": 7,
               "ai_value": 351,
               "cost": {
                 "gold": 200
@@ -489,7 +484,6 @@
               },
               "health": 25,
               "speed": 9,
-              "growth": 7,
               "ai_value": 448,
               "cost": {
                 "gold": 240
@@ -524,7 +518,6 @@
               },
               "health": 35,
               "speed": 5,
-              "growth": 4,
               "ai_value": 445,
               "cost": {
                 "gold": 300
@@ -547,7 +540,6 @@
               },
               "health": 35,
               "speed": 6,
-              "growth": 4,
               "ai_value": 588,
               "cost": {
                 "gold": 400
@@ -573,7 +565,6 @@
               },
               "health": 30,
               "speed": 5,
-              "growth": 3,
               "ai_value": 582,
               "cost": {
                 "gold": 400
@@ -596,7 +587,6 @@
               },
               "health": 30,
               "speed": 7,
-              "growth": 3,
               "ai_value": 750,
               "cost": {
                 "gold": 450
@@ -622,7 +612,6 @@
               },
               "health": 100,
               "speed": 7,
-              "growth": 2,
               "ai_value": 1946,
               "cost": {
                 "gold": 1000
@@ -645,7 +634,6 @@
               },
               "health": 100,
               "speed": 9,
-              "growth": 2,
               "ai_value": 2100,
               "cost": {
                 "gold": 1200
@@ -671,7 +659,6 @@
               },
               "health": 200,
               "speed": 12,
-              "growth": 1,
               "ai_value": 5019,
               "cost": {
                 "gold": 3000,
@@ -695,7 +682,6 @@
               },
               "health": 250,
               "speed": 18,
-              "growth": 1,
               "ai_value": 8776,
               "cost": {
                 "gold": 5000,
@@ -727,7 +713,6 @@
               },
               "health": 8,
               "speed": 6,
-              "growth": 14,
               "ai_value": 100,
               "cost": {
                 "gold": 70
@@ -750,7 +735,6 @@
               },
               "health": 10,
               "speed": 8,
-              "growth": 14,
               "ai_value": 138,
               "cost": {
                 "gold": 90
@@ -776,7 +760,6 @@
               },
               "health": 20,
               "speed": 3,
-              "growth": 8,
               "ai_value": 138,
               "cost": {
                 "gold": 120
@@ -799,7 +782,6 @@
               },
               "health": 20,
               "speed": 5,
-              "growth": 8,
               "ai_value": 209,
               "cost": {
                 "gold": 150
@@ -834,7 +816,6 @@
               },
               "health": 15,
               "speed": 6,
-              "growth": 7,
               "ai_value": 234,
               "cost": {
                 "gold": 200
@@ -857,7 +838,6 @@
               },
               "health": 15,
               "speed": 7,
-              "growth": 7,
               "ai_value": 331,
               "cost": {
                 "gold": 225
@@ -883,7 +863,6 @@
               },
               "health": 30,
               "speed": 8,
-              "growth": 5,
               "ai_value": 518,
               "cost": {
                 "gold": 250
@@ -906,7 +885,6 @@
               },
               "health": 30,
               "speed": 12,
-              "growth": 5,
               "ai_value": 532,
               "cost": {
                 "gold": 275
@@ -932,7 +910,6 @@
               },
               "health": 55,
               "speed": 3,
-              "growth": 3,
               "ai_value": 517,
               "cost": {
                 "gold": 350
@@ -955,7 +932,6 @@
               },
               "health": 65,
               "speed": 4,
-              "growth": 3,
               "ai_value": 803,
               "cost": {
                 "gold": 425
@@ -990,7 +966,6 @@
               },
               "health": 90,
               "speed": 7,
-              "growth": 2,
               "ai_value": 1806,
               "cost": {
                 "gold": 850
@@ -1013,7 +988,6 @@
               },
               "health": 110,
               "speed": 9,
-              "growth": 2,
               "ai_value": 2030,
               "cost": {
                 "gold": 950
@@ -1039,7 +1013,6 @@
               },
               "health": 180,
               "speed": 10,
-              "growth": 1,
               "ai_value": 4872,
               "cost": {
                 "gold": 2400,
@@ -1063,7 +1036,6 @@
               },
               "health": 250,
               "speed": 16,
-              "growth": 1,
               "ai_value": 8613,
               "cost": {
                 "gold": 4000,
@@ -1095,7 +1067,6 @@
               },
               "health": 4,
               "speed": 4,
-              "growth": 16,
               "ai_value": 44,
               "cost": {
                 "gold": 30
@@ -1118,7 +1089,6 @@
               },
               "health": 4,
               "speed": 5,
-              "growth": 16,
               "ai_value": 66,
               "cost": {
                 "gold": 40
@@ -1144,7 +1114,6 @@
               },
               "health": 16,
               "speed": 6,
-              "growth": 9,
               "ai_value": 165,
               "cost": {
                 "gold": 130
@@ -1167,7 +1136,6 @@
               },
               "health": 16,
               "speed": 9,
-              "growth": 9,
               "ai_value": 201,
               "cost": {
                 "gold": 160
@@ -1202,7 +1170,6 @@
               },
               "health": 30,
               "speed": 3,
-              "growth": 6,
               "ai_value": 250,
               "cost": {
                 "gold": 150
@@ -1225,7 +1192,6 @@
               },
               "health": 35,
               "speed": 5,
-              "growth": 6,
               "ai_value": 412,
               "cost": {
                 "gold": 200
@@ -1254,7 +1220,6 @@
               },
               "health": 25,
               "speed": 5,
-              "growth": 4,
               "ai_value": 570,
               "cost": {
                 "gold": 350
@@ -1277,7 +1242,6 @@
               },
               "health": 30,
               "speed": 7,
-              "growth": 4,
               "ai_value": 680,
               "cost": {
                 "gold": 450
@@ -1303,7 +1267,6 @@
               },
               "health": 40,
               "speed": 7,
-              "growth": 3,
               "ai_value": 884,
               "cost": {
                 "gold": 550
@@ -1326,7 +1289,6 @@
               },
               "health": 40,
               "speed": 11,
-              "growth": 3,
               "ai_value": 942,
               "cost": {
                 "gold": 600
@@ -1352,7 +1314,6 @@
               },
               "health": 110,
               "speed": 5,
-              "growth": 2,
               "ai_value": 2016,
               "cost": {
                 "gold": 1100
@@ -1375,7 +1336,6 @@
               },
               "health": 110,
               "speed": 7,
-              "growth": 2,
               "ai_value": 2840,
               "cost": {
                 "gold": 1600
@@ -1401,7 +1361,6 @@
               },
               "health": 150,
               "speed": 7,
-              "growth": 1,
               "ai_value": 3718,
               "cost": {
                 "gold": 2000,
@@ -1425,7 +1384,6 @@
               },
               "health": 300,
               "speed": 11,
-              "growth": 1,
               "ai_value": 7500,
               "cost": {
                 "gold": 5000,
@@ -1457,7 +1415,6 @@
               },
               "health": 4,
               "speed": 5,
-              "growth": 15,
               "ai_value": 50,
               "cost": {
                 "gold": 50
@@ -1480,7 +1437,6 @@
               },
               "health": 4,
               "speed": 7,
-              "growth": 15,
               "ai_value": 60,
               "cost": {
                 "gold": 60
@@ -1515,7 +1471,6 @@
               },
               "health": 13,
               "speed": 4,
-              "growth": 8,
               "ai_value": 159,
               "cost": {
                 "gold": 125
@@ -1538,7 +1493,6 @@
               },
               "health": 13,
               "speed": 6,
-              "growth": 8,
               "ai_value": 240,
               "cost": {
                 "gold": 175
@@ -1564,7 +1518,6 @@
               },
               "health": 25,
               "speed": 7,
-              "growth": 5,
               "ai_value": 357,
               "cost": {
                 "gold": 200
@@ -1587,7 +1540,6 @@
               },
               "health": 25,
               "speed": 8,
-              "growth": 5,
               "ai_value": 392,
               "cost": {
                 "gold": 250
@@ -1622,7 +1574,6 @@
               },
               "health": 35,
               "speed": 5,
-              "growth": 4,
               "ai_value": 445,
               "cost": {
                 "gold": 250
@@ -1645,7 +1596,6 @@
               },
               "health": 40,
               "speed": 6,
-              "growth": 4,
               "ai_value": 480,
               "cost": {
                 "gold": 270
@@ -1671,7 +1621,6 @@
               },
               "health": 45,
               "speed": 6,
-              "growth": 3,
               "ai_value": 765,
               "cost": {
                 "gold": 500
@@ -1694,7 +1643,6 @@
               },
               "health": 45,
               "speed": 7,
-              "growth": 3,
               "ai_value": 1224,
               "cost": {
                 "gold": 700
@@ -1720,7 +1668,6 @@
               },
               "health": 90,
               "speed": 9,
-              "growth": 2,
               "ai_value": 1670,
               "cost": {
                 "gold": 900
@@ -1743,7 +1690,6 @@
               },
               "health": 90,
               "speed": 13,
-              "growth": 2,
               "ai_value": 2343,
               "cost": {
                 "gold": 1100
@@ -1769,7 +1715,6 @@
               },
               "health": 160,
               "speed": 11,
-              "growth": 1,
               "ai_value": 5101,
               "cost": {
                 "gold": 2700,
@@ -1793,7 +1738,6 @@
               },
               "health": 200,
               "speed": 17,
-              "growth": 1,
               "ai_value": 7115,
               "cost": {
                 "gold": 4500,
@@ -1825,7 +1769,6 @@
               },
               "health": 6,
               "speed": 4,
-              "growth": 12,
               "ai_value": 60,
               "cost": {
                 "gold": 60
@@ -1848,7 +1791,6 @@
               },
               "health": 6,
               "speed": 5,
-              "growth": 12,
               "ai_value": 85,
               "cost": {
                 "gold": 70
@@ -1883,7 +1825,6 @@
               },
               "health": 15,
               "speed": 3,
-              "growth": 8,
               "ai_value": 98,
               "cost": {
                 "gold": 100
@@ -1906,7 +1847,6 @@
               },
               "health": 20,
               "speed": 4,
-              "growth": 8,
               "ai_value": 128,
               "cost": {
                 "gold": 125
@@ -1932,7 +1872,6 @@
               },
               "health": 18,
               "speed": 5,
-              "growth": 7,
               "ai_value": 252,
               "cost": {
                 "gold": 200
@@ -1955,7 +1894,6 @@
               },
               "health": 18,
               "speed": 7,
-              "growth": 7,
               "ai_value": 315,
               "cost": {
                 "gold": 230
@@ -1981,7 +1919,6 @@
               },
               "health": 30,
               "speed": 6,
-              "growth": 4,
               "ai_value": 555,
               "cost": {
                 "gold": 360
@@ -2004,7 +1941,6 @@
               },
               "health": 40,
               "speed": 9,
-              "growth": 4,
               "ai_value": 783,
               "cost": {
                 "gold": 500
@@ -2030,7 +1966,6 @@
               },
               "health": 30,
               "speed": 6,
-              "growth": 3,
               "ai_value": 848,
               "cost": {
                 "gold": 550
@@ -2053,7 +1988,6 @@
               },
               "health": 40,
               "speed": 7,
-              "growth": 3,
               "ai_value": 1079,
               "cost": {
                 "gold": 600
@@ -2079,7 +2013,6 @@
               },
               "health": 120,
               "speed": 7,
-              "growth": 2,
               "ai_value": 2087,
               "cost": {
                 "gold": 1200
@@ -2102,7 +2035,6 @@
               },
               "health": 120,
               "speed": 9,
-              "growth": 2,
               "ai_value": 2382,
               "cost": {
                 "gold": 1500
@@ -2128,7 +2060,6 @@
               },
               "health": 150,
               "speed": 9,
-              "growth": 1,
               "ai_value": 3388,
               "cost": {
                 "gold": 1800
@@ -2151,7 +2082,6 @@
               },
               "health": 200,
               "speed": 14,
-              "growth": 1,
               "ai_value": 4696,
               "cost": {
                 "gold": 3000,
@@ -2183,7 +2113,6 @@
               },
               "health": 5,
               "speed": 4,
-              "growth": 14,
               "ai_value": 59,
               "cost": {
                 "gold": 50
@@ -2206,7 +2135,6 @@
               },
               "health": 6,
               "speed": 5,
-              "growth": 14,
               "ai_value": 84,
               "cost": {
                 "gold": 65
@@ -2241,7 +2169,6 @@
               },
               "health": 14,
               "speed": 6,
-              "growth": 8,
               "ai_value": 154,
               "cost": {
                 "gold": 130
@@ -2264,7 +2191,6 @@
               },
               "health": 14,
               "speed": 9,
-              "growth": 8,
               "ai_value": 238,
               "cost": {
                 "gold": 170
@@ -2290,7 +2216,6 @@
               },
               "health": 22,
               "speed": 5,
-              "growth": 7,
               "ai_value": 336,
               "cost": {
                 "gold": 250
@@ -2313,7 +2238,6 @@
               },
               "health": 22,
               "speed": 7,
-              "growth": 7,
               "ai_value": 367,
               "cost": {
                 "gold": 280
@@ -2339,7 +2263,6 @@
               },
               "health": 25,
               "speed": 5,
-              "growth": 4,
               "ai_value": 517,
               "cost": {
                 "gold": 300
@@ -2362,7 +2285,6 @@
               },
               "health": 30,
               "speed": 6,
-              "growth": 4,
               "ai_value": 577,
               "cost": {
                 "gold": 330
@@ -2388,7 +2310,6 @@
               },
               "health": 50,
               "speed": 6,
-              "growth": 3,
               "ai_value": 835,
               "cost": {
                 "gold": 500
@@ -2411,7 +2332,6 @@
               },
               "health": 50,
               "speed": 8,
-              "growth": 3,
               "ai_value": 1068,
               "cost": {
                 "gold": 575
@@ -2437,7 +2357,6 @@
               },
               "health": 80,
               "speed": 7,
-              "growth": 2,
               "ai_value": 1547,
               "cost": {
                 "gold": 850
@@ -2460,7 +2379,6 @@
               },
               "health": 80,
               "speed": 11,
-              "growth": 2,
               "ai_value": 1589,
               "cost": {
                 "gold": 1050
@@ -2486,7 +2404,6 @@
               },
               "health": 180,
               "speed": 11,
-              "growth": 1,
               "ai_value": 4702,
               "cost": {
                 "gold": 2500,
@@ -2510,7 +2427,6 @@
               },
               "health": 300,
               "speed": 15,
-              "growth": 1,
               "ai_value": 8721,
               "cost": {
                 "gold": 4000,
@@ -2542,7 +2458,6 @@
               },
               "health": 5,
               "speed": 5,
-              "growth": 15,
               "ai_value": 60,
               "cost": {
                 "gold": 40
@@ -2565,7 +2480,6 @@
               },
               "health": 5,
               "speed": 7,
-              "growth": 15,
               "ai_value": 78,
               "cost": {
                 "gold": 50
@@ -2600,7 +2514,6 @@
               },
               "health": 10,
               "speed": 6,
-              "growth": 9,
               "ai_value": 130,
               "cost": {
                 "gold": 100
@@ -2623,7 +2536,6 @@
               },
               "health": 10,
               "speed": 8,
-              "growth": 9,
               "ai_value": 203,
               "cost": {
                 "gold": 140
@@ -2649,7 +2561,6 @@
               },
               "health": 15,
               "speed": 4,
-              "growth": 7,
               "ai_value": 192,
               "cost": {
                 "gold": 150
@@ -2672,7 +2583,6 @@
               },
               "health": 20,
               "speed": 5,
-              "growth": 7,
               "ai_value": 240,
               "cost": {
                 "gold": 165
@@ -2698,7 +2608,6 @@
               },
               "health": 40,
               "speed": 4,
-              "growth": 4,
               "ai_value": 416,
               "cost": {
                 "gold": 300
@@ -2721,7 +2630,6 @@
               },
               "health": 60,
               "speed": 5,
-              "growth": 4,
               "ai_value": 672,
               "cost": {
                 "gold": 400
@@ -2747,7 +2655,6 @@
               },
               "health": 60,
               "speed": 7,
-              "growth": 3,
               "ai_value": 1027,
               "cost": {
                 "gold": 600
@@ -2770,7 +2677,6 @@
               },
               "health": 60,
               "speed": 11,
-              "growth": 3,
               "ai_value": 1106,
               "cost": {
                 "gold": 700
@@ -2796,7 +2702,6 @@
               },
               "health": 70,
               "speed": 6,
-              "growth": 2,
               "ai_value": 1266,
               "cost": {
                 "gold": 750
@@ -2819,7 +2724,6 @@
               },
               "health": 70,
               "speed": 8,
-              "growth": 2,
               "ai_value": 1443,
               "cost": {
                 "gold": 1100
@@ -2845,7 +2749,6 @@
               },
               "health": 160,
               "speed": 6,
-              "growth": 1,
               "ai_value": 3162,
               "cost": {
                 "gold": 1500
@@ -2868,7 +2771,6 @@
               },
               "health": 300,
               "speed": 9,
-              "growth": 1,
               "ai_value": 6168,
               "cost": {
                 "gold": 3000,
@@ -2900,7 +2802,6 @@
               },
               "health": 6,
               "speed": 4,
-              "growth": 12,
               "ai_value": 56,
               "cost": {
                 "gold": 50
@@ -2923,7 +2824,6 @@
               },
               "health": 6,
               "speed": 5,
-              "growth": 12,
               "ai_value": 90,
               "cost": {
                 "gold": 70
@@ -2958,7 +2858,6 @@
               },
               "health": 14,
               "speed": 4,
-              "growth": 9,
               "ai_value": 126,
               "cost": {
                 "gold": 110
@@ -2981,7 +2880,6 @@
               },
               "health": 15,
               "speed": 5,
-              "growth": 9,
               "ai_value": 156,
               "cost": {
                 "gold": 140
@@ -3007,7 +2905,6 @@
               },
               "health": 20,
               "speed": 9,
-              "growth": 8,
               "ai_value": 268,
               "cost": {
                 "gold": 220
@@ -3030,7 +2927,6 @@
               },
               "health": 20,
               "speed": 13,
-              "growth": 8,
               "ai_value": 312,
               "cost": {
                 "gold": 240
@@ -3056,7 +2952,6 @@
               },
               "health": 35,
               "speed": 5,
-              "growth": 4,
               "ai_value": 552,
               "cost": {
                 "gold": 325
@@ -3079,7 +2974,6 @@
               },
               "health": 40,
               "speed": 7,
-              "growth": 4,
               "ai_value": 714,
               "cost": {
                 "gold": 400
@@ -3105,7 +2999,6 @@
               },
               "health": 70,
               "speed": 5,
-              "growth": 3,
               "ai_value": 890,
               "cost": {
                 "gold": 525
@@ -3128,7 +3021,6 @@
               },
               "health": 70,
               "speed": 6,
-              "growth": 3,
               "ai_value": 1028,
               "cost": {
                 "gold": 600
@@ -3154,7 +3046,6 @@
               },
               "health": 70,
               "speed": 7,
-              "growth": 2,
               "ai_value": 1350,
               "cost": {
                 "gold": 800
@@ -3177,7 +3068,6 @@
               },
               "health": 70,
               "speed": 11,
-              "growth": 2,
               "ai_value": 1518,
               "cost": {
                 "gold": 1100
@@ -3203,7 +3093,6 @@
               },
               "health": 175,
               "speed": 5,
-              "growth": 1,
               "ai_value": 4120,
               "cost": {
                 "gold": 2200
@@ -3226,7 +3115,6 @@
               },
               "health": 250,
               "speed": 7,
-              "growth": 1,
               "ai_value": 5931,
               "cost": {
                 "gold": 3500,
@@ -3258,7 +3146,6 @@
               },
               "health": 3,
               "speed": 7,
-              "growth": 20,
               "ai_value": 55,
               "cost": {
                 "gold": 25
@@ -3281,7 +3168,6 @@
               },
               "health": 3,
               "speed": 9,
-              "growth": 20,
               "ai_value": 95,
               "cost": {
                 "gold": 30
@@ -3316,7 +3202,6 @@
               },
               "health": 25,
               "speed": 7,
-              "growth": 6,
               "ai_value": 356,
               "cost": {
                 "gold": 250
@@ -3341,7 +3226,6 @@
               },
               "health": 25,
               "speed": 8,
-              "growth": 6,
               "ai_value": 486,
               "cost": {
                 "gold": 275
@@ -3367,7 +3251,6 @@
               },
               "health": 30,
               "speed": 5,
-              "growth": 6,
               "ai_value": 315,
               "cost": {
                 "gold": 300
@@ -3392,7 +3275,6 @@
               },
               "health": 30,
               "speed": 6,
-              "growth": 6,
               "ai_value": 380,
               "cost": {
                 "gold": 375
@@ -3418,7 +3300,6 @@
               },
               "health": 35,
               "speed": 6,
-              "growth": 5,
               "ai_value": 345,
               "cost": {
                 "gold": 350
@@ -3443,7 +3324,6 @@
               },
               "health": 35,
               "speed": 8,
-              "growth": 5,
               "ai_value": 470,
               "cost": {
                 "gold": 400
@@ -3469,7 +3349,6 @@
               },
               "health": 40,
               "speed": 4,
-              "growth": 4,
               "ai_value": 330,
               "cost": {
                 "gold": 400
@@ -3494,7 +3373,6 @@
               },
               "health": 40,
               "speed": 6,
-              "growth": 4,
               "ai_value": 490,
               "cost": {
                 "gold": 500
@@ -3520,7 +3398,6 @@
               },
               "health": 75,
               "speed": 7,
-              "growth": 2,
               "ai_value": 1669,
               "cost": {
                 "gold": 950
@@ -3543,7 +3420,6 @@
               },
               "health": 80,
               "speed": 9,
-              "growth": 2,
               "ai_value": 2012,
               "cost": {
                 "gold": 1200
@@ -3569,7 +3445,6 @@
               },
               "health": 150,
               "speed": 15,
-              "growth": 1,
               "ai_value": 4336,
               "cost": {
                 "gold": 2000
@@ -3592,7 +3467,6 @@
               },
               "health": 200,
               "speed": 21,
-              "growth": 1,
               "ai_value": 6721,
               "cost": {
                 "gold": 3000,
@@ -3634,7 +3508,6 @@
               },
               "health": 4,
               "speed": 6,
-              "growth": 16,
               "ai_value": 57,
               "cost": {
                 "gold": 35
@@ -3657,7 +3530,6 @@
               },
               "health": 4,
               "speed": 8,
-              "growth": 16,
               "ai_value": 75,
               "cost": {
                 "gold": 45
@@ -3683,7 +3555,6 @@
               },
               "health": 15,
               "speed": 5,
-              "growth": 9,
               "ai_value": 155,
               "cost": {
                 "gold": 110
@@ -3706,7 +3577,6 @@
               },
               "health": 15,
               "speed": 6,
-              "growth": 9,
               "ai_value": 174,
               "cost": {
                 "gold": 140
@@ -3741,7 +3611,6 @@
               },
               "health": 15,
               "speed": 6,
-              "growth": 7,
               "ai_value": 312,
               "cost": {
                 "gold": 225
@@ -3764,7 +3633,6 @@
               },
               "health": 15,
               "speed": 7,
-              "growth": 7,
               "ai_value": 407,
               "cost": {
                 "gold": 275
@@ -3784,7 +3652,6 @@
               },
               "health": 15,
               "speed": 8,
-              "growth": 7,
               "ai_value": 602,
               "cost": {
                 "gold": 375
@@ -3810,7 +3677,6 @@
               },
               "health": 30,
               "speed": 9,
-              "growth": 4,
               "ai_value": 502,
               "cost": {
                 "gold": 275
@@ -3833,7 +3699,6 @@
               },
               "health": 30,
               "speed": 11,
-              "growth": 4,
               "ai_value": 645,
               "cost": {
                 "gold": 325
@@ -3868,7 +3733,6 @@
               },
               "health": 35,
               "speed": 6,
-              "growth": 3,
               "ai_value": 790,
               "cost": {
                 "gold": 515
@@ -3891,7 +3755,6 @@
               },
               "health": 35,
               "speed": 7,
-              "growth": 3,
               "ai_value": 852,
               "cost": {
                 "gold": 565
@@ -3917,7 +3780,6 @@
               },
               "health": 80,
               "speed": 6,
-              "growth": 2,
               "ai_value": 1415,
               "cost": {
                 "gold": 1000
@@ -3940,7 +3802,6 @@
               },
               "health": 90,
               "speed": 7,
-              "growth": 2,
               "ai_value": 2116,
               "cost": {
                 "gold": 1300
@@ -3966,7 +3827,6 @@
               },
               "health": 180,
               "speed": 9,
-              "growth": 1,
               "ai_value": 3953,
               "cost": {
                 "gold": 2200,
@@ -3990,7 +3850,6 @@
               },
               "health": 300,
               "speed": 12,
-              "growth": 1,
               "ai_value": 7220,
               "cost": {
                 "gold": 4000,
@@ -4022,7 +3881,6 @@
               },
               "health": 4,
               "speed": 5,
-              "growth": 15,
               "ai_value": 75,
               "cost": {
                 "gold": 40
@@ -4046,7 +3904,6 @@
               },
               "health": 4,
               "speed": 6,
-              "growth": 15,
               "ai_value": 95,
               "cost": {
                 "gold": 60
@@ -4072,7 +3929,6 @@
               },
               "health": 14,
               "speed": 6,
-              "growth": 8,
               "ai_value": 186,
               "cost": {
                 "gold": 140
@@ -4095,7 +3951,6 @@
               },
               "health": 16,
               "speed": 7,
-              "growth": 8,
               "ai_value": 278,
               "cost": {
                 "gold": 170
@@ -4121,7 +3976,6 @@
               },
               "health": 25,
               "speed": 4,
-              "growth": 6,
               "ai_value": 198,
               "cost": {
                 "gold": 200
@@ -4144,7 +3998,6 @@
               },
               "health": 25,
               "speed": 6,
-              "growth": 6,
               "ai_value": 256,
               "cost": {
                 "gold": 230
@@ -4179,7 +4032,6 @@
               },
               "health": 30,
               "speed": 8,
-              "growth": 5,
               "ai_value": 669,
               "cost": {
                 "gold": 350
@@ -4202,7 +4054,6 @@
               },
               "health": 30,
               "speed": 9,
-              "growth": 5,
               "ai_value": 947,
               "cost": {
                 "gold": 450
@@ -4228,7 +4079,6 @@
               },
               "health": 50,
               "speed": 8,
-              "growth": 3,
               "ai_value": 991,
               "cost": {
                 "gold": 575
@@ -4251,7 +4101,6 @@
               },
               "health": 60,
               "speed": 10,
-              "growth": 3,
               "ai_value": 1220,
               "cost": {
                 "gold": 650
@@ -4277,7 +4126,6 @@
               },
               "health": 45,
               "speed": 7,
-              "growth": 2,
               "ai_value": 1351,
               "cost": {
                 "gold": 800
@@ -4300,7 +4148,6 @@
               },
               "health": 45,
               "speed": 8,
-              "growth": 2,
               "ai_value": 1454,
               "cost": {
                 "gold": 1100
@@ -4326,7 +4173,6 @@
               },
               "health": 160,
               "speed": 11,
-              "growth": 1,
               "ai_value": 3574,
               "cost": {
                 "gold": 2000
@@ -4349,7 +4195,6 @@
               },
               "health": 200,
               "speed": 15,
-              "growth": 1,
               "ai_value": 5341,
               "cost": {
                 "gold": 3500,
@@ -4376,7 +4221,6 @@
               },
               "health": 200,
               "speed": 6,
-              "growth": 1,
               "ai_value": 3879,
               "cost": {
                 "gold": 2200,
@@ -4400,7 +4244,6 @@
               },
               "health": 300,
               "speed": 7,
-              "growth": 1,
               "ai_value": 6433,
               "cost": {
                 "gold": 3500,
@@ -4432,7 +4275,6 @@
               },
               "health": 8,
               "speed": 3,
-              "growth": 15,
               "ai_value": 54,
               "cost": {
                 "gold": 40
@@ -4455,7 +4297,6 @@
               },
               "health": 8,
               "speed": 5,
-              "growth": 15,
               "ai_value": 84,
               "cost": {
                 "gold": 60
@@ -4481,7 +4322,6 @@
               },
               "health": 18,
               "speed": 7,
-              "growth": 9,
               "ai_value": 228,
               "cost": {
                 "gold": 135
@@ -4504,7 +4344,6 @@
               },
               "health": 18,
               "speed": 8,
-              "growth": 9,
               "ai_value": 250,
               "cost": {
                 "gold": 170
@@ -4530,7 +4369,6 @@
               },
               "health": 21,
               "speed": 6,
-              "growth": 7,
               "ai_value": 370,
               "cost": {
                 "gold": 230
@@ -4553,7 +4391,6 @@
               },
               "health": 24,
               "speed": 7,
-              "growth": 7,
               "ai_value": 526,
               "cost": {
                 "gold": 260
@@ -4579,7 +4416,6 @@
               },
               "health": 40,
               "speed": 6,
-              "growth": 4,
               "ai_value": 504,
               "cost": {
                 "gold": 325
@@ -4602,7 +4438,6 @@
               },
               "health": 45,
               "speed": 7,
-              "growth": 4,
               "ai_value": 751,
               "cost": {
                 "gold": 400
@@ -4628,7 +4463,6 @@
               },
               "health": 35,
               "speed": 5,
-              "growth": 3,
               "ai_value": 685,
               "cost": {
                 "gold": 450
@@ -4651,7 +4485,6 @@
               },
               "health": 35,
               "speed": 6,
-              "growth": 3,
               "ai_value": 818,
               "cost": {
                 "gold": 600
@@ -4677,7 +4510,6 @@
               },
               "health": 120,
               "speed": 5,
-              "growth": 2,
               "ai_value": 1359,
               "cost": {
                 "gold": 850
@@ -4700,7 +4532,6 @@
               },
               "health": 135,
               "speed": 6,
-              "growth": 2,
               "ai_value": 1601,
               "cost": {
                 "gold": 1000
@@ -4735,7 +4566,6 @@
               },
               "health": 165,
               "speed": 8,
-              "growth": 1,
               "ai_value": 4180,
               "cost": {
                 "gold": 2000
@@ -4758,7 +4588,6 @@
               },
               "health": 300,
               "speed": 10,
-              "growth": 1,
               "ai_value": 6694,
               "cost": {
                 "gold": 3500,
@@ -4772,438 +4601,510 @@
       ]
     }
   ],
-  "neutral_creatures": [
+  "neutral_dwellings": [
     {
-      "id": "peasant",
-      "name": "Peasant",
       "level": 1,
-      "attack": 1,
-      "defense": 1,
-      "damage": {
-        "min": 1,
-        "max": 1
-      },
-      "health": 1,
-      "speed": 3,
       "growth": 25,
-      "ai_value": 15,
-      "cost": {
-        "gold": 10
-      },
-      "special": "",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Peasant",
-      "level": 1,
-      "external_dwelling_ids": [
-        "hovel"
+      "variants": [
+        {
+          "id": "peasant",
+          "name": "Peasant",
+          "level": 1,
+          "attack": 1,
+          "defense": 1,
+          "damage": {
+            "min": 1,
+            "max": 1
+          },
+          "health": 1,
+          "speed": 3,
+          "ai_value": 15,
+          "cost": {
+            "gold": 10
+          },
+          "special": "",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Peasant",
+          "external_dwelling_ids": [
+            "hovel"
+          ]
+        }
       ]
     },
     {
-      "id": "boar",
-      "name": "Boar",
       "level": 2,
-      "attack": 6,
-      "defense": 5,
-      "damage": {
-        "min": 2,
-        "max": 3
-      },
-      "health": 15,
-      "speed": 6,
       "growth": 8,
-      "ai_value": 145,
-      "cost": {
-        "gold": 150
-      },
-      "special": "",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Boar",
-      "level": 2,
-      "external_dwelling_ids": [
-        "boar_glen"
+      "variants": [
+        {
+          "id": "boar",
+          "name": "Boar",
+          "level": 2,
+          "attack": 6,
+          "defense": 5,
+          "damage": {
+            "min": 2,
+            "max": 3
+          },
+          "health": 15,
+          "speed": 6,
+          "ai_value": 145,
+          "cost": {
+            "gold": 150
+          },
+          "special": "",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Boar",
+          "external_dwelling_ids": [
+            "boar_glen"
+          ]
+        }
       ]
     },
     {
-      "id": "rogue",
-      "name": "Rogue",
       "level": 2,
-      "attack": 8,
-      "defense": 3,
-      "damage": {
-        "min": 2,
-        "max": 4
-      },
-      "health": 10,
-      "speed": 6,
       "growth": 8,
-      "ai_value": 135,
-      "cost": {
-        "gold": 100
-      },
-      "special": "Spying",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Rogue",
-      "level": 2,
-      "external_dwelling_ids": [
-        "rogue_cavern"
+      "variants": [
+        {
+          "id": "rogue",
+          "name": "Rogue",
+          "level": 2,
+          "attack": 8,
+          "defense": 3,
+          "damage": {
+            "min": 2,
+            "max": 4
+          },
+          "health": 10,
+          "speed": 6,
+          "ai_value": 135,
+          "cost": {
+            "gold": 100
+          },
+          "special": "Spying",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Rogue",
+          "external_dwelling_ids": [
+            "rogue_cavern"
+          ]
+        }
       ]
     },
     {
-      "id": "leprechaun",
-      "name": "Leprechaun",
       "level": 2,
-      "attack": 8,
-      "defense": 5,
-      "damage": {
-        "min": 3,
-        "max": 5
-      },
-      "health": 15,
-      "speed": 5,
       "growth": 9,
-      "ai_value": 208,
-      "cost": {
-        "gold": 100
-      },
-      "special": "Doubles friendly units Luck chance, Spellcaster (Fortune)",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Leprechaun",
-      "level": 2,
-      "external_dwelling_ids": [
-        "alehouse"
+      "variants": [
+        {
+          "id": "leprechaun",
+          "name": "Leprechaun",
+          "level": 2,
+          "attack": 8,
+          "defense": 5,
+          "damage": {
+            "min": 3,
+            "max": 5
+          },
+          "health": 15,
+          "speed": 5,
+          "ai_value": 208,
+          "cost": {
+            "gold": 100
+          },
+          "special": "Doubles friendly units Luck chance, Spellcaster (Fortune)",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Leprechaun",
+          "external_dwelling_ids": [
+            "alehouse"
+          ]
+        }
       ]
     },
     {
-      "id": "mummy",
-      "name": "Mummy",
       "level": 3,
-      "attack": 7,
-      "defense": 7,
-      "damage": {
-        "min": 3,
-        "max": 5
-      },
-      "health": 30,
-      "speed": 5,
       "growth": 7,
-      "ai_value": 270,
-      "cost": {
-        "gold": 300
-      },
-      "special": "Undead, Curse",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Mummy",
-      "level": 3,
-      "external_dwelling_ids": [
-        "tomb_of_curses"
+      "variants": [
+        {
+          "id": "mummy",
+          "name": "Mummy",
+          "level": 3,
+          "attack": 7,
+          "defense": 7,
+          "damage": {
+            "min": 3,
+            "max": 5
+          },
+          "health": 30,
+          "speed": 5,
+          "ai_value": 270,
+          "cost": {
+            "gold": 300
+          },
+          "special": "Undead, Curse",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Mummy",
+          "external_dwelling_ids": [
+            "tomb_of_curses"
+          ]
+        }
       ]
     },
     {
-      "id": "nomad",
-      "name": "Nomad",
       "level": 3,
-      "attack": 9,
-      "defense": 8,
-      "damage": {
-        "min": 2,
-        "max": 6
-      },
-      "health": 30,
-      "speed": 7,
       "growth": 7,
-      "ai_value": 345,
-      "cost": {
-        "gold": 200
-      },
-      "special": "Sandwalker",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Nomad",
-      "level": 3,
-      "external_dwelling_ids": [
-        "nomad_tent"
+      "variants": [
+        {
+          "id": "nomad",
+          "name": "Nomad",
+          "level": 3,
+          "attack": 9,
+          "defense": 8,
+          "damage": {
+            "min": 2,
+            "max": 6
+          },
+          "health": 30,
+          "speed": 7,
+          "ai_value": 345,
+          "cost": {
+            "gold": 200
+          },
+          "special": "Sandwalker",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Nomad",
+          "external_dwelling_ids": [
+            "nomad_tent"
+          ]
+        }
       ]
     },
     {
-      "id": "sharpshooter",
-      "name": "Sharpshooter",
       "level": 4,
-      "attack": 12,
-      "defense": 10,
-      "damage": {
-        "min": 8,
-        "max": 10
-      },
-      "health": 15,
-      "speed": 9,
       "growth": 4,
-      "ai_value": 585,
-      "cost": {
-        "gold": 400
-      },
-      "special": "Ranged (32 shots), No range and obstacle penalty",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Sharpshooter",
-      "level": 4,
-      "external_dwelling_ids": [
-        "treetop_tower"
+      "variants": [
+        {
+          "id": "sharpshooter",
+          "name": "Sharpshooter",
+          "level": 4,
+          "attack": 12,
+          "defense": 10,
+          "damage": {
+            "min": 8,
+            "max": 10
+          },
+          "health": 15,
+          "speed": 9,
+          "ai_value": 585,
+          "cost": {
+            "gold": 400
+          },
+          "special": "Ranged (32 shots), No range and obstacle penalty",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Sharpshooter",
+          "external_dwelling_ids": [
+            "treetop_tower"
+          ]
+        }
       ]
     },
     {
-      "id": "satyr",
-      "name": "Satyr",
       "level": 4,
-      "attack": 10,
-      "defense": 11,
-      "damage": {
-        "min": 6,
-        "max": 10
-      },
-      "health": 35,
-      "speed": 7,
       "growth": 4,
-      "ai_value": 518,
-      "cost": {
-        "gold": 300
-      },
-      "special": "Spellcaster (Mirth)",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Satyr",
-      "level": 4,
-      "external_dwelling_ids": [
-        "wineyard"
+      "variants": [
+        {
+          "id": "satyr",
+          "name": "Satyr",
+          "level": 4,
+          "attack": 10,
+          "defense": 11,
+          "damage": {
+            "min": 6,
+            "max": 10
+          },
+          "health": 35,
+          "speed": 7,
+          "ai_value": 518,
+          "cost": {
+            "gold": 300
+          },
+          "special": "Spellcaster (Mirth)",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Satyr",
+          "external_dwelling_ids": [
+            "wineyard"
+          ]
+        }
       ]
     },
     {
-      "id": "steel_golem",
-      "name": "Steel Golem",
       "level": 4,
-      "attack": 10,
-      "defense": 11,
-      "damage": {
-        "min": 6,
-        "max": 8
-      },
-      "health": 45,
-      "speed": 6,
       "growth": 4,
-      "ai_value": 597,
-      "cost": {
-        "gold": 400
-      },
-      "special": "Unliving, Spell damage resistance (+80%)",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Steel_Golem",
-      "level": 4
-    },
-    {
-      "id": "troll",
-      "name": "Troll",
-      "level": 5,
-      "attack": 14,
-      "defense": 7,
-      "damage": {
-        "min": 10,
-        "max": 15
-      },
-      "health": 40,
-      "speed": 7,
-      "growth": 3,
-      "ai_value": 1024,
-      "cost": {
-        "gold": 500
-      },
-      "special": "Regeneration",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Troll",
-      "level": 5,
-      "external_dwelling_ids": [
-        "troll_bridge"
+      "variants": [
+        {
+          "id": "steel_golem",
+          "name": "Steel Golem",
+          "level": 4,
+          "attack": 10,
+          "defense": 11,
+          "damage": {
+            "min": 6,
+            "max": 8
+          },
+          "health": 45,
+          "speed": 6,
+          "ai_value": 597,
+          "cost": {
+            "gold": 400
+          },
+          "special": "Unliving, Spell damage resistance (+80%)",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Steel_Golem"
+        }
       ]
     },
     {
-      "id": "gold_golem",
-      "name": "Gold Golem",
       "level": 5,
-      "attack": 11,
-      "defense": 12,
-      "damage": {
-        "min": 8,
-        "max": 10
-      },
-      "health": 50,
-      "speed": 5,
       "growth": 3,
-      "ai_value": 600,
-      "cost": {
-        "gold": 500
-      },
-      "special": "Unliving, Spell damage resistance (+85%)",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Gold_Golem",
-      "level": 5,
-      "external_dwelling_ids": [
-        "golem_factory"
+      "variants": [
+        {
+          "id": "troll",
+          "name": "Troll",
+          "level": 5,
+          "attack": 14,
+          "defense": 7,
+          "damage": {
+            "min": 10,
+            "max": 15
+          },
+          "health": 40,
+          "speed": 7,
+          "ai_value": 1024,
+          "cost": {
+            "gold": 500
+          },
+          "special": "Regeneration",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Troll",
+          "external_dwelling_ids": [
+            "troll_bridge"
+          ]
+        }
       ]
     },
     {
-      "id": "fangarm",
-      "name": "Fangarm",
       "level": 5,
-      "attack": 12,
-      "defense": 12,
-      "damage": {
-        "min": 8,
-        "max": 12
-      },
-      "health": 50,
-      "speed": 6,
       "growth": 3,
-      "ai_value": 929,
-      "cost": {
-        "gold": 600
-      },
-      "special": "Flying, Mind spells immunity, Unlimited retaliations, Hypnotizing attack",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Fangarm",
-      "level": 5,
-      "external_dwelling_ids": [
-        "ziggurat"
+      "variants": [
+        {
+          "id": "gold_golem",
+          "name": "Gold Golem",
+          "level": 5,
+          "attack": 11,
+          "defense": 12,
+          "damage": {
+            "min": 8,
+            "max": 10
+          },
+          "health": 50,
+          "speed": 5,
+          "ai_value": 600,
+          "cost": {
+            "gold": 500
+          },
+          "special": "Unliving, Spell damage resistance (+85%)",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Gold_Golem",
+          "external_dwelling_ids": [
+            "golem_factory"
+          ]
+        }
       ]
     },
     {
-      "id": "diamond_golem",
-      "name": "Diamond Golem",
+      "level": 5,
+      "growth": 3,
+      "variants": [
+        {
+          "id": "fangarm",
+          "name": "Fangarm",
+          "level": 5,
+          "attack": 12,
+          "defense": 12,
+          "damage": {
+            "min": 8,
+            "max": 12
+          },
+          "health": 50,
+          "speed": 6,
+          "ai_value": 929,
+          "cost": {
+            "gold": 600
+          },
+          "special": "Flying, Mind spells immunity, Unlimited retaliations, Hypnotizing attack",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Fangarm",
+          "external_dwelling_ids": [
+            "ziggurat"
+          ]
+        }
+      ]
+    },
+    {
       "level": 6,
-      "attack": 13,
-      "defense": 12,
-      "damage": {
-        "min": 10,
-        "max": 14
-      },
-      "health": 60,
-      "speed": 5,
       "growth": 2,
-      "ai_value": 775,
-      "cost": {
-        "gold": 750
-      },
-      "special": "Unliving, Spell Damage Resistance (+95%)",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Diamond_Golem",
-      "level": 6,
-      "external_dwelling_ids": [
-        "golem_factory"
+      "variants": [
+        {
+          "id": "diamond_golem",
+          "name": "Diamond Golem",
+          "level": 6,
+          "attack": 13,
+          "defense": 12,
+          "damage": {
+            "min": 10,
+            "max": 14
+          },
+          "health": 60,
+          "speed": 5,
+          "ai_value": 775,
+          "cost": {
+            "gold": 750
+          },
+          "special": "Unliving, Spell Damage Resistance (+95%)",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Diamond_Golem",
+          "external_dwelling_ids": [
+            "golem_factory"
+          ]
+        }
       ]
     },
     {
-      "id": "enchanter",
-      "name": "Enchanter",
       "level": 6,
-      "attack": 17,
-      "defense": 12,
-      "damage": {
-        "min": 14,
-        "max": 14
-      },
-      "health": 30,
-      "speed": 9,
       "growth": 2,
-      "ai_value": 1210,
-      "cost": {
-        "gold": 750
-      },
-      "special": "Ranged (32 shots), No melee and obstacle penalty, Spellcaster",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Enchanter",
-      "level": 6,
-      "external_dwelling_ids": [
-        "enchanter_s_hollow"
+      "variants": [
+        {
+          "id": "enchanter",
+          "name": "Enchanter",
+          "level": 6,
+          "attack": 17,
+          "defense": 12,
+          "damage": {
+            "min": 14,
+            "max": 14
+          },
+          "health": 30,
+          "speed": 9,
+          "ai_value": 1210,
+          "cost": {
+            "gold": 750
+          },
+          "special": "Ranged (32 shots), No melee and obstacle penalty, Spellcaster",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Enchanter",
+          "external_dwelling_ids": [
+            "enchanter_s_hollow"
+          ]
+        }
       ]
     },
     {
-      "id": "faerie_dragon",
-      "name": "Faerie Dragon",
       "level": 7,
-      "attack": 20,
-      "defense": 20,
-      "damage": {
-        "min": 20,
-        "max": 30
-      },
-      "health": 500,
-      "speed": 15,
       "growth": 1,
-      "ai_value": 30501,
-      "cost": {
-        "gold": 10000,
-        "gem": 8
-      },
-      "special": "Dragon, Flying, Spellcaster, Natural Magic Mirror",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Faerie_Dragon",
-      "level": 7,
-      "external_dwelling_ids": [
-        "magic_forest"
+      "variants": [
+        {
+          "id": "faerie_dragon",
+          "name": "Faerie Dragon",
+          "level": 7,
+          "attack": 20,
+          "defense": 20,
+          "damage": {
+            "min": 20,
+            "max": 30
+          },
+          "health": 500,
+          "speed": 15,
+          "ai_value": 30501,
+          "cost": {
+            "gold": 10000,
+            "gem": 8
+          },
+          "special": "Dragon, Flying, Spellcaster, Natural Magic Mirror",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Faerie_Dragon",
+          "external_dwelling_ids": [
+            "magic_forest"
+          ]
+        }
       ]
     },
     {
-      "id": "rust_dragon",
-      "name": "Rust Dragon",
       "level": 7,
-      "attack": 30,
-      "defense": 30,
-      "damage": {
-        "min": 50,
-        "max": 50
-      },
-      "health": 750,
-      "speed": 17,
       "growth": 1,
-      "ai_value": 26433,
-      "cost": {
-        "gold": 15000,
-        "sulfur": 14
-      },
-      "special": "Dragon, Flying, Breath attack, Acid breath",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Rust_Dragon",
-      "level": 7,
-      "external_dwelling_ids": [
-        "sulfurous_lair"
+      "variants": [
+        {
+          "id": "rust_dragon",
+          "name": "Rust Dragon",
+          "level": 7,
+          "attack": 30,
+          "defense": 30,
+          "damage": {
+            "min": 50,
+            "max": 50
+          },
+          "health": 750,
+          "speed": 17,
+          "ai_value": 26433,
+          "cost": {
+            "gold": 15000,
+            "sulfur": 14
+          },
+          "special": "Dragon, Flying, Breath attack, Acid breath",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Rust_Dragon",
+          "external_dwelling_ids": [
+            "sulfurous_lair"
+          ]
+        }
       ]
     },
     {
-      "id": "crystal_dragon",
-      "name": "Crystal Dragon",
       "level": 7,
-      "attack": 40,
-      "defense": 40,
-      "damage": {
-        "min": 60,
-        "max": 75
-      },
-      "health": 800,
-      "speed": 16,
       "growth": 1,
-      "ai_value": 39338,
-      "cost": {
-        "gold": 20000,
-        "crystal": 10
-      },
-      "special": "Dragon, Crystal generation, Magic resistance (+20%)",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Crystal_Dragon",
-      "level": 7,
-      "external_dwelling_ids": [
-        "crystal_cave"
+      "variants": [
+        {
+          "id": "crystal_dragon",
+          "name": "Crystal Dragon",
+          "level": 7,
+          "attack": 40,
+          "defense": 40,
+          "damage": {
+            "min": 60,
+            "max": 75
+          },
+          "health": 800,
+          "speed": 16,
+          "ai_value": 39338,
+          "cost": {
+            "gold": 20000,
+            "crystal": 10
+          },
+          "special": "Dragon, Crystal generation, Magic resistance (+20%)",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Crystal_Dragon",
+          "external_dwelling_ids": [
+            "crystal_cave"
+          ]
+        }
       ]
     },
     {
-      "id": "azure_dragon",
-      "name": "Azure Dragon",
       "level": 7,
-      "attack": 50,
-      "defense": 50,
-      "damage": {
-        "min": 70,
-        "max": 80
-      },
-      "health": 1000,
-      "speed": 19,
       "growth": 1,
-      "ai_value": 78845,
-      "cost": {
-        "gold": 30000,
-        "mercury": 20
-      },
-      "special": "Dragon, Flying, Breath attack, Fear, Fearless, 1-3 lvl spells immunity",
-      "wiki_url": "https://heroes.thelazy.net/index.php/Azure_Dragon",
-      "level": 7,
-      "external_dwelling_ids": [
-        "frozen_cliffs"
+      "variants": [
+        {
+          "id": "azure_dragon",
+          "name": "Azure Dragon",
+          "level": 7,
+          "attack": 50,
+          "defense": 50,
+          "damage": {
+            "min": 70,
+            "max": 80
+          },
+          "health": 1000,
+          "speed": 19,
+          "ai_value": 78845,
+          "cost": {
+            "gold": 30000,
+            "mercury": 20
+          },
+          "special": "Dragon, Flying, Breath attack, Fear, Fearless, 1-3 lvl spells immunity",
+          "wiki_url": "https://heroes.thelazy.net/index.php/Azure_Dragon",
+          "external_dwelling_ids": [
+            "frozen_cliffs"
+          ]
+        }
       ]
     }
   ]

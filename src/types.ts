@@ -26,7 +26,6 @@ export interface Creature {
   damage: Damage;
   health: number;
   speed: number;
-  growth: number;
   ai_value: number;
   cost: Cost;
   special: string;
@@ -45,6 +44,8 @@ export interface HordeBuilding {
 export interface Dwelling {
   level: number;
   growth: number;
+  building_cost?: Cost;
+  upgrade_costs?: Cost[];
   variants: Creature[];
   horde?: HordeBuilding;
 }
@@ -77,22 +78,19 @@ export interface CreatureData {
   fortification_building_count: number;
   fortification_buildings: FortificationBuilding[];
   towns: Town[];
-  neutral_creatures: Creature[];
+  neutral_dwellings: Dwelling[];
 }
 
 export interface CatalogDwelling {
   factionName: string;
-  creature: Creature;
-  level: number;
-  growth: number;
+  dwelling: Dwelling;
   externalDwellingIds: string[];
 }
 
 export interface ExternalRecruitment {
   factionName: string;
   creature: Creature;
-  level: number;
-  growth: number;
+  dwelling: Dwelling;
 }
 
 export interface CatalogExternalDwelling extends ExternalDwellingDefinition {
@@ -113,7 +111,7 @@ export interface CreatureProfile {
   variants?: Creature[];
   variantIndex?: number;
   factionName: string;
-  level: number;
+  dwelling: Dwelling;
   dwellingName?: string;
   variant?: "Basic" | "Upgraded" | "Second upgrade";
 }

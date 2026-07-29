@@ -22,9 +22,9 @@ applies to every matching town.
 in the structure used by the planner. Towns are identified by their names and
 contain dwellings with shared `level` and `growth` values plus an ordered
 `variants` list. A dwelling has an optional `horde` object when one applies.
-Non-upgradable neutral creatures are stored as flat records under
-`neutral_creatures`. The original nested-upgrade source schema is preserved in
-`creatures_big.json`. The data comes from the Heroes 3 Wiki pages for the
+Non-upgradable neutral creatures are stored as single-variant dwellings under
+`neutral_dwellings`, so growth remains a property of the dwelling rather than
+the creature. The data comes from the Heroes 3 Wiki pages for the
 [creature list](https://heroes.thelazy.net/index.php/List_of_creatures) and
 [Horde buildings](https://heroes.thelazy.net/index.php/Horde_building).
 

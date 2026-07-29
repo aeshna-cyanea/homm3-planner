@@ -148,8 +148,8 @@ function CreatureInfobox(props: {
       id: "growth",
       emoji: "🌱",
       label: "Growth",
-      value: creature().growth,
-      changed: changedFromBase(creature().growth, baseCreature()?.growth),
+      value: props.profile.dwelling.growth,
+      changed: false,
     },
   ];
   const abilitiesChanged = () => {
@@ -179,8 +179,11 @@ function CreatureInfobox(props: {
           <p class="eyebrow">
             {props.profile.factionName} ·{" "}
             {props.profile.dwellingName
-              ? dwellingLabel(props.profile.dwellingName, props.profile.level)
-              : levelSymbol(props.profile.level)}
+              ? dwellingLabel(
+                  props.profile.dwellingName,
+                  props.profile.dwelling.level,
+                )
+              : levelSymbol(props.profile.dwelling.level)}
             <Show when={props.profile.variant}>
               {" "}· {props.profile.variant}
             </Show>

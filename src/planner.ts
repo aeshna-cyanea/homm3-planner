@@ -223,15 +223,15 @@ export function createPlanner(catalog: Catalog): Planner {
             count: entry.count,
             recruitments: dwelling.recruitments.map((recruitment) => ({
               ...recruitment,
-              production: recruitment.growth * entry.count,
+              production: recruitment.dwelling.growth * entry.count,
               unitCost: externalRecruitmentCost(
                 recruitment.creature.cost,
-                recruitment.creature.level,
+                recruitment.dwelling.level,
               ),
             })),
             production: dwelling.recruitments.reduce(
               (total, recruitment) =>
-                total + recruitment.growth * entry.count,
+                total + recruitment.dwelling.growth * entry.count,
               0,
             ),
           }]
@@ -244,13 +244,13 @@ export function createPlanner(catalog: Catalog): Planner {
       card.recruitments.map((recruitment) => ({
         name: recruitment.creature.name,
         detail:
-          `${dwellingLabel(card.name, recruitment.level)} · ` +
+          `${dwellingLabel(card.name, recruitment.dwelling.level)} · ` +
           `${card.count} external dwelling${card.count === 1 ? "" : "s"}`,
         production: recruitment.production,
         unitCost: recruitment.unitCost,
         weeklyCost: externalRecruitmentCost(
           multiplyCost(recruitment.unitCost, recruitment.production),
-          recruitment.creature.level,
+          recruitment.dwelling.level,
         ),
       }))),
   );
