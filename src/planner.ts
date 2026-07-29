@@ -146,7 +146,7 @@ export function createPlanner(catalog: Catalog): Planner {
       ? `, ${stageName(selection).toLowerCase()}`
       : ", not produced";
     return (
-      `${dwellingLabel(name ?? "Dwelling", dwelling.tier)}: ` +
+      `${dwellingLabel(name ?? "Dwelling", dwelling.level)}: ` +
       `${creatureName(planId, dwellingIndex)}` +
       `${currentState}. Click for ${nextCreatureName(planId, dwellingIndex)}.`
     );
@@ -199,7 +199,7 @@ export function createPlanner(catalog: Catalog): Planner {
       return [{
         name: selected.name,
         detail:
-          `${dwellingLabel(name ?? "Dwelling", dwelling.tier)} · ` +
+          `${dwellingLabel(name ?? "Dwelling", dwelling.level)} · ` +
           `${stageName(currentPlan.selections[dwellingIndex])}` +
           (horde ? ` · ${horde.name}` : ""),
         production,
@@ -244,7 +244,7 @@ export function createPlanner(catalog: Catalog): Planner {
       card.recruitments.map((recruitment) => ({
         name: recruitment.creature.name,
         detail:
-          `${dwellingLabel(card.name, recruitment.tier)} · ` +
+          `${dwellingLabel(card.name, recruitment.level)} · ` +
           `${card.count} external dwelling${card.count === 1 ? "" : "s"}`,
         production: recruitment.production,
         unitCost: recruitment.unitCost,

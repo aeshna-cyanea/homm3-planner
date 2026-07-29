@@ -118,7 +118,7 @@ function DwellingCard(props: {
   const label = () =>
     dwellingLabel(
       externalDwellingName(props.planner.catalog, props.dwelling) ?? "Dwelling",
-      props.dwelling.tier,
+      props.dwelling.level,
     );
   const horde = () => hordeBuilding(props.dwelling);
   const selection = () => plan().selections[props.index];
@@ -146,7 +146,7 @@ function DwellingCard(props: {
               props.planner.cycleDwelling(props.planId, props.index)}
           />
           <span class="card-top">
-            <span class="tier-label">{label()}</span>
+            <span class="level-label">{label()}</span>
             <span
               class="state-label"
               aria-hidden="true"

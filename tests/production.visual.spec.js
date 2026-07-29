@@ -45,7 +45,7 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
     expect(Object.keys(town)).toEqual(["name", "dwellings"]);
     for (const dwelling of town.dwellings) {
       expect(Object.keys(dwelling).every((key) => [
-        "tier", "growth", "variants", "horde",
+        "level", "growth", "variants", "horde",
       ].includes(key))).toBe(true);
       expect(dwelling.variants[0].external_dwelling_ids).toEqual(
         expect.arrayContaining([expect.any(String)]),
@@ -63,7 +63,7 @@ test("creature data is grouped into town dwellings and neutral creatures", () =>
     expect(creature).not.toHaveProperty("variants");
     expect(Object.keys(creature)).toEqual([
       ...fullCreatureKeys,
-      "tier",
+      "level",
       ...(creature.external_dwelling_ids ? ["external_dwelling_ids"] : []),
     ]);
     if (creature.name === "Steel Golem") {
@@ -1053,7 +1053,7 @@ test("shared dwelling aliases recruit and boost every associated creature", asyn
   const card = page.locator(
     '.external-dwelling-card[data-dwelling-id="elemental_conflux"]',
   );
-  await expect(card.locator(".tier-label")).toHaveText(
+  await expect(card.locator(".level-label")).toHaveText(
     "➁➂➃➄ Elemental Conflux",
   );
   await expect(card.locator(".creature-name")).toContainText(
@@ -1386,9 +1386,9 @@ test("all resource costs use embedded wiki icons", async ({ page }) => {
   ];
   for (const [town, resource] of creatureResources) {
     await page.locator("#town-select").selectOption(town);
-    const tierSevenCard = page.locator(".unit-card").nth(6);
-    await tierSevenCard.locator(".unit-card-cycle-action").press("Enter");
-    await expect(tierSevenCard.locator(`.resource-icon-${resource}`)).toBeVisible();
+    const levelSevenCard = page.locator(".unit-card").nth(6);
+    await levelSevenCard.locator(".unit-card-cycle-action").press("Enter");
+    await expect(levelSevenCard.locator(`.resource-icon-${resource}`)).toBeVisible();
   }
 
   for (const resource of ["gold", "wood", "ore", "mercury", "sulfur", "crystal", "gem"]) {

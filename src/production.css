@@ -856,7 +856,7 @@ select,
   gap: 0.75rem;
 }
 
-.tier-label {
+.level-label {
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 800;

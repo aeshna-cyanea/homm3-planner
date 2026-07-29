@@ -30,7 +30,7 @@ export function buildCatalog(data: CreatureData): Catalog {
           externalDwellingCatalog,
           creature,
           town.name,
-          dwelling.tier,
+          dwelling.level,
           dwelling.growth,
         );
       }
@@ -40,7 +40,7 @@ export function buildCatalog(data: CreatureData): Catalog {
     dwellingCatalog.set(creature.name, {
       factionName: "Neutral",
       creature,
-      tier: creature.tier,
+      level: creature.level,
       growth: creature.growth,
       externalDwellingIds: creature.external_dwelling_ids ?? [],
     });
@@ -48,7 +48,7 @@ export function buildCatalog(data: CreatureData): Catalog {
       externalDwellingCatalog,
       creature,
       "Neutral",
-      creature.tier,
+      creature.level,
       creature.growth,
     );
   }
@@ -81,7 +81,7 @@ export function creatureProfile(
           variants: dwelling.variants,
           variantIndex,
           factionName: town.name,
-          tier: dwelling.tier,
+          level: dwelling.level,
           dwellingName: externalDwellingName(catalog, dwelling),
           variant: variantName(variantIndex),
         };
@@ -94,7 +94,7 @@ export function creatureProfile(
     ? {
         creature: neutral.creature,
         factionName: neutral.factionName,
-        tier: neutral.tier,
+        level: neutral.level,
         dwellingName: neutral.externalDwellingIds[0]
           ? catalog.externalDwellingCatalog.get(neutral.externalDwellingIds[0])?.name
           : undefined,
@@ -138,7 +138,7 @@ function indexDwelling(
   catalog.set(creature.name, {
     factionName,
     creature,
-    tier: dwelling.tier,
+    level: dwelling.level,
     growth: dwelling.growth,
     externalDwellingIds: Array.from(
       new Set(dwelling.variants.flatMap(
@@ -152,7 +152,7 @@ function indexExternalDwellings(
   catalog: Map<string, CatalogExternalDwelling>,
   creature: Creature,
   factionName: string,
-  tier: number,
+  level: number,
   growth: number,
 ): void {
   for (const id of creature.external_dwelling_ids ?? []) {
@@ -160,7 +160,7 @@ function indexExternalDwellings(
     if (!dwelling) {
       throw new Error(`Unknown external dwelling ${id} for ${creature.name}`);
     }
-    dwelling.recruitments.push({ creature, factionName, tier, growth });
+    dwelling.recruitments.push({ creature, factionName, level: level, growth });
   }
 }
 

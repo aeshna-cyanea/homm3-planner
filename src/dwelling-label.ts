@@ -1,11 +1,11 @@
-const TIER_SYMBOLS = ["", "➀", "➁", "➂", "➃", "➄", "➅", "➆"];
+const LEVEL_SYMBOLS = ["", "➀", "➁", "➂", "➃", "➄", "➅", "➆"];
 
-export function tierSymbol(tier: number): string {
-  return TIER_SYMBOLS[tier] ?? String(tier);
+export function levelSymbol(level: number): string {
+  return LEVEL_SYMBOLS[level] ?? String(level);
 }
 
-export function dwellingLabel(name: string, tiers: number | number[]): string {
-  const values = Array.isArray(tiers) ? tiers : [tiers];
-  const symbols = Array.from(new Set(values), tierSymbol).join("");
+export function dwellingLabel(name: string, levels: number | number[]): string {
+  const values = Array.isArray(levels) ? levels : [levels];
+  const symbols = Array.from(new Set(values), levelSymbol).join("");
   return `${symbols} ${name}`;
 }

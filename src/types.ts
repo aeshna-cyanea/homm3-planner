@@ -43,7 +43,7 @@ export interface HordeBuilding {
 }
 
 export interface Dwelling {
-  tier: number;
+  level: number;
   growth: number;
   variants: Creature[];
   horde?: HordeBuilding;
@@ -52,11 +52,6 @@ export interface Dwelling {
 export interface Town {
   name: string;
   dwellings: Dwelling[];
-}
-
-export interface NeutralCreature extends Creature {
-  tier: number;
-  growth: number;
 }
 
 export interface ExternalDwellingDefinition {
@@ -82,13 +77,13 @@ export interface CreatureData {
   fortification_building_count: number;
   fortification_buildings: FortificationBuilding[];
   towns: Town[];
-  neutral_creatures: NeutralCreature[];
+  neutral_creatures: Creature[];
 }
 
 export interface CatalogDwelling {
   factionName: string;
   creature: Creature;
-  tier: number;
+  level: number;
   growth: number;
   externalDwellingIds: string[];
 }
@@ -96,7 +91,7 @@ export interface CatalogDwelling {
 export interface ExternalRecruitment {
   factionName: string;
   creature: Creature;
-  tier: number;
+  level: number;
   growth: number;
 }
 
@@ -118,7 +113,7 @@ export interface CreatureProfile {
   variants?: Creature[];
   variantIndex?: number;
   factionName: string;
-  tier: number;
+  level: number;
   dwellingName?: string;
   variant?: "Basic" | "Upgraded" | "Second upgrade";
 }

@@ -10,8 +10,8 @@ abilities, recruitment cost, and Heroes 3 Wiki source. Clicking the dialog
 cycles through that dwelling's variants; upgraded values that differ from the
 base creature are shown in green.
 
-Each dwelling cycles through none, basic, and upgraded creatures. Cove's tier 3
-also cycles through its Sea Dog second upgrade. Relevant tiers show an optional
+Each dwelling cycles through none, basic, and upgraded creatures. Cove's level 3
+also cycles through its Sea Dog second upgrade. Relevant dwellings show an optional
 Horde-building toggle. Horde growth is added before Fort, Citadel, and Castle
 modifiers are applied to recruitment costs. External dwellings can be added
 from a faction's production scheme or by searching the base dwelling creatures;
@@ -20,7 +20,7 @@ applies to every matching town.
 
 `public/creatures.json` preserves the full creature statistics and source links
 in the structure used by the planner. Towns are identified by their names and
-contain dwellings with shared `tier` and `growth` values plus an ordered
+contain dwellings with shared `level` and `growth` values plus an ordered
 `variants` list. A dwelling has an optional `horde` object when one applies.
 Non-upgradable neutral creatures are stored as flat records under
 `neutral_creatures`. The original nested-upgrade source schema is preserved in

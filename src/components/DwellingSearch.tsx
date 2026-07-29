@@ -16,7 +16,7 @@ interface SearchOption {
   aliases: string;
   creatures: string[];
   factions: string[];
-  tiers: number[];
+  levels: number[];
 }
 
 export function DwellingSearch(props: { planner: Planner }) {
@@ -37,7 +37,7 @@ export function DwellingSearch(props: { planner: Planner }) {
         factions: Array.from(new Set(
           dwelling.recruitments.map((recruitment) => recruitment.factionName),
         )),
-        tiers: dwelling.recruitments.map((recruitment) => recruitment.tier),
+        levels: dwelling.recruitments.map((recruitment) => recruitment.level),
       }),
     );
     const position = createAutoCompletePositionPlugin<SearchOption>({
@@ -118,7 +118,7 @@ export function DwellingSearch(props: { planner: Planner }) {
       <div class="unit-card add-dwelling-card" onClick={focusFromCard}>
         <div class="unit-card-cycle add-dwelling-card-body">
           <span class="card-top">
-            <span class="tier-label">New external dwelling</span>
+            <span class="level-label">New external dwelling</span>
             <span class="add-dwelling-symbol" aria-hidden="true">+</span>
           </span>
           <span class="creature-name add-dwelling-name">
@@ -154,7 +154,7 @@ function renderOption(option: SearchOption, query: string): HTMLElement {
 
   container.className = "external-search-option";
   name.append(highlightMatch(
-    dwellingLabel(option.name, option.tiers),
+    dwellingLabel(option.name, option.levels),
     query,
   ));
   detail.append(

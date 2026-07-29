@@ -56,10 +56,10 @@ function ExternalDwellingCard(props: { planner: Planner; card: Card }) {
       >
         <div class="unit-card-cycle external-dwelling-card-body">
           <span class="card-top">
-            <span class="tier-label">
+            <span class="level-label">
               {dwellingLabel(
                 props.card.name,
-                props.card.recruitments.map((recruitment) => recruitment.tier),
+                props.card.recruitments.map((recruitment) => recruitment.level),
               )}
             </span>
             <button

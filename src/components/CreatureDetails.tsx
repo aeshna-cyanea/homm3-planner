@@ -7,7 +7,7 @@ import {
   type ParentProps,
 } from "solid-js";
 import { creatureProfile } from "../catalog";
-import { dwellingLabel, tierSymbol } from "../dwelling-label";
+import { dwellingLabel, levelSymbol } from "../dwelling-label";
 import { formatNumber } from "../resources";
 import type { Catalog, CreatureProfile } from "../types";
 import { CostDisplay } from "./ResourceCost";
@@ -179,8 +179,8 @@ function CreatureInfobox(props: {
           <p class="eyebrow">
             {props.profile.factionName} ·{" "}
             {props.profile.dwellingName
-              ? dwellingLabel(props.profile.dwellingName, props.profile.tier)
-              : tierSymbol(props.profile.tier)}
+              ? dwellingLabel(props.profile.dwellingName, props.profile.level)
+              : levelSymbol(props.profile.level)}
             <Show when={props.profile.variant}>
               {" "}· {props.profile.variant}
             </Show>
