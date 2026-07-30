@@ -11,22 +11,22 @@ const githubUrl = "https://github.com/aeshna-cyanea/homm3-planner";
 const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH;
 
 export function App(props: { planner: Planner }) {
-  const [showDwellingCosts, setShowDwellingCosts] = createSignal(false);
+  const [showBuildingCosts, setShowBuildingCosts] = createSignal(false);
 
-  onMount(() => window.addEventListener("keydown", toggleDwellingCosts));
-  onCleanup(() => window.removeEventListener("keydown", toggleDwellingCosts));
+  onMount(() => window.addEventListener("keydown", toggleBuildingCosts));
+  onCleanup(() => window.removeEventListener("keydown", toggleBuildingCosts));
 
-  function toggleDwellingCosts(event: KeyboardEvent): void {
+  function toggleBuildingCosts(event: KeyboardEvent): void {
     if (!isPlainShortcut(event, "u")) return;
     event.preventDefault();
-    setShowDwellingCosts((visible) => !visible);
+    setShowBuildingCosts((visible) => !visible);
   }
 
   return (
     <CreatureDetailsProvider catalog={props.planner.catalog}>
       <main
         class="app-shell"
-        data-dwelling-costs={showDwellingCosts() ? "shown" : "hidden"}
+        data-building-costs={showBuildingCosts() ? "shown" : "hidden"}
       >
         <h1 class="sr-only">HotA town production</h1>
         <div class="town-list">
@@ -35,7 +35,7 @@ export function App(props: { planner: Planner }) {
               <TownSection
                 planner={props.planner}
                 planId={plan.id}
-                showDwellingCosts={showDwellingCosts()}
+                showBuildingCosts={showBuildingCosts()}
               />
             )}
           </For>

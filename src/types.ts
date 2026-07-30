@@ -11,6 +11,7 @@ export const RESOURCES = [
 export type Resource = (typeof RESOURCES)[number];
 export type Cost = Partial<Record<Resource, number>>;
 export type Fortification = "fort" | "citadel" | "castle";
+export type PendingFortification = Exclude<Fortification, "fort">;
 
 export interface Damage {
   min: number;
@@ -121,6 +122,7 @@ export interface TownPlan {
   label: string;
   town: string;
   fortification: Fortification;
+  pendingFortification: PendingFortification | null;
   selections: number[];
   hordeEnabled: boolean[];
   pendingDwellings: number[];
@@ -147,6 +149,7 @@ export interface SavedTownPlan {
   label?: string;
   town: string;
   fortification: Fortification;
+  pendingFortification?: PendingFortification | null;
   dwellings: SavedDwelling[];
   pendingDwellings?: string[];
   /** Legacy single-pending save format. */
@@ -185,6 +188,12 @@ export interface PendingDwellingCosts {
     quantity: number;
     cost: Cost;
   };
+}
+
+export interface PendingFortificationCosts {
+  fortification: PendingFortification;
+  buildingName: string;
+  construction: Cost;
 }
 
 export interface ExternalDwellingCard {

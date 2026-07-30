@@ -6,11 +6,12 @@ and recruitment subtotal, and its default label can be renamed with the pencil
 beside it. The global-total dialog aggregates every town plus recruitment at
 external dwellings, along with any pending one-time costs. Press `T` to add a
 town or `P` to open the global total.
-Press `U` outside a text field to show or hide the construction or upgrade cost
-for each dwelling's next variant. Creature names open a compact reference dialog
-with their statistics, special abilities, recruitment cost, and Heroes 3 Wiki
-source. Clicking the dialog cycles through that dwelling's variants; upgraded
-values that differ from the base creature are shown in green.
+Press `U` outside a text field to show or hide each dwelling's next construction
+or upgrade cost and the next fortification cost. Creature names open a
+compact reference dialog with their statistics, special abilities, recruitment
+cost, and Heroes 3 Wiki source. Clicking the dialog cycles through that
+dwelling's variants; upgraded values that differ from the base creature are
+shown in green.
 
 Each dwelling cycles through none, basic, and upgraded creatures. Cove's level 3
 also cycles through its Sea Dog second upgrade. Relevant dwellings show an optional
@@ -20,15 +21,16 @@ from a faction's production scheme or by searching the base dwelling creatures;
 repeated additions increment one shared dwelling count, and their growth bonus
 applies to every matching town.
 
-Middle-click a dwelling, three-finger tap it, or press `Shift+Enter` while its
-card is focused to advance it provisionally. A town can have multiple pending
-dwellings. Its blue one-time-costs panel groups each construction or upgrade
-with its cost and, for a newly built base dwelling, one unmodified week of its
-creatures. Click a pending card normally to confirm its advancement, or use that
-entry's close button (or repeat the pending gesture) to cancel and revert it.
-The panel's bottom actions confirm or cancel every pending dwelling in that
-town. Pending dwellings are included when state is saved and are cleared when
-their town's faction changes.
+Middle-click a dwelling or fortification, three-finger tap it, or press
+`Shift+Enter` while it is focused to advance it provisionally. A town can have
+multiple pending dwellings and one pending Citadel or Castle. Its blue
+one-time-costs panel groups each construction or upgrade with its cost and, for
+a newly built base dwelling, one unmodified week of its creatures. Click a
+pending control normally to confirm its advancement, or use that entry's close
+button (or repeat the pending gesture) to cancel and revert it. The panel's
+bottom actions confirm or cancel every pending building in that town. Pending
+buildings are included when state is saved. Changing faction clears pending
+dwellings and cancels any pending fortification, reverting its advancement.
 
 `public/creatures.json` preserves the full creature statistics and source links
 in the structure used by the planner. Towns are identified by their names and

@@ -6,7 +6,7 @@ import { TownRecruitment } from "./Recruitment";
 export function TownSection(props: {
   planner: Planner;
   planId: string;
-  showDwellingCosts: boolean;
+  showBuildingCosts: boolean;
 }) {
   const [collapsed, setCollapsed] = createSignal(false);
   const [editingLabel, setEditingLabel] = createSignal(false);
@@ -112,7 +112,7 @@ export function TownSection(props: {
         <ProductionScheme
           planner={props.planner}
           planId={props.planId}
-          showDwellingCosts={props.showDwellingCosts}
+          showBuildingCosts={props.showBuildingCosts}
         />
       </div>
 

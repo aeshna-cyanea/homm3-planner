@@ -285,7 +285,7 @@ test("P toggles global totals without hijacking form fields", async ({ page }) =
   await expect(townSearch).toHaveValue("t");
 });
 
-test("U toggles the next dwelling cost without hijacking text fields", async ({
+test("U toggles building costs without hijacking text fields", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 800 });
@@ -295,27 +295,34 @@ test("U toggles the next dwelling cost without hijacking text fields", async ({
   const costs = page.locator("#unit-grid .next-dwelling-cost");
   const firstCard = page.locator("#unit-grid .unit-card").first();
   const firstCost = firstCard.locator(".next-dwelling-cost");
+  const fortificationCost = page.locator(".fortification-cost");
   const townSearch = page.locator("#add-town-search");
 
-  await expect(app).toHaveAttribute("data-dwelling-costs", "hidden");
+  await expect(app).toHaveAttribute("data-building-costs", "hidden");
   await expect(costs).toHaveCount(7);
   await expect(firstCost).toBeHidden();
+  await page.locator("#fortification-cycle").click();
+  await expect(fortificationCost).toBeHidden();
 
   await townSearch.focus();
   await townSearch.press("u");
   await expect(townSearch).toHaveValue("u");
-  await expect(app).toHaveAttribute("data-dwelling-costs", "hidden");
+  await expect(app).toHaveAttribute("data-building-costs", "hidden");
   await townSearch.fill("");
   await townSearch.evaluate((input) => input.blur());
 
   await page.keyboard.press("u");
-  await expect(app).toHaveAttribute("data-dwelling-costs", "shown");
+  await expect(app).toHaveAttribute("data-building-costs", "shown");
   await expect(
     page.locator("#unit-grid .next-dwelling-cost:visible"),
   ).toHaveCount(7);
   await expect(firstCost.locator(".cost-item b")).toHaveText(["1,000", "5"]);
   await expect(firstCost.locator(".resource-icon-gold")).toHaveCount(1);
   await expect(firstCost.locator(".resource-icon-ore")).toHaveCount(1);
+  await expect(fortificationCost.locator(".cost-item b")).toHaveText([
+    "2,500",
+    "5",
+  ]);
 
   await firstCard.locator(".unit-card-cycle-action").press("Enter");
   await expect(firstCard).toHaveAttribute("data-stage", "1");
@@ -346,8 +353,114 @@ test("U toggles the next dwelling cost without hijacking text fields", async ({
   expect(pageWidth.document).toBeLessThanOrEqual(pageWidth.viewport);
 
   await page.keyboard.press("u");
-  await expect(app).toHaveAttribute("data-dwelling-costs", "hidden");
+  await expect(app).toHaveAttribute("data-building-costs", "hidden");
   await expect(pirateCost).toBeHidden();
+  await expect(fortificationCost).toBeHidden();
+});
+
+test("pending fortifications advance, total, persist, and clear with faction changes", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const town = page.locator(".town-section").first();
+  const fortification = town.locator(".fortification-cycle-button");
+  const oneTime = town.locator("[data-one-time-costs]");
+  const firstProduction = town
+    .locator(".unit-card")
+    .first()
+    .locator(".production-detail strong");
+
+  await expect(fortification).toHaveAttribute("data-fortification", "fort");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
+  await expect(fortification.locator(".fortification-cost")).toBeHidden();
+
+  await fortification.click({ button: "middle" });
+  await expect(fortification).toHaveAttribute("data-fortification", "citadel");
+  await expect(fortification).toHaveAttribute("data-pending", "true");
+  await expect(fortification.locator(".fortification-pending-clock")).toBeVisible();
+  await expect(firstProduction).toHaveText("21");
+  await expect(oneTime.locator(".one-time-cost-label")).toHaveText(
+    "Building Citadel",
+  );
+  await expect(oneTime.locator(".one-time-cost-value .cost-item b")).toHaveText([
+    "2,500",
+    "5",
+  ]);
+  await expect(oneTime.locator(".one-time-subtotal .cost-item b")).toHaveText([
+    "2,500",
+    "5",
+  ]);
+
+  await page.locator("#open-global-total").click();
+  const globalDialog = page.locator(".global-total-dialog");
+  const citadelLineItem = globalDialog
+    .locator(".results-cost-line-item")
+    .filter({ hasText: "Building Citadel" });
+  await expect(citadelLineItem.locator(".results-line-item-cost .cost-item b"))
+    .toHaveText(["2,500", "5"]);
+  await expect(
+    globalDialog.locator("#global-resource-totals .resource-total"),
+  ).toHaveText(["3,760 gold", "5 ore"]);
+  await globalDialog.getByRole("button", { name: "Close" }).click();
+
+  await fortification.click();
+  await expect(fortification).toHaveAttribute("data-fortification", "citadel");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
+  await expect(oneTime).toHaveCount(0);
+
+  await fortification.press("Shift+Enter");
+  await expect(fortification).toHaveAttribute("data-fortification", "castle");
+  await expect(fortification).toHaveAttribute("data-pending", "true");
+  await expect(firstProduction).toHaveText("28");
+  await expect(oneTime.locator(".one-time-cost-label")).toHaveText(
+    "Building Castle",
+  );
+
+  await oneTime.getByRole("button", { name: "Cancel building Castle" }).click();
+  await expect(fortification).toHaveAttribute("data-fortification", "citadel");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
+  await fortification.press("Shift+Enter");
+
+  await page.locator("#save-state").click();
+  const savedState = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hota-production-planner-state")));
+  expect(savedState.townPlans[0].pendingFortification).toBe("castle");
+  await page.reload();
+
+  await expect(fortification).toHaveAttribute("data-fortification", "castle");
+  await expect(fortification).toHaveAttribute("data-pending", "true");
+  await expect(oneTime.locator(".one-time-cost-label")).toHaveText(
+    "Building Castle",
+  );
+
+  await town.locator("select").first().selectOption("Inferno");
+  await expect(fortification).toHaveAttribute("data-fortification", "citadel");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
+  await expect(oneTime).toHaveCount(0);
+
+  const secondDwelling = town.locator(".unit-card").nth(1);
+  await fortification.press("Shift+Enter");
+  await secondDwelling.locator(".production-card-body").click({ button: "middle" });
+  await expect(oneTime.locator(".one-time-cost-group")).toHaveCount(2);
+  await oneTime.getByRole("button", { name: "Cancel all" }).click();
+  await expect(fortification).toHaveAttribute("data-fortification", "citadel");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
+  await expect(secondDwelling).toHaveAttribute("data-stage", "-1");
+  await expect(oneTime).toHaveCount(0);
+
+  await fortification.press("Shift+Enter");
+  await secondDwelling.locator(".production-card-body").click({ button: "middle" });
+  await oneTime.getByRole("button", { name: "Confirm all" }).click();
+  await expect(fortification).toHaveAttribute("data-fortification", "castle");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
+  await expect(secondDwelling).toHaveAttribute("data-stage", "0");
+  await expect(secondDwelling).toHaveAttribute("data-pending", "false");
+  await expect(oneTime).toHaveCount(0);
+
+  await fortification.press("Shift+Enter");
+  await expect(fortification).toHaveAttribute("data-fortification", "castle");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
 });
 
 test("pending construction advances, confirms, cancels, and uses compact one-time rows", async ({
@@ -712,10 +825,19 @@ test("multiple pending dwellings are independent, individually cancelable, persi
   ).toHaveAttribute("data-pending", "true");
 });
 
-test("a three-finger touchend gesture toggles a pending dwelling", async ({
+test("a three-finger touchend gesture toggles pending buildings", async ({
   page,
 }) => {
   await page.goto("/");
+
+  const fortification = page.locator(".fortification-cycle-button").first();
+  await threeFingerTap(fortification);
+  await expect(fortification).toHaveAttribute("data-fortification", "citadel");
+  await expect(fortification).toHaveAttribute("data-pending", "true");
+
+  await threeFingerTap(fortification);
+  await expect(fortification).toHaveAttribute("data-fortification", "fort");
+  await expect(fortification).toHaveAttribute("data-pending", "false");
 
   const card = page.locator(".town-section").first().locator(".unit-card").nth(1);
   const body = card.locator(".production-card-body");

@@ -16,7 +16,7 @@ import { CostDisplay } from "./ResourceCost";
 export function ProductionScheme(props: {
   planner: Planner;
   planId: string;
-  showDwellingCosts: boolean;
+  showBuildingCosts: boolean;
 }) {
   return (
     <section
@@ -25,7 +25,11 @@ export function ProductionScheme(props: {
       data-town-id={props.planId}
       aria-label={`${props.planner.townLabel(props.planId)} production scheme`}
     >
-      <TownControls planner={props.planner} planId={props.planId} />
+      <TownControls
+        planner={props.planner}
+        planId={props.planId}
+        showBuildingCosts={props.showBuildingCosts}
+      />
       <div
         class="unit-grid"
         id={domId("unit-grid", props.planId)}
@@ -38,7 +42,7 @@ export function ProductionScheme(props: {
               planId={props.planId}
               dwelling={dwelling}
               index={index()}
-              showDwellingCosts={props.showDwellingCosts}
+              showBuildingCosts={props.showBuildingCosts}
             />
           )}
         </For>
@@ -47,12 +51,50 @@ export function ProductionScheme(props: {
   );
 }
 
-function TownControls(props: { planner: Planner; planId: string }) {
+function TownControls(props: {
+  planner: Planner;
+  planId: string;
+  showBuildingCosts: boolean;
+}) {
   const plan = () => props.planner.plan(props.planId);
   const fortification = () => plan().fortification;
   const copy = () => FORTIFICATION_COPY[fortification()];
-  const cost = () => props.planner.fortificationCost(fortification());
+  const cost = () => props.planner.fortificationCost(
+    props.planner.nextFortification(props.planId),
+  );
+  const pending = () => plan().pendingFortification !== null;
   const id = (name: string) => domId(name, props.planId);
+  const threeFingerTap = createThreeFingerTapRecognizer(togglePending);
+
+  function togglePending(): void {
+    props.planner.togglePendingFortification(props.planId);
+  }
+
+  function handleMiddleButtonDown(event: MouseEvent): void {
+    if (event.button === 1) event.preventDefault();
+  }
+
+  function handleAuxiliaryClick(event: MouseEvent): void {
+    if (event.button !== 1) return;
+    event.preventDefault();
+    togglePending();
+  }
+
+  function handleCycleKeyDown(event: KeyboardEvent): void {
+    if (
+      event.key !== "Enter" ||
+      !event.shiftKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey ||
+      event.repeat ||
+      event.isComposing
+    ) {
+      return;
+    }
+    event.preventDefault();
+    togglePending();
+  }
 
   return (
     <div class="scheme-controls">
@@ -79,10 +121,14 @@ function TownControls(props: { planner: Planner; planId: string }) {
           id={id("fortification-cycle")}
           type="button"
           data-fortification={fortification()}
+          data-pending={pending() ? "true" : "false"}
+          classList={{ "is-pending": pending() }}
           title={
-            `Select ${FORTIFICATION_COPY[
-              props.planner.nextFortification(props.planId)
-            ].name}`
+            pending()
+              ? `Confirm ${copy().name}`
+              : `Select ${FORTIFICATION_COPY[
+                  props.planner.nextFortification(props.planId)
+                ].name}`
           }
           aria-labelledby={[
             id("fortification-label"),
@@ -90,13 +136,35 @@ function TownControls(props: { planner: Planner; planId: string }) {
             id("fortification-detail"),
           ].join(" ")}
           aria-describedby={id("fortification-cycle-hint")}
+          aria-keyshortcuts="Shift+Enter"
           onClick={() => props.planner.cycleFortification(props.planId)}
+          onKeyDown={handleCycleKeyDown}
+          onMouseDown={handleMiddleButtonDown}
+          onAuxClick={handleAuxiliaryClick}
+          onTouchStart={(event) => threeFingerTap.start(event)}
+          onTouchMove={(event) => threeFingerTap.move(event)}
+          onTouchEnd={(event) => threeFingerTap.end(event)}
+          onTouchCancel={() => threeFingerTap.cancel()}
         >
           <span class="fortification-button-copy">
-            <strong id={id("fortification-name")}>{copy().name}</strong>
+            <span class="fortification-name-row">
+              <strong id={id("fortification-name")}>{copy().name}</strong>
+              <Show when={pending()}>
+                <span
+                  class="pending-clock fortification-pending-clock"
+                  aria-hidden="true"
+                  title="Pending"
+                >
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="8.5" />
+                    <path d="M12 7.5v5l3.5 2" />
+                  </svg>
+                </span>
+              </Show>
+            </span>
             <small id={id("fortification-detail")}>
               <span class="fortification-growth">{copy().growth}</span>
-              {cost() && (
+              {props.showBuildingCosts && cost() && (
                 <span class="fortification-cost">
                   <CostDisplay cost={cost()!} />
                 </span>
@@ -105,8 +173,13 @@ function TownControls(props: { planner: Planner; planId: string }) {
           </span>
         </button>
         <span class="sr-only" id={id("fortification-cycle-hint")}>
-          Activate to select{" "}
-          {FORTIFICATION_COPY[props.planner.nextFortification(props.planId)].name}.
+          {pending()
+            ? "Pending. Activate to confirm; Shift Enter or middle click to cancel."
+            : `Activate to select ${
+                FORTIFICATION_COPY[
+                  props.planner.nextFortification(props.planId)
+                ].name
+              }. Shift Enter or middle click advances it as pending.`}
         </span>
       </div>
     </div>
@@ -118,7 +191,7 @@ function DwellingCard(props: {
   planId: string;
   dwelling: Dwelling;
   index: number;
-  showDwellingCosts: boolean;
+  showBuildingCosts: boolean;
 }) {
   const plan = () => props.planner.plan(props.planId);
   const basic = () => basicCreature(props.dwelling);
@@ -224,7 +297,7 @@ function DwellingCard(props: {
           </span>
           <span
             class="next-dwelling-cost"
-            hidden={!props.showDwellingCosts}
+            hidden={!props.showBuildingCosts}
           >
             {nextCost() ? (
               <CostDisplay cost={nextCost()!} />

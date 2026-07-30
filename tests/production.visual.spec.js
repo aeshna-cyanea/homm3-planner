@@ -613,6 +613,7 @@ for (const viewport of viewports) {
     await expect(emptyCard.locator(".creature-details .resource-icon-gold")).toBeVisible();
 
     if (viewport.width === 600) {
+      await page.keyboard.press("u");
       await page.locator("#fortification-cycle").click();
       await expect(page.locator("#fortification-cycle")).toHaveAttribute(
         "data-fortification",
@@ -637,6 +638,7 @@ for (const viewport of viewports) {
       const lastCastleCost = await castleCostItems.last().boundingBox();
       expect(lastCastleCost.y).toBe(firstCastleCost.y);
       await page.locator("#fortification-cycle").click();
+      await page.keyboard.press("u");
     }
 
     await page.locator(".site-meta code").evaluate(function stabilizeCommitHash(code) {
@@ -1469,6 +1471,7 @@ test("multi-resource creature costs have visible separators", async ({ page }) =
 
 test("all resource costs use embedded wiki icons", async ({ page }) => {
   await page.goto("/index.html");
+  await page.keyboard.press("u");
 
   const fortificationButton = page.locator("#fortification-cycle");
   await fortificationButton.click();

@@ -51,7 +51,8 @@ function GlobalTotalDialog(props: { planner: Planner }) {
   let dialog!: HTMLDialogElement;
   const hasPendingCosts = () =>
     props.planner.state.townPlans.some(
-      (plan) => plan.pendingDwellings.length > 0,
+      (plan) =>
+        plan.pendingFortification !== null || plan.pendingDwellings.length > 0,
     );
 
   onMount(() => window.addEventListener("keydown", toggleWithShortcut));

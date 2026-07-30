@@ -10,6 +10,8 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
   const rows = () => props.planner.productionRows(props.planId);
   const pendingCosts = () =>
     props.planner.pendingDwellingCosts(props.planId);
+  const pendingFortification = () =>
+    props.planner.pendingFortificationCosts(props.planId);
   const id = (name: string) => domId(name, props.planId);
 
   return (
@@ -18,7 +20,7 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
       data-town-results={props.planId}
       data-empty={rows().length === 0}
     >
-      <Show when={pendingCosts().length > 0}>
+      <Show when={pendingFortification() || pendingCosts().length > 0}>
         <section
           class="results-section one-time-results-section panel"
           aria-labelledby={id("one-time-title")}
@@ -34,11 +36,27 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
               aria-live="polite"
             >
               <CostDisplay
-                cost={props.planner.pendingDwellingTotal(props.planId)}
+                cost={props.planner.pendingBuildingTotal(props.planId)}
               />
             </span>
           </div>
           <div class="one-time-costs">
+            <Show when={pendingFortification()}>
+              {(costs) => (
+                <div
+                  class="one-time-cost-group"
+                  data-pending-fortification={costs().fortification}
+                >
+                  <OneTimeCostRow
+                    label={`Building ${costs().buildingName}`}
+                    cost={costs().construction}
+                    cancelLabel={`Cancel building ${costs().buildingName}`}
+                    onCancel={() =>
+                      props.planner.cancelPendingFortification(props.planId)}
+                  />
+                </div>
+              )}
+            </Show>
             <For each={pendingCosts()}>
               {(costs) => {
                 const action = costs.action === "building"
@@ -83,7 +101,7 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
               class="one-time-action-button is-confirm"
               type="button"
               onClick={() =>
-                props.planner.confirmAllPendingDwellings(props.planId)}
+                props.planner.confirmAllPendingBuildings(props.planId)}
             >
               Confirm all
             </button>
@@ -91,7 +109,7 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
               class="one-time-action-button"
               type="button"
               onClick={() =>
-                props.planner.cancelAllPendingDwellings(props.planId)}
+                props.planner.cancelAllPendingBuildings(props.planId)}
             >
               Cancel all
             </button>

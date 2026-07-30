@@ -698,6 +698,19 @@ select:focus-visible,
   align-content: center;
 }
 
+.fortification-name-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.fortification-pending-clock {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
 select,
 .town-search-input,
 .fortification-cycle-button strong {
@@ -740,6 +753,19 @@ select,
 .fortification-cycle-button:hover {
   border-color: var(--gold-bright);
   background: rgba(221, 182, 94, 0.18);
+}
+
+.fortification-cycle-button.is-pending {
+  border-color: rgba(91, 166, 230, 0.78);
+  background: rgba(73, 152, 220, 0.12);
+  box-shadow:
+    0 0 0 0.0625rem rgba(91, 166, 230, 0.34),
+    0 0 0.875rem rgba(73, 152, 220, 0.28);
+}
+
+.fortification-cycle-button.is-pending:hover {
+  border-color: #7bc1f5;
+  background: rgba(73, 152, 220, 0.18);
 }
 
 .fortification-cycle-button:focus-visible {
@@ -1712,7 +1738,7 @@ select,
 
 /* Two 9rem cards plus their 0.75rem gap need 18.75rem. */
 @container creature-scheme (max-width: 18.75rem) {
-  .pending-clock { display: none; }
+  .unit-card .pending-clock { display: none; }
 }
 
 @media (max-width: 48.75rem) {
