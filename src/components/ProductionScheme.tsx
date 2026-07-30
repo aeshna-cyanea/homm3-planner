@@ -138,7 +138,7 @@ function DwellingCard(props: {
       : props.dwelling.upgrade_costs?.[selection()];
   const externalCount = () =>
     props.planner.externalDwellingCount(basic().name);
-  const pending = () => plan().pendingDwelling === props.index;
+  const pending = () => plan().pendingDwellings.includes(props.index);
   const threeFingerTap = createThreeFingerTapRecognizer(togglePending);
 
   function togglePending(): void {

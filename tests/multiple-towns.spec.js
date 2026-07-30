@@ -391,14 +391,14 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
   await expect(archer).toHaveAttribute("data-pending", "true");
   await expect(archer.locator(".pending-clock")).toBeVisible();
   await expect(oneTime).toBeVisible();
-  await expect(oneTime.locator(".eyebrow")).toHaveText("One-time");
+  await expect(oneTime.locator(".eyebrow")).toHaveText("One-time costs");
   await expect(oneTime).not.toContainText("Dwelling");
 
   const oneTimeRows = oneTime.locator(".one-time-cost-row");
   await expect(oneTimeRows).toHaveCount(2);
   await expect(oneTimeRows.locator(".one-time-cost-label")).toHaveText([
-    "Construction",
-    "Creatures",
+    "Building Archers' Tower",
+    "➁ Archer ×9",
   ]);
   await expect(oneTimeRows.nth(0).locator(".cost-item b")).toHaveText([
     "1,000",
@@ -407,6 +407,32 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
   ]);
   await expect(oneTimeRows.nth(1).locator(".cost-item b")).toHaveText("900");
   await expect(oneTime.locator(".one-time-cost-value")).toHaveCount(2);
+  await expect(oneTime.locator(".one-time-subtotal .cost-item b")).toHaveText([
+    "1,900",
+    "5",
+    "5",
+  ]);
+  const entryClose = oneTime.getByRole("button", {
+    name: "Cancel building Archers' Tower",
+  });
+  await expect(entryClose).toHaveCSS("width", "18px");
+  const [dwellingCostBox, entryCloseBox] = await Promise.all([
+    oneTimeRows.nth(0).locator(".one-time-cost-value").boundingBox(),
+    entryClose.boundingBox(),
+  ]);
+  expect(entryCloseBox.x).toBeGreaterThan(
+    dwellingCostBox.x + dwellingCostBox.width,
+  );
+  const creaturePriceBox = await oneTimeRows
+    .nth(1)
+    .locator(".one-time-cost-value")
+    .boundingBox();
+  expect(creaturePriceBox.x + creaturePriceBox.width).toBeCloseTo(
+    dwellingCostBox.x + dwellingCostBox.width,
+    0,
+  );
+  await expect(oneTime.getByRole("button", { name: "Confirm all" })).toBeVisible();
+  await expect(oneTime.getByRole("button", { name: "Cancel all" })).toBeVisible();
 
   await page.locator("#open-global-total").click();
   const globalDialog = page.locator(".global-total-dialog");
@@ -446,9 +472,7 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
         : "weekly"));
   expect(panelOrder.slice(0, 2)).toEqual(["one-time", "weekly"]);
 
-  await oneTime.getByRole("button", {
-    name: "Cancel pending construction",
-  }).click();
+  await entryClose.click();
   await expect(archer).toHaveAttribute("data-stage", "-1");
   await expect(archer).toHaveAttribute("data-pending", "false");
   await expect(oneTime).toHaveCount(0);
@@ -471,23 +495,59 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
   await archerAction.press("Shift+Enter");
   await expect(archer).toHaveAttribute("data-stage", "1");
   await expect(archer).toHaveAttribute("data-pending", "true");
+  await expect(oneTime.locator(".eyebrow")).toHaveText("One-time costs");
   await expect(oneTimeRows).toHaveCount(1);
   await expect(oneTimeRows.locator(".one-time-cost-label")).toHaveText(
-    "Construction",
+    "Upgrading Archers' Tower",
   );
 
-  await archerAction.press("Shift+Enter");
-  await expect(archer).toHaveAttribute("data-stage", "0");
-  await expect(archer).toHaveAttribute("data-pending", "false");
-
-  await archerAction.press("Enter");
+  await oneTime.getByRole("button", { name: "Confirm all" }).click();
   await expect(archer).toHaveAttribute("data-stage", "1");
+  await expect(archer).toHaveAttribute("data-pending", "false");
+  await expect(oneTime).toHaveCount(0);
+
   await archerAction.press("Shift+Enter");
   await expect(archer).toHaveAttribute("data-stage", "1");
   await expect(archer).toHaveAttribute("data-pending", "false");
 });
 
-test("pending dwellings are independent per town, transferable, persistent, and faction-scoped", async ({
+test("a many-resource one-time subtotal stays on one line", async ({ page }) => {
+  for (const width of [1280, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.locator(".town-section select").first().selectOption("Inferno");
+
+    const cards = page.locator(".town-section").first().locator(".unit-card");
+    for (const dwellingIndex of [5, 6]) {
+      await cards
+        .nth(dwellingIndex)
+        .locator(".production-card-body")
+        .click({ button: "middle" });
+    }
+
+    const subtotal = page.locator(".one-time-subtotal");
+    await expect(subtotal.locator(".cost-item")).toHaveCount(6);
+    await expect(subtotal.locator(".cost-item b")).toHaveText([
+      "23,500",
+      "10",
+      "20",
+      "24",
+      "3",
+      "3",
+    ]);
+    const layout = await subtotal.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      itemTops: [...element.querySelectorAll(".cost-item")].map(
+        (item) => item.getBoundingClientRect().top,
+      ),
+    }));
+    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth + 1);
+    expect(new Set(layout.itemTops.map(Math.round)).size).toBe(1);
+  }
+});
+
+test("multiple pending dwellings are independent, individually cancelable, persistent, and faction-scoped", async ({
   page,
 }) => {
   await page.goto("/");
@@ -506,11 +566,47 @@ test("pending dwellings are independent per town, transferable, persistent, and 
   await expect(page.locator("[data-one-time-costs]")).toHaveCount(2);
 
   await castleThird.locator(".production-card-body").click({ button: "middle" });
-  await expect(castleFirst).toHaveAttribute("data-stage", "0");
-  await expect(castleFirst).toHaveAttribute("data-pending", "false");
+  await expect(castleFirst).toHaveAttribute("data-stage", "1");
+  await expect(castleFirst).toHaveAttribute("data-pending", "true");
   await expect(castleThird).toHaveAttribute("data-stage", "0");
   await expect(castleThird).toHaveAttribute("data-pending", "true");
   await expect(coveSecond).toHaveAttribute("data-pending", "true");
+  await expect(page.locator(".unit-card[data-pending=true]")).toHaveCount(3);
+
+  const castleOneTime = castle.locator("[data-one-time-costs]");
+  await expect(castleOneTime.locator(".one-time-cost-group")).toHaveCount(2);
+  await expect(
+    castleOneTime.locator(".one-time-cost-group .one-time-cost-label"),
+  ).toHaveText([
+    "Upgrading Guardhouse",
+    "Building Griffin Tower",
+    "➂ Griffin ×7",
+  ]);
+
+  await castleOneTime.getByRole("button", {
+    name: "Cancel upgrading Guardhouse",
+  }).click();
+  await expect(castleFirst).toHaveAttribute("data-stage", "0");
+  await expect(castleFirst).toHaveAttribute("data-pending", "false");
+  await expect(castleThird).toHaveAttribute("data-pending", "true");
+  await expect(coveSecond).toHaveAttribute("data-pending", "true");
+
+  await castleFirst.locator(".production-card-body").click({ button: "middle" });
+  await expect(castleFirst).toHaveAttribute("data-stage", "1");
+  await expect(castleFirst).toHaveAttribute("data-pending", "true");
+  await expect(castleOneTime.locator(".one-time-cost-group")).toHaveCount(2);
+
+  await castleOneTime.getByRole("button", { name: "Cancel all" }).click();
+  await expect(castleFirst).toHaveAttribute("data-stage", "0");
+  await expect(castleFirst).toHaveAttribute("data-pending", "false");
+  await expect(castleThird).toHaveAttribute("data-stage", "-1");
+  await expect(castleThird).toHaveAttribute("data-pending", "false");
+  await expect(castleOneTime).toHaveCount(0);
+  await expect(coveSecond).toHaveAttribute("data-pending", "true");
+
+  await castleFirst.locator(".production-card-body").click({ button: "middle" });
+  await castleThird.locator(".production-card-body").click({ button: "middle" });
+  await expect(castleOneTime.locator(".one-time-cost-group")).toHaveCount(2);
 
   await castle.locator(".fortification-cycle-button").click();
   await castle.locator(".fortification-cycle-button").click();
@@ -540,18 +636,30 @@ test("pending dwellings are independent per town, transferable, persistent, and 
   await expect(griffinDetail).toHaveCSS("overflow", "hidden");
   const creatureCost = castle
     .locator("[data-one-time-costs] .one-time-cost-row")
-    .filter({ hasText: "Creatures" });
+    .filter({ hasText: "➂ Griffin ×7" });
   await expect(creatureCost.locator(".cost-item b")).toHaveText("1,400");
 
   await page.locator("#save-state").click();
+  const savedState = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hota-production-planner-state")));
+  expect(savedState.townPlans[0].pendingDwellings).toEqual([
+    "Pikeman",
+    "Griffin",
+  ]);
   await page.reload();
 
   const restoredTowns = page.locator(".town-section");
   const restoredCastle = restoredTowns.nth(0);
   const restoredCove = restoredTowns.nth(1);
   await expect(
+    restoredCastle.locator(".unit-card").nth(0),
+  ).toHaveAttribute("data-pending", "true");
+  await expect(
     restoredCastle.locator(".unit-card").nth(2),
   ).toHaveAttribute("data-pending", "true");
+  await expect(
+    restoredCastle.locator(".one-time-cost-group"),
+  ).toHaveCount(2);
   await expect(
     restoredCove.locator(".unit-card").nth(1),
   ).toHaveAttribute("data-pending", "true");

@@ -9,7 +9,11 @@ import {
   selectedCreature,
   townByName,
 } from "./catalog";
-import { dwellingLabel, levelSymbol } from "./dwelling-label";
+import {
+  dwellingDisplayName,
+  dwellingLabel,
+  levelSymbol,
+} from "./dwelling-label";
 import { loadSavedState, saveState } from "./persistence";
 import { multiplyCost, sumCosts, totalCosts } from "./resources";
 import type {
@@ -46,7 +50,8 @@ export interface Planner {
   dwellings(planId: string): Dwelling[];
   productionRows(planId: string): RecruitmentRow[];
   productionTotals(planId: string): CostEntry[];
-  pendingDwellingCosts(planId: string): PendingDwellingCosts | undefined;
+  pendingDwellingCosts(planId: string): PendingDwellingCosts[];
+  pendingDwellingTotal(planId: string): Cost;
   externalDwellingCards(): ExternalDwellingCard[];
   externalRows(): RecruitmentRow[];
   externalTotals(): CostEntry[];
@@ -61,7 +66,9 @@ export interface Planner {
   nextFortification(planId: string): Fortification;
   cycleDwelling(planId: string, dwellingIndex: number): void;
   togglePendingDwelling(planId: string, dwellingIndex: number): void;
-  cancelPendingDwelling(planId: string): void;
+  cancelPendingDwelling(planId: string, dwellingIndex: number): void;
+  confirmAllPendingDwellings(planId: string): void;
+  cancelAllPendingDwellings(planId: string): void;
   toggleHorde(planId: string, dwellingIndex: number, enabled: boolean): void;
   creature(planId: string, dwellingIndex: number): ReturnType<typeof selectedCreature>;
   detailCreature(planId: string, dwellingIndex: number): ReturnType<typeof basicCreature>;
@@ -150,7 +157,7 @@ export function createPlanner(catalog: Catalog): Planner {
     const currentState = creature(planId, dwellingIndex)
       ? `, ${stageName(selection).toLowerCase()}`
       : ", not produced";
-    const isPending = currentPlan.pendingDwelling === dwellingIndex;
+    const isPending = currentPlan.pendingDwellings.includes(dwellingIndex);
     const pendingAction = isPending
       ? "Pending. Click to confirm; Shift Enter or middle click to cancel."
       : selection < dwelling.variants.length - 1
@@ -233,52 +240,65 @@ export function createPlanner(catalog: Catalog): Planner {
 
   function pendingDwellingCosts(
     planId: string,
-  ): PendingDwellingCosts | undefined {
+  ): PendingDwellingCosts[] {
     const currentPlan = plan(planId);
-    const dwellingIndex = currentPlan.pendingDwelling;
-    if (dwellingIndex === null) return undefined;
+    return currentPlan.pendingDwellings.flatMap((dwellingIndex) => {
+      const dwelling = dwellings(planId)[dwellingIndex];
+      const selection = currentPlan.selections[dwellingIndex];
+      const construction = selection === 0
+        ? dwelling?.building_cost
+        : dwelling?.upgrade_costs?.[selection - 1];
+      if (!dwelling || !construction || selection < 0) return [];
 
-    const dwelling = dwellings(planId)[dwellingIndex];
-    const selection = currentPlan.selections[dwellingIndex];
-    const construction = selection === 0
-      ? dwelling?.building_cost
-      : dwelling?.upgrade_costs?.[selection - 1];
-    if (!dwelling || !construction || selection < 0) return undefined;
-
-    return {
-      construction,
-      ...(selection === 0
-        ? {
-            creatures: multiplyCost(
-              basicCreature(dwelling).cost,
-              dwelling.growth,
-            ),
-          }
-        : {}),
-    };
+      const baseCreature = basicCreature(dwelling);
+      return [{
+        dwellingIndex,
+        action: selection === 0 ? "building" as const : "upgrading" as const,
+        dwellingName: dwellingDisplayName(
+          externalDwellingName(catalog, dwelling) ?? "Dwelling",
+          selection,
+        ),
+        construction,
+        ...(selection === 0
+          ? {
+              creatures: {
+                name: baseCreature.name,
+                level: baseCreature.level,
+                quantity: dwelling.growth,
+                cost: multiplyCost(baseCreature.cost, dwelling.growth),
+              },
+            }
+          : {}),
+      }];
+    });
   }
 
-  function pendingCreatureRow(planId: string): RecruitmentRow | undefined {
+  function pendingCreatureRows(planId: string): RecruitmentRow[] {
     const currentPlan = plan(planId);
-    const dwellingIndex = currentPlan.pendingDwelling;
-    if (
-      dwellingIndex === null ||
-      currentPlan.selections[dwellingIndex] !== 0
-    ) {
-      return undefined;
-    }
+    return currentPlan.pendingDwellings.flatMap((dwellingIndex) => {
+      if (currentPlan.selections[dwellingIndex] !== 0) return [];
 
-    const dwelling = dwellings(planId)[dwellingIndex];
-    const creature = dwelling && basicCreature(dwelling);
-    if (!dwelling || !creature) return undefined;
+      const dwelling = dwellings(planId)[dwellingIndex];
+      const creature = dwelling && basicCreature(dwelling);
+      return dwelling && creature
+        ? [{
+            name: creature.name,
+            detail: "One-time",
+            production: dwelling.growth,
+            unitCost: creature.cost,
+            weeklyCost: multiplyCost(creature.cost, dwelling.growth),
+          }]
+        : [];
+    });
+  }
 
-    return {
-      name: creature.name,
-      detail: "One-time",
-      production: dwelling.growth,
-      unitCost: creature.cost,
-      weeklyCost: multiplyCost(creature.cost, dwelling.growth),
-    };
+  function pendingDwellingTotal(planId: string): Cost {
+    return sumCosts(
+      pendingDwellingCosts(planId).flatMap((costs) => [
+        costs.construction,
+        ...(costs.creatures ? [costs.creatures.cost] : []),
+      ]),
+    );
   }
 
   const externalDwellingCards = createMemo<ExternalDwellingCard[]>(() =>
@@ -326,10 +346,9 @@ export function createPlanner(catalog: Catalog): Planner {
   const globalRows = createMemo<RecruitmentRow[]>(() => {
     const sourcedRows = state.townPlans.flatMap((currentPlan) => {
       const source = townLabel(currentPlan.id);
-      const immediate = pendingCreatureRow(currentPlan.id);
       return [
         ...productionRows(currentPlan.id).map((row) => ({ row, source })),
-        ...(immediate ? [{ row: immediate, source }] : []),
+        ...pendingCreatureRows(currentPlan.id).map((row) => ({ row, source })),
       ];
     });
     sourcedRows.push(
@@ -421,11 +440,12 @@ export function createPlanner(catalog: Catalog): Planner {
         label: currentPlan.label,
         town: currentPlan.town,
         fortification: currentPlan.fortification,
-        pendingDwelling: currentPlan.pendingDwelling === null
-          ? null
-          : basicCreature(
-              dwellingsFor(catalog, currentPlan)[currentPlan.pendingDwelling],
+        pendingDwellings: currentPlan.pendingDwellings.map(
+          (dwellingIndex) =>
+            basicCreature(
+              dwellingsFor(catalog, currentPlan)[dwellingIndex],
             ).name,
+        ),
         dwellings: dwellingsFor(catalog, currentPlan).map((dwelling, index) => ({
           basicCreature: basicCreature(dwelling).name,
           selectedCreature:
@@ -446,6 +466,7 @@ export function createPlanner(catalog: Catalog): Planner {
     productionRows,
     productionTotals,
     pendingDwellingCosts,
+    pendingDwellingTotal,
     externalDwellingCards,
     externalRows,
     externalTotals: createMemo(() => {
@@ -456,10 +477,10 @@ export function createPlanner(catalog: Catalog): Planner {
     }),
     globalRows,
     globalTotals: createMemo(() => {
-      const constructionCosts = state.townPlans.flatMap((currentPlan) => {
-        const costs = pendingDwellingCosts(currentPlan.id);
-        return costs ? [costs.construction] : [];
-      });
+      const constructionCosts = state.townPlans.flatMap((currentPlan) =>
+        pendingDwellingCosts(currentPlan.id).map(
+          (costs) => costs.construction,
+        ));
       return totalCosts([
         ...globalRows().map((row) => row.weeklyCost),
         ...constructionCosts,
@@ -499,7 +520,7 @@ export function createPlanner(catalog: Catalog): Planner {
         town: replacement.town,
         selections: replacement.selections,
         hordeEnabled: replacement.hordeEnabled,
-        pendingDwelling: null,
+        pendingDwellings: [],
       });
     },
 
@@ -516,8 +537,9 @@ export function createPlanner(catalog: Catalog): Planner {
 
     cycleDwelling(planId, dwellingIndex) {
       const index = planIndex(planId);
-      if (plan(planId).pendingDwelling === dwellingIndex) {
-        setState("townPlans", index, "pendingDwelling", null);
+      if (plan(planId).pendingDwellings.includes(dwellingIndex)) {
+        setState("townPlans", index, "pendingDwellings", (pending) =>
+          pending.filter((candidate) => candidate !== dwellingIndex));
         return;
       }
       const selection = nextSelection(
@@ -533,8 +555,8 @@ export function createPlanner(catalog: Catalog): Planner {
     togglePendingDwelling(planId, dwellingIndex) {
       const index = planIndex(planId);
       const currentPlan = plan(planId);
-      if (currentPlan.pendingDwelling === dwellingIndex) {
-        cancelPendingDwelling(planId);
+      if (currentPlan.pendingDwellings.includes(dwellingIndex)) {
+        cancelPendingDwelling(planId, dwellingIndex);
         return;
       }
 
@@ -542,9 +564,6 @@ export function createPlanner(catalog: Catalog): Planner {
       const selection = currentPlan.selections[dwellingIndex];
       if (!dwelling || selection >= dwelling.variants.length - 1) return;
 
-      if (currentPlan.pendingDwelling !== null) {
-        cancelPendingDwelling(planId);
-      }
       setState(
         "townPlans",
         index,
@@ -552,10 +571,21 @@ export function createPlanner(catalog: Catalog): Planner {
         dwellingIndex,
         selection + 1,
       );
-      setState("townPlans", index, "pendingDwelling", dwellingIndex);
+      setState("townPlans", index, "pendingDwellings", (pending) =>
+        [...pending, dwellingIndex].sort((left, right) => left - right));
     },
 
     cancelPendingDwelling,
+
+    confirmAllPendingDwellings(planId) {
+      setState("townPlans", planIndex(planId), "pendingDwellings", []);
+    },
+
+    cancelAllPendingDwellings(planId) {
+      for (const dwellingIndex of [...plan(planId).pendingDwellings]) {
+        cancelPendingDwelling(planId, dwellingIndex);
+      }
+    },
 
     toggleHorde(planId, dwellingIndex, enabled) {
       setState(
@@ -619,15 +649,18 @@ export function createPlanner(catalog: Catalog): Planner {
     },
   };
 
-  function cancelPendingDwelling(planId: string): void {
+  function cancelPendingDwelling(
+    planId: string,
+    dwellingIndex: number,
+  ): void {
     const index = planIndex(planId);
     const currentPlan = plan(planId);
-    const dwellingIndex = currentPlan.pendingDwelling;
-    if (dwellingIndex === null) return;
+    if (!currentPlan.pendingDwellings.includes(dwellingIndex)) return;
 
     const selection = currentPlan.selections[dwellingIndex] - 1;
     setState("townPlans", index, "selections", dwellingIndex, selection);
-    setState("townPlans", index, "pendingDwelling", null);
+    setState("townPlans", index, "pendingDwellings", (pending) =>
+      pending.filter((candidate) => candidate !== dwellingIndex));
     if (selection < 0) {
       setState("townPlans", index, "hordeEnabled", dwellingIndex, false);
     }
@@ -649,7 +682,7 @@ function createPlan(catalog: Catalog, townName: string, id = "town-1"): TownPlan
     fortification: "fort",
     selections: town.dwellings.map((_, index) => (index === 0 ? 0 : -1)),
     hordeEnabled: town.dwellings.map(() => false),
-    pendingDwelling: null,
+    pendingDwellings: [],
   };
 }
 
@@ -699,15 +732,20 @@ function restoreState(
         hordeBuilding(dwelling),
       );
     }
-    if (typeof savedPlan.pendingDwelling === "string") {
-      const pendingIndex = dwellingsFor(catalog, plan).findIndex(
-        (dwelling) =>
-          basicCreature(dwelling).name === savedPlan.pendingDwelling,
-      );
-      if (pendingIndex >= 0 && plan.selections[pendingIndex] >= 0) {
-        plan.pendingDwelling = pendingIndex;
-      }
-    }
+    const savedPendingNames = Array.isArray(savedPlan.pendingDwellings)
+      ? savedPlan.pendingDwellings.filter(
+          (name): name is string => typeof name === "string",
+        )
+      : typeof savedPlan.pendingDwelling === "string"
+        ? [savedPlan.pendingDwelling]
+        : [];
+    plan.pendingDwellings = dwellingsFor(catalog, plan).flatMap(
+      (dwelling, dwellingIndex) =>
+        savedPendingNames.includes(basicCreature(dwelling).name) &&
+          plan.selections[dwellingIndex] >= 0
+          ? [dwellingIndex]
+          : [],
+    );
     return [plan];
   });
   if (townPlans.length === 0) return null;

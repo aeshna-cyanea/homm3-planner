@@ -1,4 +1,5 @@
 import { For, Show } from "solid-js";
+import { levelSymbol } from "../dwelling-label";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
 import type { RecruitmentRow } from "../types";
@@ -17,44 +18,85 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
       data-town-results={props.planId}
       data-empty={rows().length === 0}
     >
-      <Show when={pendingCosts()}>
-        {(costs) => (
-          <section
-            class="results-section one-time-results-section panel"
-            aria-labelledby={id("one-time-title")}
-            data-one-time-costs
-          >
-            <div class="section-heading one-time-heading">
-              <p class="eyebrow" id={id("one-time-title")}>One-time</p>
-              <button
-                class="one-time-close-button"
-                type="button"
-                aria-label="Cancel pending construction"
-                title="Cancel pending construction"
-                onClick={() =>
-                  props.planner.cancelPendingDwelling(props.planId)}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m6 6 12 12M18 6 6 18" />
-                </svg>
-              </button>
-            </div>
-            <div class="one-time-costs">
-              <OneTimeCostRow
-                label="Construction"
-                cost={costs().construction}
+      <Show when={pendingCosts().length > 0}>
+        <section
+          class="results-section one-time-results-section panel"
+          aria-labelledby={id("one-time-title")}
+          data-one-time-costs
+        >
+          <div class="section-heading one-time-heading">
+            <p class="eyebrow" id={id("one-time-title")}>
+              One-time costs
+            </p>
+            <span
+              class="cost-list one-time-subtotal"
+              aria-label="One-time cost subtotal"
+              aria-live="polite"
+            >
+              <CostDisplay
+                cost={props.planner.pendingDwellingTotal(props.planId)}
               />
-              <Show when={costs().creatures}>
-                {(creatures) => (
-                  <OneTimeCostRow
-                    label="Creatures"
-                    cost={creatures()}
-                  />
-                )}
-              </Show>
-            </div>
-          </section>
-        )}
+            </span>
+          </div>
+          <div class="one-time-costs">
+            <For each={pendingCosts()}>
+              {(costs) => {
+                const action = costs.action === "building"
+                  ? "Building"
+                  : "Upgrading";
+                const actionLabel = `${action} ${costs.dwellingName}`;
+                return (
+                  <div
+                    class="one-time-cost-group"
+                    data-pending-dwelling={costs.dwellingIndex}
+                  >
+                    <OneTimeCostRow
+                      label={actionLabel}
+                      cost={costs.construction}
+                      cancelLabel={
+                        `Cancel ${action.toLowerCase()} ${costs.dwellingName}`
+                      }
+                      onCancel={() =>
+                        props.planner.cancelPendingDwelling(
+                          props.planId,
+                          costs.dwellingIndex,
+                        )}
+                    />
+                    <Show when={costs.creatures}>
+                      {(creatures) => (
+                        <OneTimeCostRow
+                          label={
+                            `${levelSymbol(creatures().level)} ` +
+                            `${creatures().name} ×${formatNumber(creatures().quantity)}`
+                          }
+                          cost={creatures().cost}
+                        />
+                      )}
+                    </Show>
+                  </div>
+                );
+              }}
+            </For>
+          </div>
+          <div class="one-time-actions">
+            <button
+              class="one-time-action-button is-confirm"
+              type="button"
+              onClick={() =>
+                props.planner.confirmAllPendingDwellings(props.planId)}
+            >
+              Confirm all
+            </button>
+            <button
+              class="one-time-action-button"
+              type="button"
+              onClick={() =>
+                props.planner.cancelAllPendingDwellings(props.planId)}
+            >
+              Cancel all
+            </button>
+          </div>
+        </section>
       </Show>
 
       <section class="results-section panel" aria-labelledby={id("results-title")}>
@@ -95,12 +137,29 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
 function OneTimeCostRow(props: {
   label: string;
   cost: RecruitmentRow["unitCost"];
+  cancelLabel?: string;
+  onCancel?: () => void;
 }) {
   return (
     <div class="one-time-cost-row">
       <span class="one-time-cost-label">{props.label}</span>
       <span class="cost-list one-time-cost-value">
         <CostDisplay cost={props.cost} />
+      </span>
+      <span class="one-time-cost-cancel">
+        <Show when={props.onCancel}>
+          <button
+            class="one-time-entry-close-button"
+            type="button"
+            aria-label={props.cancelLabel}
+            title={props.cancelLabel}
+            onClick={() => props.onCancel?.()}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 6 12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </Show>
       </span>
     </div>
   );

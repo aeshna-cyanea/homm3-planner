@@ -11,9 +11,14 @@ export function dwellingLabel(
 ): string {
   const values = Array.isArray(levels) ? levels : [levels];
   const symbols = Array.from(new Set(values), levelSymbol).join("");
-  const displayName =
-    name === "Frigate" && variantIndex === 2
-      ? "Gunpowder Warehouse"
-      : name;
-  return `${symbols} ${displayName}`;
+  return `${symbols} ${dwellingDisplayName(name, variantIndex)}`;
+}
+
+export function dwellingDisplayName(
+  name: string,
+  variantIndex?: number,
+): string {
+  return name === "Frigate" && variantIndex === 2
+    ? "Gunpowder Warehouse"
+    : name;
 }

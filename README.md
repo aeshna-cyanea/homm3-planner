@@ -21,12 +21,14 @@ repeated additions increment one shared dwelling count, and their growth bonus
 applies to every matching town.
 
 Middle-click a dwelling, three-finger tap it, or press `Shift+Enter` while its
-card is focused to advance it provisionally. A town can have one such pending
-dwelling at a time. Its blue one-time panel shows the construction cost and, for
-a newly built base dwelling, one unmodified week of its creatures. Click the
-card normally to confirm the advancement, or use the panel's close button (or
-repeat the pending gesture) to cancel and revert it. Pending dwellings are
-included when state is saved and are cleared when their town's faction changes.
+card is focused to advance it provisionally. A town can have multiple pending
+dwellings. Its blue one-time-costs panel groups each construction or upgrade
+with its cost and, for a newly built base dwelling, one unmodified week of its
+creatures. Click a pending card normally to confirm its advancement, or use that
+entry's close button (or repeat the pending gesture) to cancel and revert it.
+The panel's bottom actions confirm or cancel every pending dwelling in that
+town. Pending dwellings are included when state is saved and are cleared when
+their town's faction changes.
 
 `public/creatures.json` preserves the full creature statistics and source links
 in the structure used by the planner. Towns are identified by their names and

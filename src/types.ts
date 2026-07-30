@@ -123,7 +123,7 @@ export interface TownPlan {
   fortification: Fortification;
   selections: number[];
   hordeEnabled: boolean[];
-  pendingDwelling: number | null;
+  pendingDwellings: number[];
 }
 
 export interface ExternalDwelling {
@@ -148,6 +148,8 @@ export interface SavedTownPlan {
   town: string;
   fortification: Fortification;
   dwellings: SavedDwelling[];
+  pendingDwellings?: string[];
+  /** Legacy single-pending save format. */
   pendingDwelling?: string | null;
 }
 
@@ -166,8 +168,16 @@ export interface RecruitmentRow {
 }
 
 export interface PendingDwellingCosts {
+  dwellingIndex: number;
+  action: "building" | "upgrading";
+  dwellingName: string;
   construction: Cost;
-  creatures?: Cost;
+  creatures?: {
+    name: string;
+    level: number;
+    quantity: number;
+    cost: Cost;
+  };
 }
 
 export interface ExternalDwellingCard {
