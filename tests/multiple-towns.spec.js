@@ -446,21 +446,47 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
   await expect(
     globalDialog.locator("#global-resource-totals .resource-total"),
   ).toHaveText(["3,640 gold", "5 wood", "5 ore"]);
+  const archerRows = globalDialog
+    .locator("#global-results-body tr:not(.results-cost-line-item)")
+    .filter({ hasText: "Archer" });
+  await expect(archerRows).toHaveCount(2);
+  const oneTimeArcherRow = archerRows.filter({ hasText: "One-time" });
+  await expect(oneTimeArcherRow).toHaveClass(/results-one-time-creature/);
+  await expect(oneTimeArcherRow.locator("td")).toHaveText([
+    "ArcherTown 1 · One-time",
+    "9 units",
+    "100 gold",
+    "900 gold",
+  ]);
   await expect(
-    globalDialog.locator("#global-results-body").locator("tr").filter({
-      hasText: "Archer",
-    }).locator("td"),
+    archerRows.filter({ hasNotText: "One-time" }).locator("td"),
   ).toHaveText([
     "ArcherTown 1",
-    "18 units",
+    "9 units",
     "100 gold",
-    "1,800 gold",
+    "900 gold",
   ]);
+  const buildingLineItem = globalDialog
+    .locator("#global-results-body .results-cost-line-item")
+    .filter({ hasText: "Building Archers' Tower" });
+  await expect(buildingLineItem.locator(".results-line-item-name")).toHaveText(
+    "Building Archers' Tower",
+  );
+  await expect(buildingLineItem.locator("td").first().locator("small")).toHaveText(
+    "Town 1",
+  );
+  await expect(buildingLineItem.locator(".results-not-applicable")).toHaveText([
+    "—",
+    "—",
+  ]);
+  await expect(
+    buildingLineItem.locator(".results-line-item-cost .cost-item b"),
+  ).toHaveText(["1,000", "5", "5"]);
   await expect(globalDialog.locator(".results-table th")).toHaveText([
-    "Creature",
+    "Item",
     "Units",
     "Each",
-    "Creature cost",
+    "Cost",
   ]);
   await globalDialog.getByRole("button", { name: "Close" }).click();
 
@@ -500,6 +526,18 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
   await expect(oneTimeRows.locator(".one-time-cost-label")).toHaveText(
     "Upgrading Archers' Tower",
   );
+
+  await page.locator("#open-global-total").click();
+  const upgradingLineItem = globalDialog
+    .locator("#global-results-body .results-cost-line-item")
+    .filter({ hasText: "Upgrading Archers' Tower" });
+  await expect(upgradingLineItem.locator(".results-line-item-name")).toHaveText(
+    "Upgrading Archers' Tower",
+  );
+  await expect(
+    upgradingLineItem.locator(".results-line-item-cost .cost-item b"),
+  ).toHaveText(["1,000", "5", "5"]);
+  await globalDialog.getByRole("button", { name: "Close" }).click();
 
   await oneTime.getByRole("button", { name: "Confirm all" }).click();
   await expect(archer).toHaveAttribute("data-stage", "1");

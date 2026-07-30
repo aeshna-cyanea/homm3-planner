@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 import { levelSymbol } from "../dwelling-label";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
-import type { RecruitmentRow } from "../types";
+import type { GlobalCostLineItem, RecruitmentRow } from "../types";
 import { CreatureNameButton } from "./CreatureDetails";
 import { CostDisplay, ResourceTotals } from "./ResourceCost";
 
@@ -220,24 +220,48 @@ export function ExternalRecruitment(props: { planner: Planner }) {
 export function ResultsTable(props: {
   id?: string;
   rows: RecruitmentRow[];
+  costLineItems?: GlobalCostLineItem[];
   combinedCosts?: boolean;
 }) {
   return (
     <table class="results-table">
       <thead>
         <tr>
-          <th scope="col">Creature</th>
+          <th scope="col">{props.combinedCosts ? "Item" : "Creature"}</th>
           <th scope="col">{props.combinedCosts ? "Units" : "Produced"}</th>
           <th scope="col">Each</th>
           <th scope="col">
-            {props.combinedCosts ? "Creature cost" : "Weekly cost"}
+            {props.combinedCosts ? "Cost" : "Weekly cost"}
           </th>
         </tr>
       </thead>
       <tbody id={props.id}>
+        <For each={props.costLineItems ?? []}>
+          {(item) => (
+            <tr class="results-cost-line-item">
+              <td>
+                <span class="results-creature-name results-line-item-name">
+                  {item.label}
+                </span>
+                <small>{item.source}</small>
+              </td>
+              <td class="results-not-applicable">—</td>
+              <td class="results-not-applicable">—</td>
+              <td class="results-line-item-cost">
+                <span class="cost-list">
+                  <CostDisplay cost={item.cost} />
+                </span>
+              </td>
+            </tr>
+          )}
+        </For>
         <For each={props.rows}>
           {(row) => (
-            <tr>
+            <tr
+              classList={{
+                "results-one-time-creature": row.period === "one-time",
+              }}
+            >
               <td>
                 <CreatureNameButton
                   class="results-creature-name"

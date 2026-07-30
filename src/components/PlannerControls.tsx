@@ -146,6 +146,7 @@ function GlobalTotalDialog(props: { planner: Planner }) {
               <ResultsTable
                 id="global-results-body"
                 rows={props.planner.globalRows()}
+                costLineItems={props.planner.globalCostLineItems()}
                 combinedCosts={hasPendingCosts()}
               />
             </div>

@@ -162,9 +162,16 @@ export interface RecruitmentRow {
   name: string;
   detail: string;
   detailParts?: string[];
+  period?: "weekly" | "one-time";
   production: number;
   unitCost: Cost;
   weeklyCost: Cost;
+}
+
+export interface GlobalCostLineItem {
+  label: string;
+  source: string;
+  cost: Cost;
 }
 
 export interface PendingDwellingCosts {

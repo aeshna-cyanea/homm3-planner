@@ -23,6 +23,7 @@ import type {
   Dwelling,
   ExternalDwellingCard,
   Fortification,
+  GlobalCostLineItem,
   PendingDwellingCosts,
   PlannerState,
   RecruitmentRow,
@@ -56,6 +57,7 @@ export interface Planner {
   externalRows(): RecruitmentRow[];
   externalTotals(): CostEntry[];
   globalRows(): RecruitmentRow[];
+  globalCostLineItems(): GlobalCostLineItem[];
   globalTotals(): CostEntry[];
   resultContext(planId: string): string;
   addTown(town: string): string;
@@ -284,6 +286,7 @@ export function createPlanner(catalog: Catalog): Planner {
         ? [{
             name: creature.name,
             detail: "One-time",
+            period: "one-time" as const,
             production: dwelling.growth,
             unitCost: creature.cost,
             weeklyCost: multiplyCost(creature.cost, dwelling.growth),
@@ -344,18 +347,31 @@ export function createPlanner(catalog: Catalog): Planner {
   );
 
   const globalRows = createMemo<RecruitmentRow[]>(() => {
-    const sourcedRows = state.townPlans.flatMap((currentPlan) => {
+    const weeklyRows = state.townPlans.flatMap((currentPlan) => {
       const source = townLabel(currentPlan.id);
-      return [
-        ...productionRows(currentPlan.id).map((row) => ({ row, source })),
-        ...pendingCreatureRows(currentPlan.id).map((row) => ({ row, source })),
-      ];
+      return productionRows(currentPlan.id).map((row) => ({ row, source }));
     });
-    sourcedRows.push(
+    weeklyRows.push(
       ...externalRows().map((row) => ({ row, source: "External dwellings" })),
     );
-    return aggregateRows(sourcedRows);
+    const oneTimeRows = state.townPlans.flatMap((currentPlan) => {
+      const source = townLabel(currentPlan.id);
+      return pendingCreatureRows(currentPlan.id).map((row) => ({ row, source }));
+    });
+    return [
+      ...aggregateRows(oneTimeRows),
+      ...aggregateRows(weeklyRows),
+    ];
   });
+
+  const globalCostLineItems = createMemo<GlobalCostLineItem[]>(() =>
+    state.townPlans.flatMap((currentPlan) =>
+      pendingDwellingCosts(currentPlan.id).map((costs) => ({
+        label: `${capitalize(costs.action)} ${costs.dwellingName}`,
+        source: townLabel(currentPlan.id),
+        cost: costs.construction,
+      }))),
+  );
 
   function setExternalDwellingCount(
     creatureName: string,
@@ -476,14 +492,11 @@ export function createPlanner(catalog: Catalog): Planner {
         : [["gold", 0] as CostEntry];
     }),
     globalRows,
+    globalCostLineItems,
     globalTotals: createMemo(() => {
-      const constructionCosts = state.townPlans.flatMap((currentPlan) =>
-        pendingDwellingCosts(currentPlan.id).map(
-          (costs) => costs.construction,
-        ));
       return totalCosts([
         ...globalRows().map((row) => row.weeklyCost),
-        ...constructionCosts,
+        ...globalCostLineItems().map((item) => item.cost),
       ]);
     }),
     resultContext(planId) {
@@ -796,7 +809,8 @@ function aggregateRows(
 
   return Array.from(groups.values(), ({ row, sources, costs }) => ({
     ...row,
-    detail: sources.join(" · "),
+    detail:
+      `${sources.join(" · ")}${row.period === "one-time" ? " · One-time" : ""}`,
     detailParts: undefined,
     weeklyCost: sumCosts(costs),
   }));
