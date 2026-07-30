@@ -1,5 +1,10 @@
 import { For, createSignal, onCleanup, onMount } from "solid-js";
 import { isPlainShortcut } from "./keyboard";
+import {
+  loadPreferences,
+  savePreferences,
+  type PlannerPreferences,
+} from "./persistence";
 import type { Planner } from "./planner";
 import { CreatureDetailsProvider } from "./components/CreatureDetails";
 import { ExternalDwellings } from "./components/ExternalDwellings";
@@ -11,7 +16,13 @@ const githubUrl = "https://github.com/aeshna-cyanea/homm3-planner";
 const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH;
 
 export function App(props: { planner: Planner }) {
-  const [showBuildingCosts, setShowBuildingCosts] = createSignal(false);
+  const preferences = loadPreferences();
+  const [showBuildingCosts, setShowBuildingCosts] = createSignal(
+    preferences.showBuildingCosts,
+  );
+  const [controlsPosition, setControlsPosition] = createSignal(
+    preferences.controlsPosition,
+  );
 
   onMount(() => window.addEventListener("keydown", toggleBuildingCosts));
   onCleanup(() => window.removeEventListener("keydown", toggleBuildingCosts));
@@ -19,16 +30,44 @@ export function App(props: { planner: Planner }) {
   function toggleBuildingCosts(event: KeyboardEvent): void {
     if (!isPlainShortcut(event, "u")) return;
     event.preventDefault();
-    setShowBuildingCosts((visible) => !visible);
+    toggleBuildingCostsVisibility();
+  }
+
+  function persistPreferences(next: Partial<PlannerPreferences>): void {
+    savePreferences({
+      showBuildingCosts: showBuildingCosts(),
+      controlsPosition: controlsPosition(),
+      ...next,
+    });
+  }
+
+  function toggleBuildingCostsVisibility(): void {
+    const next = !showBuildingCosts();
+    setShowBuildingCosts(next);
+    persistPreferences({ showBuildingCosts: next });
+  }
+
+  function toggleControlsPosition(): void {
+    const next = controlsPosition() === "header" ? "footer" : "header";
+    setControlsPosition(next);
+    persistPreferences({ controlsPosition: next });
   }
 
   return (
     <CreatureDetailsProvider catalog={props.planner.catalog}>
       <main
-        class="app-shell"
+        class="app-shell planner-app"
         data-building-costs={showBuildingCosts() ? "shown" : "hidden"}
+        data-controls-position={controlsPosition()}
       >
         <h1 class="sr-only">HotA town production</h1>
+        <PlannerControls
+          planner={props.planner}
+          showBuildingCosts={showBuildingCosts()}
+          controlsPosition={controlsPosition()}
+          onToggleBuildingCosts={toggleBuildingCostsVisibility}
+          onToggleControlsPosition={toggleControlsPosition}
+        />
         <div class="town-list">
           <For each={props.planner.state.townPlans}>
             {(plan) => (
@@ -44,7 +83,6 @@ export function App(props: { planner: Planner }) {
           <ExternalDwellings planner={props.planner} />
           <ExternalRecruitment planner={props.planner} />
         </div>
-        <PlannerControls planner={props.planner} />
         <SourceFooter />
       </main>
     </CreatureDetailsProvider>

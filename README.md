@@ -5,9 +5,11 @@ production across any number of towns. Each town has its own production scheme
 and recruitment subtotal, and its default label can be renamed with the pencil
 beside it. The global-total dialog aggregates every town plus recruitment at
 external dwellings, along with any pending one-time costs. Press `T` to add a
-town or `P` to open the global total.
-Press `U` outside a text field to show or hide each dwelling's next construction
-or upgrade cost and the next fortification cost. Creature names open a
+town or `P` to open the global total. The controls start at the top of the page;
+the arrow at their right edge moves them between the header and footer.
+Press `U` outside a text field, or use Show construction costs, to show or hide
+each dwelling's next construction or upgrade cost and the next fortification
+cost. Both display preferences persist across visits. Creature names open a
 compact reference dialog with their statistics, special abilities, recruitment
 cost, and Heroes 3 Wiki source. Clicking the dialog cycles through that
 dwelling's variants; upgraded values that differ from the base creature are

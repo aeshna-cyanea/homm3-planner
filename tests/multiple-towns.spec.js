@@ -186,6 +186,7 @@ test("add controls show keycaps and their full surfaces focus the search", async
 
   await expect(townControl.locator(".shortcut-key")).toHaveText("T");
   await expect(dwellingCard.locator(".shortcut-key")).toHaveText("/");
+  await expect(page.locator(".building-costs-button .shortcut-key")).toHaveText("U");
   await expect(page.locator(".global-total-button .shortcut-key")).toHaveText("P");
   await expect(townSearch).toHaveAttribute("placeholder", "Search towns");
   await expect(dwellingSearch).toHaveAttribute("placeholder", "Search creatures");
@@ -201,6 +202,80 @@ test("add controls show keycaps and their full surfaces focus the search", async
     position: { x: townControlBox.width - 5, y: 5 },
   });
   await expect(townSearch).toBeFocused();
+});
+
+test("controls default to the header and both display preferences persist", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  const app = page.locator(".planner-app");
+  const controls = page.locator(".planner-controls");
+  const townList = page.locator(".town-list");
+  const costsButton = page.locator("#toggle-building-costs");
+  const globalTotalButton = page.locator("#open-global-total");
+  const moveButton = page.locator("#move-planner-controls");
+
+  await expect(app).toHaveAttribute("data-controls-position", "header");
+  await expect(app).toHaveAttribute("data-building-costs", "hidden");
+  await expect(costsButton).toHaveAccessibleName("Show construction costs");
+  await expect(moveButton).toHaveAccessibleName("Move controls to footer");
+
+  const headerLayout = await page.evaluate(() => {
+    const controls = document.querySelector(".planner-controls").getBoundingClientRect();
+    const towns = document.querySelector(".town-list").getBoundingClientRect();
+    const costs = document.querySelector("#toggle-building-costs").getBoundingClientRect();
+    const total = document.querySelector("#open-global-total").getBoundingClientRect();
+    return {
+      controlsAboveTowns: controls.bottom < towns.top,
+      costsLeftOfTotal: costs.right <= total.left,
+    };
+  });
+  expect(headerLayout).toEqual({
+    controlsAboveTowns: true,
+    costsLeftOfTotal: true,
+  });
+
+  const animations = await moveButton.evaluate((button) => {
+    button.click();
+    return document.querySelector(".planner-controls").getAnimations()
+      .map((animation) => animation.animationName);
+  });
+  expect(animations).toContain("relocate-planner-controls");
+  await expect(app).toHaveAttribute("data-controls-position", "footer");
+  await expect(moveButton).toHaveAccessibleName("Move controls to header");
+  await expect(controls).not.toHaveClass(/is-relocating/);
+
+  const footerLayout = await page.evaluate(() => {
+    const controls = document.querySelector(".planner-controls").getBoundingClientRect();
+    const external = document.querySelector(".external-layout").getBoundingClientRect();
+    return controls.top > external.bottom;
+  });
+  expect(footerLayout).toBe(true);
+
+  await costsButton.click();
+  await expect(app).toHaveAttribute("data-building-costs", "shown");
+  await expect(costsButton).toHaveAccessibleName("Hide construction costs");
+  await expect(costsButton).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(() => page.evaluate(() => JSON.parse(
+    localStorage.getItem("hota-production-planner-preferences"),
+  ))).toEqual({
+    showBuildingCosts: true,
+    controlsPosition: "footer",
+  });
+
+  await page.reload();
+  await expect(app).toHaveAttribute("data-controls-position", "footer");
+  await expect(app).toHaveAttribute("data-building-costs", "shown");
+  await expect(controls).toBeVisible();
+  await expect(globalTotalButton).toBeVisible();
+
+  await moveButton.click();
+  await costsButton.click();
+  await page.reload();
+  await expect(app).toHaveAttribute("data-controls-position", "header");
+  await expect(app).toHaveAttribute("data-building-costs", "hidden");
 });
 
 test("adding a town smoothly scrolls to the new town", async ({ page }) => {
@@ -320,8 +395,9 @@ test("U toggles building costs without hijacking text fields", async ({
   await expect(firstCost.locator(".resource-icon-gold")).toHaveCount(1);
   await expect(firstCost.locator(".resource-icon-ore")).toHaveCount(1);
   await expect(fortificationCost.locator(".cost-item b")).toHaveText([
-    "2,500",
-    "5",
+    "5,000",
+    "10",
+    "10",
   ]);
 
   await firstCard.locator(".unit-card-cycle-action").press("Enter");

@@ -83,6 +83,11 @@ button, select { color: inherit; }
   padding: 3rem 0 4rem;
 }
 
+.planner-app {
+  display: flex;
+  flex-direction: column;
+}
+
 .site-meta {
   position: absolute;
   right: 0;
@@ -347,10 +352,27 @@ h2 {
   justify-content: space-between;
   flex-wrap: nowrap;
   gap: 1.375rem;
-  margin-top: 1.375rem;
+  margin: 0 0 2.75rem;
   padding: 1.25rem;
+  position: relative;
   container-name: planner-controls;
   container-type: inline-size;
+}
+
+.planner-app[data-controls-position="footer"] .planner-controls {
+  order: 1;
+  margin: 1.375rem 0 0;
+}
+
+.planner-controls.is-relocating {
+  z-index: 5;
+  animation: relocate-planner-controls 500ms ease-in;
+  will-change: transform;
+}
+
+@keyframes relocate-planner-controls {
+  from { transform: translateY(var(--planner-controls-offset-y, 0)); }
+  to { transform: translateY(0); }
 }
 
 .add-town-control {
@@ -395,6 +417,42 @@ h2 {
   font-size: clamp(0.62rem, calc(0.5rem + 0.75cqi), 0.875rem);
 }
 
+.building-costs-button,
+.global-total-button {
+  white-space: nowrap;
+}
+
+.building-costs-button[aria-pressed="true"] {
+  color: var(--gold-bright);
+  border-color: var(--gold);
+  background: rgba(221, 182, 94, 0.1);
+}
+
+.building-costs-button .shortcut-key,
+.global-total-button .shortcut-key {
+  margin-left: 0.375rem;
+}
+
+.building-costs-compact-label { display: none; }
+
+.move-controls-button {
+  display: inline-grid;
+  flex: 0 0 3rem !important;
+  place-items: center;
+  width: 3rem;
+  padding: 0.75rem !important;
+}
+
+.move-controls-button svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .global-total-button {
   color: var(--ink);
   border-color: var(--gold);
@@ -415,10 +473,6 @@ h2 {
   color: var(--gold-bright);
   font: inherit;
   font-size: 0.68rem;
-}
-
-.global-total-button .shortcut-key {
-  margin-left: 0.375rem;
 }
 
 .global-total-dialog,
@@ -1741,16 +1795,22 @@ select,
   .unit-card .pending-clock { display: none; }
 }
 
+@container planner-controls (max-width: 60rem) {
+  .building-costs-wide-label,
+  .global-total-wide-label,
+  .wide-action-label { display: none; }
+  .building-costs-compact-label { display: inline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planner-controls.is-relocating { animation: none; }
+}
+
 @media (max-width: 48.75rem) {
   .app-shell { width: calc(100% - 1.25rem); padding-top: 1.75rem; }
 }
 
-@media (max-width: 32.5rem) {
-  .section-heading { align-items: flex-start; flex-direction: column; }
-  .scheme-section,
-  .results-section { padding: 1.1875rem; }
-  .scheme-controls { grid-template-columns: minmax(0, 1fr); }
-  .town-section-header { align-items: flex-start; }
+@media (max-width: 42rem) {
   .planner-controls {
     align-items: stretch;
     flex-direction: column;
@@ -1763,6 +1823,14 @@ select,
     justify-content: stretch;
     width: 100%;
   }
+}
+
+@media (max-width: 32.5rem) {
+  .section-heading { align-items: flex-start; flex-direction: column; }
+  .scheme-section,
+  .results-section { padding: 1.1875rem; }
+  .scheme-controls { grid-template-columns: minmax(0, 1fr); }
+  .town-section-header { align-items: flex-start; }
   .global-total-panel,
   .creature-details-panel { padding: 1.1875rem; }
   .creature-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

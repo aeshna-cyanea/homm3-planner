@@ -587,8 +587,8 @@ for (const viewport of viewports) {
       ),
     ).toBeVisible();
 
-    const totalAmount = await page.locator(".resource-total strong").first().boundingBox();
-    const totalIcon = await page.locator(".resource-total .resource-icon").first().boundingBox();
+    const totalAmount = await page.locator("#resource-totals strong").first().boundingBox();
+    const totalIcon = await page.locator("#resource-totals .resource-icon").first().boundingBox();
     expect(totalIcon.y).toBe(totalAmount.y);
     expect(totalIcon.height).toBe(totalAmount.height);
 
@@ -614,11 +614,6 @@ for (const viewport of viewports) {
 
     if (viewport.width === 600) {
       await page.keyboard.press("u");
-      await page.locator("#fortification-cycle").click();
-      await expect(page.locator("#fortification-cycle")).toHaveAttribute(
-        "data-fortification",
-        "citadel",
-      );
       const citadelGrowth = await page
         .locator("#fortification-detail .fortification-growth")
         .boundingBox();
@@ -633,10 +628,15 @@ for (const viewport of viewports) {
       expect(citadelCost.y).toBeGreaterThanOrEqual(citadelGrowth.y);
 
       await page.locator("#fortification-cycle").click();
+      await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+        "data-fortification",
+        "citadel",
+      );
       const castleCostItems = page.locator("#fortification-detail .cost-item");
       const firstCastleCost = await castleCostItems.first().boundingBox();
       const lastCastleCost = await castleCostItems.last().boundingBox();
       expect(lastCastleCost.y).toBe(firstCastleCost.y);
+      await page.locator("#fortification-cycle").click();
       await page.locator("#fortification-cycle").click();
       await page.keyboard.press("u");
     }
@@ -1474,7 +1474,6 @@ test("all resource costs use embedded wiki icons", async ({ page }) => {
   await page.keyboard.press("u");
 
   const fortificationButton = page.locator("#fortification-cycle");
-  await fortificationButton.click();
   for (const resource of ["gold", "ore"]) {
     await expect(fortificationButton.locator(`.resource-icon-${resource}`)).toBeVisible();
   }
