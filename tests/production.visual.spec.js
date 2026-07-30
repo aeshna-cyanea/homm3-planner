@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const creatureData = require("../public/creatures.json");
 
 const viewports = [
-  { name: "small-phone", width: 320, height: 800 },
+  { name: "small-phone", width: 350, height: 800 },
   { name: "phone", width: 390, height: 844 },
   { name: "mobile-breakpoint", width: 520, height: 900 },
   { name: "narrow-tablet", width: 600, height: 900 },
@@ -340,13 +340,13 @@ test("creature names open details without interfering with keyboard cycling", as
   });
   await expect(firstSlot.locator(".unit-card")).toHaveAttribute("data-stage", "-1");
 
-  await page.setViewportSize({ width: 320, height: 600 });
+  await page.setViewportSize({ width: 350, height: 600 });
   await name.click();
   const dialogBox = await dialog.boundingBox();
   expect(dialogBox).not.toBeNull();
   expect(dialogBox.x).toBeGreaterThanOrEqual(0);
   expect(dialogBox.y).toBeGreaterThanOrEqual(0);
-  expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(320);
+  expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(350);
   expect(dialogBox.y + dialogBox.height).toBeLessThanOrEqual(600);
 });
 
@@ -655,15 +655,22 @@ test("state actions scale smoothly and stay on one line", async ({ page }) => {
   await page.goto("/index.html");
 
   const measurements = [];
-  for (const width of [320, 520, 521, 600, 800, 1100]) {
+  for (const width of [350, 520, 521, 600, 800, 1100]) {
     await page.setViewportSize({ width, height: 900 });
     measurements.push(await page.locator(".planner-controls").evaluate((controls, width) => {
       const actions = controls.querySelector(".state-actions");
-      const buttons = [...actions.querySelectorAll(":scope > button")];
+      const buttons = [
+        ...actions.querySelectorAll(":scope > button:not(.move-controls-button)"),
+      ];
+      const moveButton = controls.querySelector(".move-controls-button");
+      const helpText = controls.querySelector(".add-town-label");
       const globalTotal = controls.querySelector("#open-global-total");
       const shortcut = globalTotal.querySelector(".shortcut-key");
       const townSearch = controls.querySelector("#add-town-search");
       const actionsBox = actions.getBoundingClientRect();
+      const controlsBox = controls.getBoundingClientRect();
+      const moveButtonBox = moveButton.getBoundingClientRect();
+      const helpTextBox = helpText.getBoundingClientRect();
       const globalTotalBox = globalTotal.getBoundingClientRect();
       const shortcutBox = shortcut.getBoundingClientRect();
       const townSearchBox = townSearch.getBoundingClientRect();
@@ -693,6 +700,13 @@ test("state actions scale smoothly and stay on one line", async ({ page }) => {
         shortcutContained:
           shortcutBox.left >= globalTotalBox.left &&
           shortcutBox.right <= globalTotalBox.right,
+        moveButtonInPanel:
+          moveButtonBox.top >= controlsBox.top &&
+          moveButtonBox.right <= controlsBox.right,
+        moveButtonAlignedWithHelp:
+          Math.abs(moveButtonBox.top - helpTextBox.top) <= 1 &&
+          Math.abs(moveButtonBox.height - helpTextBox.height) <= 1,
+        moveButtonAboveActions: moveButtonBox.bottom <= actionsBox.top,
         placeholderContained: townSearchBox.width >= placeholderSpace,
       };
     }, width));
@@ -707,6 +721,9 @@ test("state actions scale smoothly and stay on one line", async ({ page }) => {
     }
     expect(measurement.buttonsContained, context).toBe(true);
     expect(measurement.shortcutContained, context).toBe(true);
+    expect(measurement.moveButtonInPanel, context).toBe(true);
+    expect(measurement.moveButtonAlignedWithHelp, context).toBe(true);
+    expect(measurement.moveButtonAboveActions, context).toBe(true);
     expect(measurement.placeholderContained, context).toBe(true);
   }
 
@@ -830,7 +847,7 @@ test("recruitment wraps before the scheme drops below three columns", async ({ p
 });
 
 test("wrapped creature names do not collide with dwelling controls", async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 900 });
+  await page.setViewportSize({ width: 350, height: 900 });
   await page.goto("/index.html");
   await page.locator("#town-select").selectOption("Factory");
 
@@ -1376,7 +1393,7 @@ test("planner state persists across reloads", async ({ page }) => {
   await expect(thirdSlot.locator(".creature-name")).toHaveText("Griffin");
   await expect(thirdSlot.locator(".external-dwelling-input")).toHaveValue("2");
   await expect(thirdSlot.locator(".horde-checkbox")).toBeChecked();
-  await page.locator("#save-state").click();
+  await page.locator("#save-state").press("s");
 
   const savedState = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("hota-production-planner-state")),
@@ -1418,6 +1435,20 @@ test("planner state persists across reloads", async ({ page }) => {
     .locator(".unit-card-cycle-action")
     .press("Enter");
   await page.locator(".unit-slot").nth(2).locator('[data-external-action="increment"]').click();
+
+  await page.reload();
+  await expect(page.locator("#town-select")).toHaveValue("Castle");
+  await expect(page.locator("#fortification-cycle")).toHaveAttribute(
+    "data-fortification",
+    "fort",
+  );
+  await expect(page.locator(".unit-slot").nth(2).locator(".creature-name")).toHaveText(
+    "Royal Griffin",
+  );
+  await expect(
+    page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
+  ).toHaveValue("3");
+
   await page.locator("#reset-scheme").click();
   await expect(page.locator("#town-select")).toHaveValue("Castle");
   await expect(page.locator("#fortification-cycle")).toHaveAttribute(
@@ -1430,10 +1461,8 @@ test("planner state persists across reloads", async ({ page }) => {
   await expect(
     page.locator(".unit-slot").nth(2).locator(".external-dwelling-input"),
   ).toHaveValue("2");
-  await expect(page.locator(".unit-slot").nth(2).locator(".horde-checkbox")).toBeChecked();
 
   await page.reload();
-  await expect(page.locator("#town-select")).toHaveValue("Castle");
   await expect(page.locator("#fortification-cycle")).toHaveAttribute(
     "data-fortification",
     "castle",

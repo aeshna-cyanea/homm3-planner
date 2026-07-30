@@ -15,6 +15,11 @@ cost, and Heroes 3 Wiki source. Clicking the dialog cycles through that
 dwelling's variants; upgraded values that differ from the base creature are
 shown in green.
 
+Planner changes are autosaved and restored across reloads. Press `S` or use
+Save State to create a separate restore point; press `R` or use Reset State to
+return to that restore point. Reset returns to the default plan when no restore
+point has been saved.
+
 Each dwelling cycles through none, basic, and upgraded creatures. Cove's level 3
 also cycles through its Sea Dog second upgrade. Relevant dwellings show an optional
 Horde-building toggle. Horde growth is added before Fort, Citadel, and Castle

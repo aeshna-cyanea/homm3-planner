@@ -14,6 +14,20 @@ export function PlannerControls(props: {
 }) {
   let controls!: HTMLDivElement;
 
+  onMount(() => window.addEventListener("keydown", handleStateShortcut));
+  onCleanup(() => window.removeEventListener("keydown", handleStateShortcut));
+
+  function handleStateShortcut(event: KeyboardEvent): void {
+    if (isPlainShortcut(event, "s")) {
+      event.preventDefault();
+      props.planner.save();
+      return;
+    }
+    if (!isPlainShortcut(event, "r")) return;
+    event.preventDefault();
+    props.planner.reset();
+  }
+
   function focusTownSearch(event: MouseEvent): void {
     const target = event.target as Element;
     if (target.closest(".town-search-dropdown")) return;
@@ -52,30 +66,62 @@ export function PlannerControls(props: {
       class="planner-controls panel"
       onAnimationEnd={finishRelocating}
     >
-      <div class="add-town-control" onClick={focusTownSearch}>
+      <div class="planner-controls-heading">
         <label class="add-town-label" for="add-town-search">
           <span>Add town</span>
           <kbd class="shortcut-key">T</kbd>
         </label>
+        <button
+          class="reset-button move-controls-button"
+          id="move-planner-controls"
+          type="button"
+          aria-label={props.controlsPosition === "header"
+            ? "Move controls to footer"
+            : "Move controls to header"}
+          title={props.controlsPosition === "header"
+            ? "Move controls to footer"
+            : "Move controls to header"}
+          onClick={toggleControlsPosition}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d={props.controlsPosition === "header"
+              ? "M6 9l6 6 6-6"
+              : "M6 15l6-6 6 6"}
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div class="add-town-control" onClick={focusTownSearch}>
         <TownSearch planner={props.planner} />
       </div>
 
       <div class="state-actions">
         <button
-          class="reset-button"
+          class="reset-button save-state-button"
           id="save-state"
           type="button"
+          aria-label="Save state"
+          aria-keyshortcuts="s"
           onClick={() => props.planner.save()}
         >
-          Save <span class="wide-action-label">State</span>
+          <span class="state-action-label">
+            Save <span class="wide-action-label">State</span>
+          </span>
+          <kbd class="shortcut-key">S</kbd>
         </button>
         <button
-          class="reset-button"
+          class="reset-button reset-state-button"
           id="reset-scheme"
           type="button"
+          aria-label="Reset state"
+          aria-keyshortcuts="r"
           onClick={() => props.planner.reset()}
         >
-          Reset <span class="wide-action-label">State</span>
+          <span class="state-action-label">
+            Reset <span class="wide-action-label">State</span>
+          </span>
+          <kbd class="shortcut-key">R</kbd>
         </button>
         <button
           class="reset-button building-costs-button"
@@ -97,25 +143,6 @@ export function PlannerControls(props: {
           <kbd class="shortcut-key">U</kbd>
         </button>
         <GlobalTotalDialog planner={props.planner} />
-        <button
-          class="reset-button move-controls-button"
-          id="move-planner-controls"
-          type="button"
-          aria-label={props.controlsPosition === "header"
-            ? "Move controls to footer"
-            : "Move controls to header"}
-          title={props.controlsPosition === "header"
-            ? "Move controls to footer"
-            : "Move controls to header"}
-          onClick={toggleControlsPosition}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d={props.controlsPosition === "header"
-              ? "M6 9l6 6 6-6"
-              : "M6 15l6-6 6 6"}
-            />
-          </svg>
-        </button>
       </div>
     </div>
   );

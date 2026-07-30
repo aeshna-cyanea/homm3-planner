@@ -1,4 +1,4 @@
-import { createMemo } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
 import type { Store } from "solid-js/store";
 import {
@@ -14,7 +14,12 @@ import {
   dwellingLabel,
   levelSymbol,
 } from "./dwelling-label";
-import { loadSavedState, saveState } from "./persistence";
+import {
+  autosaveState,
+  loadAutosavedState,
+  loadSavedState,
+  saveState,
+} from "./persistence";
 import { multiplyCost, sumCosts, totalCosts } from "./resources";
 import type {
   Catalog,
@@ -97,10 +102,17 @@ export interface Planner {
 }
 
 export function createPlanner(catalog: Catalog): Planner {
-  const loadedSnapshot = loadSavedState();
-  const restored = loadedSnapshot && restoreState(catalog, loadedSnapshot);
-  let savedSnapshot = restored ? loadedSnapshot : null;
-  const [state, setState] = createStore(restored ?? initialState(catalog));
+  const autosavedSnapshot = loadAutosavedState();
+  const restoredAutosave =
+    autosavedSnapshot && restoreState(catalog, autosavedSnapshot);
+  const loadedSavedSnapshot = loadSavedState();
+  let savedSnapshot =
+    loadedSavedSnapshot && restoreState(catalog, loadedSavedSnapshot)
+      ? loadedSavedSnapshot
+      : null;
+  const [state, setState] = createStore(
+    restoredAutosave ?? initialState(catalog),
+  );
 
   function planIndex(planId: string): number {
     const index = state.townPlans.findIndex((candidate) => candidate.id === planId);
@@ -511,6 +523,8 @@ export function createPlanner(catalog: Catalog): Planner {
       externalDwellings: state.externalDwellings.map((dwelling) => ({ ...dwelling })),
     };
   }
+
+  createEffect(() => autosaveState(serialize()));
 
   return {
     catalog,

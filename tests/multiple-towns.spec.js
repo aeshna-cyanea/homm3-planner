@@ -105,7 +105,7 @@ test("towns have independent schemes and external bonuses apply to every match",
   });
 });
 
-test("town controls remain unique, collapsible, removable, and persistent", async ({
+test("town controls remain unique, collapsible, removable, and autosaved", async ({
   page,
 }) => {
   await page.goto("/");
@@ -129,7 +129,6 @@ test("town controls remain unique, collapsible, removable, and persistent", asyn
   await expect(firstTown.locator(".production-scheme-section")).toBeVisible();
   await expect(firstTown.locator(".results-column")).toBeVisible();
 
-  await page.locator("#save-state").click();
   await page.reload();
   await expect(page.locator(".town-section")).toHaveCount(2);
   await expect(page.locator("#town-select-town-2")).toHaveValue("Cove");
@@ -180,12 +179,23 @@ test("add controls show keycaps and their full surfaces focus the search", async
   await page.goto("/");
 
   const townControl = page.locator(".add-town-control");
+  const townLabel = page.locator(".planner-controls-heading .add-town-label");
   const townSearch = page.locator("#add-town-search");
   const dwellingCard = page.locator(".add-dwelling-card");
   const dwellingSearch = page.locator("#external-dwelling-search");
 
-  await expect(townControl.locator(".shortcut-key")).toHaveText("T");
+  await expect(townLabel.locator(".shortcut-key")).toHaveText("T");
   await expect(dwellingCard.locator(".shortcut-key")).toHaveText("/");
+  await expect(page.locator("#save-state .shortcut-key")).toHaveText("S");
+  await expect(page.locator("#save-state")).toHaveAttribute(
+    "aria-keyshortcuts",
+    "s",
+  );
+  await expect(page.locator("#reset-scheme .shortcut-key")).toHaveText("R");
+  await expect(page.locator("#reset-scheme")).toHaveAttribute(
+    "aria-keyshortcuts",
+    "r",
+  );
   await expect(page.locator(".building-costs-button .shortcut-key")).toHaveText("U");
   await expect(page.locator(".global-total-button .shortcut-key")).toHaveText("P");
   await expect(townSearch).toHaveAttribute("placeholder", "Search towns");
@@ -202,6 +212,46 @@ test("add controls show keycaps and their full surfaces focus the search", async
     position: { x: townControlBox.width - 5, y: 5 },
   });
   await expect(townSearch).toBeFocused();
+});
+
+test("reset restores the default when no state was explicitly saved", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const townSelect = page.locator("#town-select");
+  await townSelect.selectOption("Inferno");
+  await expect.poll(() => page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hota-production-planner-autosave"))
+      ?.townPlans?.[0]?.town,
+  )).toBe("Inferno");
+
+  await page.reload();
+  await expect(townSelect).toHaveValue("Inferno");
+
+  await page.locator("#reset-scheme").click();
+  await expect(townSelect).toHaveValue("Castle");
+  await page.reload();
+  await expect(townSelect).toHaveValue("Castle");
+});
+
+test("reset restores the explicit save while reload restores the latest autosave", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const townSelect = page.locator("#town-select");
+  await townSelect.selectOption("Inferno");
+  await page.keyboard.press("s");
+  await townSelect.selectOption("Factory");
+
+  await page.reload();
+  await expect(townSelect).toHaveValue("Factory");
+
+  await page.keyboard.press("r");
+  await expect(townSelect).toHaveValue("Inferno");
+  await page.reload();
+  await expect(townSelect).toHaveValue("Inferno");
 });
 
 test("controls default to the header and both display preferences persist", async ({
@@ -363,7 +413,7 @@ test("P toggles global totals without hijacking form fields", async ({ page }) =
 test("U toggles building costs without hijacking text fields", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 320, height: 800 });
+  await page.setViewportSize({ width: 350, height: 800 });
   await page.goto("/");
 
   const app = page.locator(".app-shell");
@@ -739,7 +789,7 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
 });
 
 test("a many-resource one-time subtotal stays on one line", async ({ page }) => {
-  for (const width of [1280, 320]) {
+  for (const width of [1280, 350]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await page.locator(".town-section select").first().selectOption("Inferno");

@@ -1,6 +1,7 @@
 import type { SavedPlannerState } from "./types";
 
-const storageKey = "hota-production-planner-state";
+const savedStateStorageKey = "hota-production-planner-state";
+const autosavedStateStorageKey = "hota-production-planner-autosave";
 const preferencesStorageKey = "hota-production-planner-preferences";
 
 export interface PlannerPreferences {
@@ -9,19 +10,35 @@ export interface PlannerPreferences {
 }
 
 export function loadSavedState(): SavedPlannerState | null {
+  return loadState(savedStateStorageKey);
+}
+
+export function saveState(state: SavedPlannerState): void {
+  storeState(savedStateStorageKey, state);
+}
+
+export function loadAutosavedState(): SavedPlannerState | null {
+  return loadState(autosavedStateStorageKey);
+}
+
+export function autosaveState(state: SavedPlannerState): void {
+  storeState(autosavedStateStorageKey, state);
+}
+
+function loadState(key: string): SavedPlannerState | null {
   try {
-    const value: unknown = JSON.parse(localStorage.getItem(storageKey) ?? "null");
+    const value: unknown = JSON.parse(localStorage.getItem(key) ?? "null");
     return isSavedPlannerState(value) ? value : null;
   } catch {
     return null;
   }
 }
 
-export function saveState(state: SavedPlannerState): void {
+function storeState(key: string, state: SavedPlannerState): void {
   try {
-    localStorage.setItem(storageKey, JSON.stringify(state));
+    localStorage.setItem(key, JSON.stringify(state));
   } catch {
-    // Saving is optional when storage is blocked or unavailable.
+    // Persistence is optional when storage is blocked or unavailable.
   }
 }
 
