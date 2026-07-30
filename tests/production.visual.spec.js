@@ -351,9 +351,39 @@ test("creature names open details without interfering with keyboard cycling", as
 });
 
 test("PWA app shell reloads while offline", async ({ page, context }) => {
+  await page.addInitScript(() => {
+    window.__serviceWorkerRegistrationReadyStates = [];
+    const originalRegister = ServiceWorkerContainer.prototype.register;
+    ServiceWorkerContainer.prototype.register = function registerAfterLoad(
+      ...args
+    ) {
+      window.__serviceWorkerRegistrationReadyStates.push(document.readyState);
+      return originalRegister.apply(this, args);
+    };
+  });
   await page.goto("/");
   await expect(page.locator("#town-select")).toBeEnabled();
   await expect(page.locator('script[id="vite-plugin-pwa:register-sw"]')).toHaveCount(0);
+
+  const dataPreload = page.locator(
+    'link[rel="preload"][href="./creatures.json"]',
+  );
+  await expect(dataPreload).toHaveAttribute("as", "fetch");
+  await expect(dataPreload).toHaveAttribute("type", "application/json");
+  await expect(dataPreload).toHaveAttribute("crossorigin", "");
+  const creatureResourceEntries = await page.evaluate(() => {
+    const url = new URL("./creatures.json", location.href).href;
+    return performance.getEntriesByName(url).map((entry) => ({
+      initiatorType: entry.initiatorType,
+      name: entry.name,
+    }));
+  });
+  expect(creatureResourceEntries).toEqual([
+    {
+      initiatorType: "link",
+      name: new URL("/creatures.json", page.url()).href,
+    },
+  ]);
 
   const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
   expect(manifestHref).toBe("manifest.webmanifest");
@@ -393,6 +423,9 @@ test("PWA app shell reloads while offline", async ({ page, context }) => {
   await page.waitForFunction(function appIsControlledByServiceWorker() {
     return Boolean(navigator.serviceWorker?.controller);
   });
+  await expect.poll(() => page.evaluate(
+    () => window.__serviceWorkerRegistrationReadyStates,
+  )).toEqual(["complete"]);
 
   await context.setOffline(true);
   try {

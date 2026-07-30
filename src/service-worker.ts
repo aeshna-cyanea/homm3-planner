@@ -13,5 +13,10 @@ export default function initializeServiceWorker(): void {
     return;
   }
 
-  registerSW({ immediate: true });
+  const register = () => registerSW({ immediate: true });
+  if (document.readyState === "complete") {
+    register();
+  } else {
+    window.addEventListener("load", register, { once: true });
+  }
 }
