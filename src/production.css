@@ -937,6 +937,25 @@ select,
   outline-offset: 0.1875rem;
 }
 
+.next-dwelling-cost {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem 0.25rem;
+  margin-bottom: 0.1875rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.next-dwelling-cost[hidden] {
+  display: none;
+}
+
+.next-dwelling-cost-complete {
+  font-style: italic;
+}
+
 .creature-details {
   display: flex;
   flex-wrap: wrap;

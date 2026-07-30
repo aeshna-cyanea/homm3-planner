@@ -582,7 +582,9 @@ for (const viewport of viewports) {
       page.locator(".unit-card").first().locator(".cost-detail .cost-item b"),
     ).toHaveText("60");
     await expect(
-      page.locator(".unit-card").first().locator(".resource-icon-gold"),
+      page.locator(".unit-card").first().locator(
+        ".cost-detail .resource-icon-gold",
+      ),
     ).toBeVisible();
 
     const totalAmount = await page.locator(".resource-total strong").first().boundingBox();
@@ -590,8 +592,13 @@ for (const viewport of viewports) {
     expect(totalIcon.y).toBe(totalAmount.y);
     expect(totalIcon.height).toBe(totalAmount.height);
 
-    const firstCostAmount = await page.locator(".cost-item b").first().boundingBox();
-    const firstCostIcon = await page.locator(".cost-item .resource-icon").first().boundingBox();
+    const firstCreatureCost = page.locator(".unit-card").first().locator(
+      ".cost-detail .cost-item",
+    ).first();
+    const firstCostAmount = await firstCreatureCost.locator("b").boundingBox();
+    const firstCostIcon = await firstCreatureCost.locator(
+      ".resource-icon",
+    ).boundingBox();
     expect(firstCostIcon.y + firstCostIcon.height).toBeLessThanOrEqual(
       firstCostAmount.y + firstCostAmount.height,
     );
@@ -1443,9 +1450,15 @@ test("multi-resource creature costs have visible separators", async ({ page }) =
   await expect(dreadnoughtCosts).toHaveCount(2);
   await expect(dreadnoughtCosts.first().locator("b")).toHaveText("2,200");
   await expect(dreadnoughtCosts.last().locator("b")).toHaveText("1");
-  await expect(dreadnoughtCard.locator(".cost-separator")).toHaveText(",");
-  await expect(dreadnoughtCard.locator(".resource-icon-gold")).toBeVisible();
-  await expect(dreadnoughtCard.locator(".resource-icon-crystal")).toBeVisible();
+  await expect(
+    dreadnoughtCard.locator(".cost-detail .cost-separator"),
+  ).toHaveText(",");
+  await expect(
+    dreadnoughtCard.locator(".cost-detail .resource-icon-gold"),
+  ).toBeVisible();
+  await expect(
+    dreadnoughtCard.locator(".cost-detail .resource-icon-crystal"),
+  ).toBeVisible();
   await page.locator("#town-select").focus();
   await expect(dreadnoughtCard).toHaveScreenshot("factory-dreadnought-cost.png", {
     animations: "disabled",
@@ -1475,7 +1488,9 @@ test("all resource costs use embedded wiki icons", async ({ page }) => {
     await page.locator("#town-select").selectOption(town);
     const levelSevenCard = page.locator(".unit-card").nth(6);
     await levelSevenCard.locator(".unit-card-cycle-action").press("Enter");
-    await expect(levelSevenCard.locator(`.resource-icon-${resource}`)).toBeVisible();
+    await expect(
+      levelSevenCard.locator(`.cost-detail .resource-icon-${resource}`),
+    ).toBeVisible();
   }
 
   for (const resource of ["gold", "wood", "ore", "mercury", "sulfur", "crystal", "gem"]) {

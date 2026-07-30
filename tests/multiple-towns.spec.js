@@ -245,3 +245,68 @@ test("P opens global totals without hijacking form fields", async ({ page }) => 
   await townSearch.press("t");
   await expect(townSearch).toHaveValue("t");
 });
+
+test("U toggles the next dwelling cost without hijacking text fields", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto("/");
+
+  const app = page.locator(".app-shell");
+  const costs = page.locator("#unit-grid .next-dwelling-cost");
+  const firstCard = page.locator("#unit-grid .unit-card").first();
+  const firstCost = firstCard.locator(".next-dwelling-cost");
+  const townSearch = page.locator("#add-town-search");
+
+  await expect(app).toHaveAttribute("data-dwelling-costs", "hidden");
+  await expect(costs).toHaveCount(7);
+  await expect(firstCost).toBeHidden();
+
+  await townSearch.focus();
+  await townSearch.press("u");
+  await expect(townSearch).toHaveValue("u");
+  await expect(app).toHaveAttribute("data-dwelling-costs", "hidden");
+  await townSearch.fill("");
+  await townSearch.evaluate((input) => input.blur());
+
+  await page.keyboard.press("u");
+  await expect(app).toHaveAttribute("data-dwelling-costs", "shown");
+  await expect(
+    page.locator("#unit-grid .next-dwelling-cost:visible"),
+  ).toHaveCount(7);
+  await expect(firstCost.locator(".cost-item b")).toHaveText(["1,000", "5"]);
+  await expect(firstCost.locator(".resource-icon-gold")).toHaveCount(1);
+  await expect(firstCost.locator(".resource-icon-ore")).toHaveCount(1);
+
+  await firstCard.locator(".unit-card-cycle-action").press("Enter");
+  await expect(firstCard).toHaveAttribute("data-stage", "1");
+  await expect(firstCost).toHaveText("No further upgrade");
+
+  await firstCard.locator(".unit-card-cycle-action").press("Enter");
+  await expect(firstCard).toHaveAttribute("data-stage", "-1");
+  await expect(firstCost.locator(".cost-item b")).toHaveText(["500", "10"]);
+
+  await page.locator("#town-select").selectOption("Cove");
+  const pirateCard = page.locator("#unit-grid .unit-card").nth(2);
+  const pirateCost = pirateCard.locator(".next-dwelling-cost");
+
+  await pirateCard.locator(".unit-card-cycle-action").press("Enter");
+  await expect(pirateCost.locator(".cost-item b")).toHaveText(["1,500", "5"]);
+  await pirateCard.locator(".unit-card-cycle-action").press("Enter");
+  await expect(pirateCost.locator(".cost-item b")).toHaveText([
+    "3,000", "5", "5", "5", "5", "5", "5",
+  ]);
+  await pirateCard.locator(".unit-card-cycle-action").press("Enter");
+  await expect(pirateCard).toHaveAttribute("data-stage", "2");
+  await expect(pirateCost).toHaveText("No further upgrade");
+
+  const pageWidth = await page.evaluate(() => ({
+    viewport: window.innerWidth,
+    document: document.documentElement.scrollWidth,
+  }));
+  expect(pageWidth.document).toBeLessThanOrEqual(pageWidth.viewport);
+
+  await page.keyboard.press("u");
+  await expect(app).toHaveAttribute("data-dwelling-costs", "hidden");
+  await expect(pirateCost).toBeHidden();
+});

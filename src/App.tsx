@@ -1,4 +1,5 @@
-import { For } from "solid-js";
+import { For, createSignal, onCleanup, onMount } from "solid-js";
+import { isPlainShortcut } from "./keyboard";
 import type { Planner } from "./planner";
 import { CreatureDetailsProvider } from "./components/CreatureDetails";
 import { ExternalDwellings } from "./components/ExternalDwellings";
@@ -10,9 +11,23 @@ const githubUrl = "https://github.com/aeshna-cyanea/homm3-planner";
 const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH;
 
 export function App(props: { planner: Planner }) {
+  const [showDwellingCosts, setShowDwellingCosts] = createSignal(false);
+
+  onMount(() => window.addEventListener("keydown", toggleDwellingCosts));
+  onCleanup(() => window.removeEventListener("keydown", toggleDwellingCosts));
+
+  function toggleDwellingCosts(event: KeyboardEvent): void {
+    if (!isPlainShortcut(event, "u")) return;
+    event.preventDefault();
+    setShowDwellingCosts((visible) => !visible);
+  }
+
   return (
     <CreatureDetailsProvider catalog={props.planner.catalog}>
-      <main class="app-shell">
+      <main
+        class="app-shell"
+        data-dwelling-costs={showDwellingCosts() ? "shown" : "hidden"}
+      >
         <h1 class="sr-only">HotA town production</h1>
         <div class="town-list">
           <For each={props.planner.state.townPlans}>
@@ -20,6 +35,7 @@ export function App(props: { planner: Planner }) {
               <TownSection
                 planner={props.planner}
                 planId={plan.id}
+                showDwellingCosts={showDwellingCosts()}
               />
             )}
           </For>

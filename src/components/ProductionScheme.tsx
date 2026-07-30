@@ -12,7 +12,11 @@ import type { Dwelling } from "../types";
 import { CreatureNameButton } from "./CreatureDetails";
 import { CostDisplay } from "./ResourceCost";
 
-export function ProductionScheme(props: { planner: Planner; planId: string }) {
+export function ProductionScheme(props: {
+  planner: Planner;
+  planId: string;
+  showDwellingCosts: boolean;
+}) {
   return (
     <section
       class="scheme-section production-scheme-section panel"
@@ -33,6 +37,7 @@ export function ProductionScheme(props: { planner: Planner; planId: string }) {
               planId={props.planId}
               dwelling={dwelling}
               index={index()}
+              showDwellingCosts={props.showDwellingCosts}
             />
           )}
         </For>
@@ -112,6 +117,7 @@ function DwellingCard(props: {
   planId: string;
   dwelling: Dwelling;
   index: number;
+  showDwellingCosts: boolean;
 }) {
   const plan = () => props.planner.plan(props.planId);
   const basic = () => basicCreature(props.dwelling);
@@ -125,6 +131,10 @@ function DwellingCard(props: {
   const horde = () => hordeBuilding(props.dwelling);
   const selected = () => props.planner.creature(props.planId, props.index);
   const detail = () => props.planner.detailCreature(props.planId, props.index);
+  const nextCost = () =>
+    selection() < 0
+      ? props.dwelling.building_cost
+      : props.dwelling.upgrade_costs?.[selection()];
   const externalCount = () =>
     props.planner.externalDwellingCount(basic().name);
 
@@ -153,6 +163,18 @@ function DwellingCard(props: {
               aria-hidden="true"
               title={props.planner.stageName(selection())}
             />
+          </span>
+          <span
+            class="next-dwelling-cost"
+            hidden={!props.showDwellingCosts}
+          >
+            {nextCost() ? (
+              <CostDisplay cost={nextCost()!} />
+            ) : (
+              <span class="next-dwelling-cost-complete">
+                No further upgrade
+              </span>
+            )}
           </span>
           <CreatureNameButton
             class="creature-name"

@@ -5,10 +5,11 @@ production across any number of towns. Each town has its own production scheme
 and recruitment subtotal, and its default label can be renamed with the pencil
 beside it. The global-total dialog aggregates every town plus recruitment at
 external dwellings. Press `T` to add a town or `P` to open the global total.
-Creature names open a compact reference dialog with their statistics, special
-abilities, recruitment cost, and Heroes 3 Wiki source. Clicking the dialog
-cycles through that dwelling's variants; upgraded values that differ from the
-base creature are shown in green.
+Press `U` outside a text field to show or hide the construction or upgrade cost
+for each dwelling's next variant. Creature names open a compact reference dialog
+with their statistics, special abilities, recruitment cost, and Heroes 3 Wiki
+source. Clicking the dialog cycles through that dwelling's variants; upgraded
+values that differ from the base creature are shown in green.
 
 Each dwelling cycles through none, basic, and upgraded creatures. Cove's level 3
 also cycles through its Sea Dog second upgrade. Relevant dwellings show an optional
