@@ -7,6 +7,8 @@ import { CostDisplay, ResourceTotals } from "./ResourceCost";
 
 export function TownRecruitment(props: { planner: Planner; planId: string }) {
   const rows = () => props.planner.productionRows(props.planId);
+  const pendingCosts = () =>
+    props.planner.pendingDwellingCosts(props.planId);
   const id = (name: string) => domId(name, props.planId);
 
   return (
@@ -15,6 +17,46 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
       data-town-results={props.planId}
       data-empty={rows().length === 0}
     >
+      <Show when={pendingCosts()}>
+        {(costs) => (
+          <section
+            class="results-section one-time-results-section panel"
+            aria-labelledby={id("one-time-title")}
+            data-one-time-costs
+          >
+            <div class="section-heading one-time-heading">
+              <p class="eyebrow" id={id("one-time-title")}>One-time</p>
+              <button
+                class="one-time-close-button"
+                type="button"
+                aria-label="Cancel pending construction"
+                title="Cancel pending construction"
+                onClick={() =>
+                  props.planner.cancelPendingDwelling(props.planId)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 6 12 12M18 6 6 18" />
+                </svg>
+              </button>
+            </div>
+            <div class="one-time-costs">
+              <OneTimeCostRow
+                label="Construction"
+                cost={costs().construction}
+              />
+              <Show when={costs().creatures}>
+                {(creatures) => (
+                  <OneTimeCostRow
+                    label="Creatures"
+                    cost={creatures()}
+                  />
+                )}
+              </Show>
+            </div>
+          </section>
+        )}
+      </Show>
+
       <section class="results-section panel" aria-labelledby={id("results-title")}>
         <div class="section-heading">
           <div>
@@ -46,6 +88,20 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
           </div>
         </Show>
       </section>
+    </div>
+  );
+}
+
+function OneTimeCostRow(props: {
+  label: string;
+  cost: RecruitmentRow["unitCost"];
+}) {
+  return (
+    <div class="one-time-cost-row">
+      <span class="one-time-cost-label">{props.label}</span>
+      <span class="cost-list one-time-cost-value">
+        <CostDisplay cost={props.cost} />
+      </span>
     </div>
   );
 }
@@ -102,15 +158,21 @@ export function ExternalRecruitment(props: { planner: Planner }) {
   );
 }
 
-export function ResultsTable(props: { id?: string; rows: RecruitmentRow[] }) {
+export function ResultsTable(props: {
+  id?: string;
+  rows: RecruitmentRow[];
+  combinedCosts?: boolean;
+}) {
   return (
     <table class="results-table">
       <thead>
         <tr>
           <th scope="col">Creature</th>
-          <th scope="col">Produced</th>
+          <th scope="col">{props.combinedCosts ? "Units" : "Produced"}</th>
           <th scope="col">Each</th>
-          <th scope="col">Weekly cost</th>
+          <th scope="col">
+            {props.combinedCosts ? "Creature cost" : "Weekly cost"}
+          </th>
         </tr>
       </thead>
       <tbody id={props.id}>
@@ -122,7 +184,23 @@ export function ResultsTable(props: { id?: string; rows: RecruitmentRow[] }) {
                   class="results-creature-name"
                   name={row.name}
                 />
-                <small>{row.detail}</small>
+                <Show
+                  when={row.detailParts}
+                  fallback={<small>{row.detail}</small>}
+                >
+                  {(parts) => (
+                    <small
+                      class="results-detail-parts"
+                      aria-label={row.detail}
+                    >
+                      <For each={parts()}>
+                        {(part) => (
+                          <span class="results-detail-part">{part}</span>
+                        )}
+                      </For>
+                    </small>
+                  )}
+                </Show>
               </td>
               <td>
                 {formatNumber(row.production)} <small>units</small>

@@ -1329,9 +1329,11 @@ test("ordered dwelling variants drive stages and share Horde buildings", async (
     "aria-label",
     /Gunpowder Warehouse/,
   );
-  await expect(
-    page.locator("#results-body tr").filter({ hasText: "Sea Dog" }),
-  ).toContainText("Gunpowder Warehouse");
+  const seaDogResult = page
+    .locator("#results-body tr")
+    .filter({ hasText: "Sea Dog" });
+  await expect(seaDogResult).toContainText("➂ · Second upgrade");
+  await expect(seaDogResult).not.toContainText("Gunpowder Warehouse");
 
   await pirateSlot.locator(".creature-info-trigger").click();
   const dialog = page.locator(".creature-details-dialog");

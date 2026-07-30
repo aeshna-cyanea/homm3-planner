@@ -4,7 +4,8 @@ The static planner reads `public/creatures.json` and calculates one week of
 production across any number of towns. Each town has its own production scheme
 and recruitment subtotal, and its default label can be renamed with the pencil
 beside it. The global-total dialog aggregates every town plus recruitment at
-external dwellings. Press `T` to add a town or `P` to open the global total.
+external dwellings, along with any pending one-time costs. Press `T` to add a
+town or `P` to open the global total.
 Press `U` outside a text field to show or hide the construction or upgrade cost
 for each dwelling's next variant. Creature names open a compact reference dialog
 with their statistics, special abilities, recruitment cost, and Heroes 3 Wiki
@@ -18,6 +19,14 @@ modifiers are applied to recruitment costs. External dwellings can be added
 from a faction's production scheme or by searching the base dwelling creatures;
 repeated additions increment one shared dwelling count, and their growth bonus
 applies to every matching town.
+
+Middle-click a dwelling, three-finger tap it, or press `Shift+Enter` while its
+card is focused to advance it provisionally. A town can have one such pending
+dwelling at a time. Its blue one-time panel shows the construction cost and, for
+a newly built base dwelling, one unmodified week of its creatures. Click the
+card normally to confirm the advancement, or use the panel's close button (or
+repeat the pending gesture) to cancel and revert it. Pending dwellings are
+included when state is saved and are cleared when their town's faction changes.
 
 `public/creatures.json` preserves the full creature statistics and source links
 in the structure used by the planner. Towns are identified by their names and

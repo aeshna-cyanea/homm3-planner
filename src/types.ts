@@ -123,6 +123,7 @@ export interface TownPlan {
   fortification: Fortification;
   selections: number[];
   hordeEnabled: boolean[];
+  pendingDwelling: number | null;
 }
 
 export interface ExternalDwelling {
@@ -147,6 +148,7 @@ export interface SavedTownPlan {
   town: string;
   fortification: Fortification;
   dwellings: SavedDwelling[];
+  pendingDwelling?: string | null;
 }
 
 export interface SavedPlannerState {
@@ -157,9 +159,15 @@ export interface SavedPlannerState {
 export interface RecruitmentRow {
   name: string;
   detail: string;
+  detailParts?: string[];
   production: number;
   unitCost: Cost;
   weeklyCost: Cost;
+}
+
+export interface PendingDwellingCosts {
+  construction: Cost;
+  creatures?: Cost;
 }
 
 export interface ExternalDwellingCard {

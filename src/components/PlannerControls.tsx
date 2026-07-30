@@ -49,18 +49,26 @@ export function PlannerControls(props: { planner: Planner }) {
 
 function GlobalTotalDialog(props: { planner: Planner }) {
   let dialog!: HTMLDialogElement;
+  const hasPendingCosts = () =>
+    props.planner.state.townPlans.some(
+      (plan) => plan.pendingDwelling !== null,
+    );
 
-  onMount(() => window.addEventListener("keydown", openWithShortcut));
-  onCleanup(() => window.removeEventListener("keydown", openWithShortcut));
+  onMount(() => window.addEventListener("keydown", toggleWithShortcut));
+  onCleanup(() => window.removeEventListener("keydown", toggleWithShortcut));
 
   function open(): void {
     if (!dialog.open) dialog.showModal();
   }
 
-  function openWithShortcut(event: KeyboardEvent): void {
+  function toggleWithShortcut(event: KeyboardEvent): void {
     if (!isPlainShortcut(event, "p")) return;
     event.preventDefault();
-    open();
+    if (dialog.open) {
+      dialog.close();
+    } else {
+      dialog.showModal();
+    }
   }
 
   function closeFromBackdrop(event: MouseEvent): void {
@@ -89,8 +97,12 @@ function GlobalTotalDialog(props: { planner: Planner }) {
         <div class="global-total-panel">
           <header class="dialog-header">
             <div>
-              <p class="eyebrow">All recruitment</p>
-              <h2 id="global-total-title">Global weekly total</h2>
+              <p class="eyebrow">
+                {hasPendingCosts() ? "Weekly + one-time" : "All recruitment"}
+              </p>
+              <h2 id="global-total-title">
+                {hasPendingCosts() ? "Global total" : "Global weekly total"}
+              </h2>
             </div>
             <form method="dialog">
               <button class="dialog-close-button" type="submit" aria-label="Close">
@@ -105,6 +117,9 @@ function GlobalTotalDialog(props: { planner: Planner }) {
             <Show when={props.planner.externalRows().length > 0}>
               {" "}· External dwellings
             </Show>
+            <Show when={hasPendingCosts()}>
+              {" "}· Includes pending one-time costs
+            </Show>
           </p>
 
           <Show
@@ -115,7 +130,13 @@ function GlobalTotalDialog(props: { planner: Planner }) {
               </div>
             }
           >
-            <div class="totals" aria-live="polite">
+            <div
+              class="totals"
+              aria-live="polite"
+              aria-label={hasPendingCosts()
+                ? "Global total including weekly recruitment and pending one-time costs"
+                : "Global weekly total"}
+            >
               <ResourceTotals
                 id="global-resource-totals"
                 entries={props.planner.globalTotals()}
@@ -125,6 +146,7 @@ function GlobalTotalDialog(props: { planner: Planner }) {
               <ResultsTable
                 id="global-results-body"
                 rows={props.planner.globalRows()}
+                combinedCosts={hasPendingCosts()}
               />
             </div>
           </Show>

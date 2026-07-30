@@ -1,4 +1,4 @@
-import { For } from "solid-js";
+import { For, Show } from "solid-js";
 import {
   basicCreature,
   externalDwellingName,
@@ -8,6 +8,7 @@ import { dwellingLabel } from "../dwelling-label";
 import { FORTIFICATION_COPY } from "../planner";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
+import { createThreeFingerTapRecognizer } from "../three-finger-tap";
 import type { Dwelling } from "../types";
 import { CreatureNameButton } from "./CreatureDetails";
 import { CostDisplay } from "./ResourceCost";
@@ -137,6 +138,38 @@ function DwellingCard(props: {
       : props.dwelling.upgrade_costs?.[selection()];
   const externalCount = () =>
     props.planner.externalDwellingCount(basic().name);
+  const pending = () => plan().pendingDwelling === props.index;
+  const threeFingerTap = createThreeFingerTapRecognizer(togglePending);
+
+  function togglePending(): void {
+    props.planner.togglePendingDwelling(props.planId, props.index);
+  }
+
+  function handleMiddleButtonDown(event: MouseEvent): void {
+    if (event.button === 1) event.preventDefault();
+  }
+
+  function handleAuxiliaryClick(event: MouseEvent): void {
+    if (event.button !== 1) return;
+    event.preventDefault();
+    togglePending();
+  }
+
+  function handleCycleKeyDown(event: KeyboardEvent): void {
+    if (
+      event.key !== "Enter" ||
+      !event.shiftKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey ||
+      event.repeat ||
+      event.isComposing
+    ) {
+      return;
+    }
+    event.preventDefault();
+    togglePending();
+  }
 
   function setExternalCount(event: Event): void {
     const input = event.currentTarget as HTMLInputElement;
@@ -146,23 +179,48 @@ function DwellingCard(props: {
 
   return (
     <div class="unit-slot" classList={{ "has-horde": Boolean(horde()) }}>
-      <div class="unit-card" data-stage={selection()}>
-        <div class="unit-card-cycle production-card-body">
+      <div
+        class="unit-card"
+        classList={{ "is-pending": pending() }}
+        data-stage={selection()}
+        data-pending={pending() ? "true" : "false"}
+      >
+        <div
+          class="unit-card-cycle production-card-body"
+          onMouseDown={handleMiddleButtonDown}
+          onAuxClick={handleAuxiliaryClick}
+          onTouchStart={(event) => threeFingerTap.start(event)}
+          onTouchMove={(event) => threeFingerTap.move(event)}
+          onTouchEnd={(event) => threeFingerTap.end(event)}
+          onTouchCancel={() => threeFingerTap.cancel()}
+        >
           <button
             class="unit-card-cycle-action"
             type="button"
             data-slot={props.index}
             aria-label={props.planner.cardAriaLabel(props.planId, props.index)}
+            aria-keyshortcuts="Shift+Enter"
             onClick={() =>
               props.planner.cycleDwelling(props.planId, props.index)}
+            onKeyDown={handleCycleKeyDown}
           />
           <span class="card-top">
             <span class="level-label">{label()}</span>
-            <span
-              class="state-label"
-              aria-hidden="true"
-              title={props.planner.stageName(selection())}
-            />
+            <span class="state-markers">
+              <span
+                class="state-label"
+                aria-hidden="true"
+                title={props.planner.stageName(selection())}
+              />
+              <Show when={pending()}>
+                <span class="pending-clock" aria-hidden="true" title="Pending">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="8.5" />
+                    <path d="M12 7.5v5l3.5 2" />
+                  </svg>
+                </span>
+              </Show>
+            </span>
           </span>
           <span
             class="next-dwelling-cost"
