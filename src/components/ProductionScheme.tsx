@@ -115,13 +115,14 @@ function DwellingCard(props: {
 }) {
   const plan = () => props.planner.plan(props.planId);
   const basic = () => basicCreature(props.dwelling);
+  const selection = () => plan().selections[props.index];
   const label = () =>
     dwellingLabel(
       externalDwellingName(props.planner.catalog, props.dwelling) ?? "Dwelling",
       props.dwelling.level,
+      selection(),
     );
   const horde = () => hordeBuilding(props.dwelling);
-  const selection = () => plan().selections[props.index];
   const selected = () => props.planner.creature(props.planId, props.index);
   const detail = () => props.planner.detailCreature(props.planId, props.index);
   const externalCount = () =>

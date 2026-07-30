@@ -78,6 +78,76 @@ test("creature data stores growth on town and neutral dwellings", () => {
   expect(creatureCount).toBe(creatureData.creature_count);
 });
 
+test("current wiki tables provide ordered HotA building costs", () => {
+  const sourcedFactions = [
+    "Castle", "Rampart", "Tower", "Inferno", "Necropolis",
+    "Dungeon", "Stronghold", "Fortress", "Conflux", "Cove",
+    "Factory", "Bulwark",
+  ];
+  const costedFactions = creatureData.towns
+    .filter((town) =>
+      town.dwellings.some((dwelling) => dwelling.building_cost))
+    .map((town) => town.name);
+
+  expect(costedFactions).toEqual(sourcedFactions);
+  for (const faction of sourcedFactions) {
+    const town = creatureData.towns.find((entry) => entry.name === faction);
+    for (const dwelling of town.dwellings) {
+      expect(dwelling.building_cost).toEqual(
+        expect.objectContaining({ gold: expect.any(Number) }),
+      );
+      expect(dwelling.upgrade_costs).toHaveLength(
+        dwelling.variants.length - 1,
+      );
+      for (const cost of [dwelling.building_cost, ...dwelling.upgrade_costs]) {
+        expect(Object.values(cost).every((amount) => amount > 0)).toBe(true);
+      }
+    }
+  }
+
+  const frigate = creatureData.towns
+    .find((town) => town.name === "Cove")
+    .dwellings.find((dwelling) => dwelling.variants[0].name === "Pirate");
+  expect(frigate.upgrade_costs).toEqual([
+    { gold: 1500, wood: 5 },
+    {
+      gold: 3000,
+      wood: 5,
+      ore: 5,
+      mercury: 5,
+      sulfur: 5,
+      crystal: 5,
+      gem: 5,
+    },
+  ]);
+
+  const cyclopsCave = creatureData.towns
+    .find((town) => town.name === "Stronghold")
+    .dwellings.find((dwelling) => dwelling.variants[0].name === "Cyclops");
+  expect(cyclopsCave.building_cost).toEqual({ gold: 3500, ore: 20 });
+  expect(cyclopsCave.upgrade_costs).toEqual([
+    { gold: 3000, wood: 5, ore: 5, crystal: 10 },
+  ]);
+
+  const factoryDreadnought = creatureData.towns
+    .find((town) => town.name === "Factory")
+    .dwellings.find(
+      (dwelling) => dwelling.variants[0].name === "Dreadnought",
+    );
+  expect(factoryDreadnought.building_cost).toEqual({
+    gold: 10000,
+    ore: 20,
+    crystal: 20,
+  });
+
+  const bulwarkJotunn = creatureData.towns
+    .find((town) => town.name === "Bulwark")
+    .dwellings.find((dwelling) => dwelling.variants[0].name === "Jotunn");
+  expect(bulwarkJotunn.upgrade_costs).toEqual([
+    { gold: 15000, wood: 10, ore: 10, gem: 20 },
+  ]);
+});
+
 test("Horde buildings are embedded on town dwellings", () => {
   expect(creatureData).not.toHaveProperty("horde_buildings");
   expect(creatureData).not.toHaveProperty("horde_building_count");
@@ -1238,11 +1308,23 @@ test("ordered dwelling variants drive stages and share Horde buildings", async (
 
   await page.locator("#town-select").selectOption("Cove");
   const pirateSlot = page.locator(".unit-slot").nth(2);
-  for (const name of ["Pirate", "Corsair", "Sea Dog"]) {
+  for (const [name, dwellingName] of [
+    ["Pirate", "Frigate"],
+    ["Corsair", "Frigate"],
+    ["Sea Dog", "Gunpowder Warehouse"],
+  ]) {
     await pirateSlot.locator(".unit-card-cycle-action").press("Enter");
     await expect(pirateSlot.locator(".creature-name")).toHaveText(name);
+    await expect(pirateSlot.locator(".level-label")).toContainText(dwellingName);
   }
   await expect(pirateSlot.locator(".unit-card")).toHaveAttribute("data-stage", "2");
+  await expect(pirateSlot.locator(".unit-card-cycle-action")).toHaveAttribute(
+    "aria-label",
+    /Gunpowder Warehouse/,
+  );
+  await expect(
+    page.locator("#results-body tr").filter({ hasText: "Sea Dog" }),
+  ).toContainText("Gunpowder Warehouse");
 
   await pirateSlot.locator(".creature-info-trigger").click();
   const dialog = page.locator(".creature-details-dialog");
@@ -1250,6 +1332,7 @@ test("ordered dwelling variants drive stages and share Horde buildings", async (
     await dialog.locator('[data-stat="attack"]').click();
     await expect(dialog.locator("h2")).toHaveText(name);
   }
+  await expect(dialog.locator(".eyebrow")).toContainText("Gunpowder Warehouse");
   await expect(pirateSlot.locator(".unit-card")).toHaveAttribute("data-stage", "2");
   await dialog.getByRole("button", { name: "Close" }).click();
 });

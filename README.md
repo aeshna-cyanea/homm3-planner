@@ -27,6 +27,10 @@ Non-upgradable neutral creatures are stored as single-variant dwellings under
 the creature. The data comes from the Heroes 3 Wiki pages for the
 [creature list](https://heroes.thelazy.net/index.php/List_of_creatures) and
 [Horde buildings](https://heroes.thelazy.net/index.php/Horde_building).
+Building and upgrade costs for every faction come from the current
+[Heroes 3 Wiki faction creature-dwelling tables](https://heroes.thelazy.net/index.php/Castle_creature_dwellings).
+When a table provides costs for multiple rulesets, the data uses its HotA
+values.
 
 Install the project dependencies once:
 

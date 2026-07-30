@@ -182,6 +182,7 @@ function CreatureInfobox(props: {
               ? dwellingLabel(
                   props.profile.dwellingName,
                   props.profile.dwelling.level,
+                  props.profile.variantIndex,
                 )
               : levelSymbol(props.profile.dwelling.level)}
             <Show when={props.profile.variant}>

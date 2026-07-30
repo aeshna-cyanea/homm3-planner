@@ -4,8 +4,16 @@ export function levelSymbol(level: number): string {
   return LEVEL_SYMBOLS[level] ?? String(level);
 }
 
-export function dwellingLabel(name: string, levels: number | number[]): string {
+export function dwellingLabel(
+  name: string,
+  levels: number | number[],
+  variantIndex?: number,
+): string {
   const values = Array.isArray(levels) ? levels : [levels];
   const symbols = Array.from(new Set(values), levelSymbol).join("");
-  return `${symbols} ${name}`;
+  const displayName =
+    name === "Frigate" && variantIndex === 2
+      ? "Gunpowder Warehouse"
+      : name;
+  return `${symbols} ${displayName}`;
 }

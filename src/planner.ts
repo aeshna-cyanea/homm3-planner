@@ -146,7 +146,7 @@ export function createPlanner(catalog: Catalog): Planner {
       ? `, ${stageName(selection).toLowerCase()}`
       : ", not produced";
     return (
-      `${dwellingLabel(name ?? "Dwelling", dwelling.level)}: ` +
+      `${dwellingLabel(name ?? "Dwelling", dwelling.level, selection)}: ` +
       `${creatureName(planId, dwellingIndex)}` +
       `${currentState}. Click for ${nextCreatureName(planId, dwellingIndex)}.`
     );
@@ -199,7 +199,11 @@ export function createPlanner(catalog: Catalog): Planner {
       return [{
         name: selected.name,
         detail:
-          `${dwellingLabel(name ?? "Dwelling", dwelling.level)} · ` +
+          `${dwellingLabel(
+            name ?? "Dwelling",
+            dwelling.level,
+            currentPlan.selections[dwellingIndex],
+          )} · ` +
           `${stageName(currentPlan.selections[dwellingIndex])}` +
           (horde ? ` · ${horde.name}` : ""),
         production,

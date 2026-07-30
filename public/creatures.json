@@ -355,6 +355,16 @@
         {
           "level": 1,
           "growth": 14,
+          "building_cost": {
+            "gold": 500,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "pikeman",
@@ -402,6 +412,18 @@
         {
           "level": 2,
           "growth": 9,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "archer",
@@ -449,6 +471,16 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1000,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "griffin",
@@ -505,6 +537,17 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 5,
+              "crystal": 5
+            }
+          ],
           "variants": [
             {
               "id": "swordsman",
@@ -552,6 +595,26 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 3000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 2,
+            "sulfur": 2,
+            "crystal": 2,
+            "gem": 2
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 2,
+              "ore": 2,
+              "mercury": 2,
+              "sulfur": 2,
+              "crystal": 2,
+              "gem": 2
+            }
+          ],
           "variants": [
             {
               "id": "monk",
@@ -599,6 +662,16 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 5000,
+            "wood": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 10
+            }
+          ],
           "variants": [
             {
               "id": "cavalier",
@@ -646,6 +719,22 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 20000,
+            "mercury": 10,
+            "sulfur": 10,
+            "crystal": 10,
+            "gem": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 20000,
+              "mercury": 10,
+              "sulfur": 10,
+              "crystal": 10,
+              "gem": 10
+            }
+          ],
           "variants": [
             {
               "id": "angel",
@@ -700,6 +789,16 @@
         {
           "level": 1,
           "growth": 14,
+          "building_cost": {
+            "gold": 500,
+            "wood": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "centaur",
@@ -747,6 +846,16 @@
         {
           "level": 2,
           "growth": 8,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "dwarf",
@@ -803,6 +912,16 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1500,
+            "wood": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "wood": 10
+            }
+          ],
           "variants": [
             {
               "id": "wood_elf",
@@ -850,6 +969,16 @@
         {
           "level": 4,
           "growth": 5,
+          "building_cost": {
+            "gold": 2000,
+            "crystal": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "crystal": 5
+            }
+          ],
           "variants": [
             {
               "id": "pegasus",
@@ -897,6 +1026,14 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 2500
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500
+            }
+          ],
           "variants": [
             {
               "id": "dendroid_guard",
@@ -953,6 +1090,18 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 4000,
+            "wood": 5,
+            "ore": 5,
+            "gem": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "gem": 5
+            }
+          ],
           "variants": [
             {
               "id": "unicorn",
@@ -1000,6 +1149,18 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "ore": 30,
+            "crystal": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 20000,
+              "ore": 30,
+              "crystal": 20
+            }
+          ],
           "variants": [
             {
               "id": "green_dragon",
@@ -1054,6 +1215,16 @@
         {
           "level": 1,
           "growth": 16,
+          "building_cost": {
+            "gold": 300,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000
+            }
+          ],
           "variants": [
             {
               "id": "gremlin",
@@ -1101,6 +1272,16 @@
         {
           "level": 2,
           "growth": 9,
+          "building_cost": {
+            "gold": 1000,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "stone_gargoyle",
@@ -1157,6 +1338,19 @@
         {
           "level": 3,
           "growth": 6,
+          "building_cost": {
+            "gold": 1500,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "wood": 5,
+              "ore": 5,
+              "mercury": 5
+            }
+          ],
           "variants": [
             {
               "id": "stone_golem",
@@ -1207,6 +1401,21 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 5,
+            "sulfur": 5,
+            "crystal": 5,
+            "gem": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "mage",
@@ -1254,6 +1463,19 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 2500,
+            "wood": 5,
+            "ore": 5,
+            "crystal": 6,
+            "gem": 6
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "genie",
@@ -1301,6 +1523,24 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 4000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 2,
+            "sulfur": 2,
+            "crystal": 2,
+            "gem": 2
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "mercury": 3,
+              "sulfur": 3,
+              "crystal": 3,
+              "gem": 3
+            }
+          ],
           "variants": [
             {
               "id": "naga",
@@ -1348,6 +1588,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 5000,
+            "wood": 10,
+            "ore": 10,
+            "gem": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 20000,
+              "wood": 5,
+              "ore": 5,
+              "gem": 30
+            }
+          ],
           "variants": [
             {
               "id": "giant",
@@ -1402,6 +1656,16 @@
         {
           "level": 1,
           "growth": 15,
+          "building_cost": {
+            "gold": 300,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000
+            }
+          ],
           "variants": [
             {
               "id": "imp",
@@ -1458,6 +1722,16 @@
         {
           "level": 2,
           "growth": 8,
+          "building_cost": {
+            "gold": 1000,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "mercury": 4
+            }
+          ],
           "variants": [
             {
               "id": "gog",
@@ -1505,6 +1779,16 @@
         {
           "level": 3,
           "growth": 5,
+          "building_cost": {
+            "gold": 1500,
+            "wood": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "sulfur": 4
+            }
+          ],
           "variants": [
             {
               "id": "hell_hound",
@@ -1561,6 +1845,18 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "demon",
@@ -1608,6 +1904,16 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 3000
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "mercury": 5,
+              "sulfur": 5
+            }
+          ],
           "variants": [
             {
               "id": "pit_fiend",
@@ -1655,6 +1961,22 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 4000,
+            "ore": 10,
+            "mercury": 3,
+            "sulfur": 3,
+            "gem": 3
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "ore": 5,
+              "mercury": 5,
+              "sulfur": 5,
+              "gem": 5
+            }
+          ],
           "variants": [
             {
               "id": "efreeti",
@@ -1702,6 +2024,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 15000,
+            "wood": 10,
+            "ore": 10,
+            "mercury": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 20000,
+              "wood": 5,
+              "ore": 5,
+              "mercury": 20
+            }
+          ],
           "variants": [
             {
               "id": "devil",
@@ -1756,6 +2092,18 @@
         {
           "level": 1,
           "growth": 12,
+          "building_cost": {
+            "gold": 400,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "skeleton",
@@ -1812,6 +2160,17 @@
         {
           "level": 2,
           "growth": 8,
+          "building_cost": {
+            "gold": 1000,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "walking_dead",
@@ -1859,6 +2218,17 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1500,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "mercury": 4
+            }
+          ],
           "variants": [
             {
               "id": "wight",
@@ -1906,6 +2276,19 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 10,
+              "crystal": 10,
+              "gem": 10
+            }
+          ],
           "variants": [
             {
               "id": "vampire",
@@ -1953,6 +2336,18 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 2000,
+            "ore": 5,
+            "sulfur": 4
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 5,
+              "sulfur": 4
+            }
+          ],
           "variants": [
             {
               "id": "lich",
@@ -2000,6 +2395,21 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 6000,
+            "wood": 10,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "ore": 5,
+              "mercury": 2,
+              "sulfur": 2,
+              "crystal": 2,
+              "gem": 2
+            }
+          ],
           "variants": [
             {
               "id": "black_knight",
@@ -2047,6 +2457,22 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 5,
+            "sulfur": 5,
+            "crystal": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 5,
+              "ore": 5,
+              "mercury": 20
+            }
+          ],
           "variants": [
             {
               "id": "bone_dragon",
@@ -2100,6 +2526,16 @@
         {
           "level": 1,
           "growth": 14,
+          "building_cost": {
+            "gold": 400,
+            "wood": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "troglodyte",
@@ -2156,6 +2592,16 @@
         {
           "level": 2,
           "growth": 8,
+          "building_cost": {
+            "gold": 1000
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "sulfur": 2,
+              "crystal": 2
+            }
+          ],
           "variants": [
             {
               "id": "harpy",
@@ -2203,6 +2649,26 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 1,
+            "ore": 1,
+            "mercury": 1,
+            "sulfur": 1,
+            "crystal": 1,
+            "gem": 1
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 1,
+              "ore": 1,
+              "mercury": 1,
+              "sulfur": 1,
+              "crystal": 1,
+              "gem": 1
+            }
+          ],
           "variants": [
             {
               "id": "beholder",
@@ -2250,6 +2716,17 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "medusa",
@@ -2297,6 +2774,18 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 4000,
+            "ore": 10,
+            "gem": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "ore": 5,
+              "gem": 5
+            }
+          ],
           "variants": [
             {
               "id": "minotaur",
@@ -2344,6 +2833,22 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 5000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 5,
+            "sulfur": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 5,
+              "ore": 5,
+              "mercury": 5,
+              "sulfur": 5
+            }
+          ],
           "variants": [
             {
               "id": "manticore",
@@ -2391,6 +2896,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 15000,
+            "wood": 15,
+            "ore": 15,
+            "sulfur": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 15,
+              "ore": 15,
+              "sulfur": 20
+            }
+          ],
           "variants": [
             {
               "id": "red_dragon",
@@ -2445,6 +2964,18 @@
         {
           "level": 1,
           "growth": 15,
+          "building_cost": {
+            "gold": 200,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "goblin",
@@ -2501,6 +3032,18 @@
         {
           "level": 2,
           "growth": 9,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 10,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "wolf_rider",
@@ -2548,6 +3091,18 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 2,
+              "ore": 2
+            }
+          ],
           "variants": [
             {
               "id": "orc",
@@ -2595,6 +3150,18 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5,
+              "ore": 5,
+              "gem": 5
+            }
+          ],
           "variants": [
             {
               "id": "ogre",
@@ -2642,6 +3209,17 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 2500,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "roc",
@@ -2689,6 +3267,18 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 3500,
+            "ore": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 5,
+              "ore": 5,
+              "crystal": 10
+            }
+          ],
           "variants": [
             {
               "id": "cyclops",
@@ -2736,6 +3326,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "wood": 10,
+            "ore": 10,
+            "crystal": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 10,
+              "ore": 10,
+              "crystal": 20
+            }
+          ],
           "variants": [
             {
               "id": "behemoth",
@@ -2789,6 +3393,16 @@
         {
           "level": 1,
           "growth": 12,
+          "building_cost": {
+            "gold": 400,
+            "wood": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 10
+            }
+          ],
           "variants": [
             {
               "id": "gnoll",
@@ -2845,6 +3459,16 @@
         {
           "level": 2,
           "growth": 9,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "lizardman",
@@ -2892,6 +3516,19 @@
         {
           "level": 3,
           "growth": 8,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5,
+            "mercury": 2,
+            "sulfur": 2
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "mercury": 2,
+              "sulfur": 2
+            }
+          ],
           "variants": [
             {
               "id": "serpent_fly",
@@ -2939,6 +3576,18 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "basilisk",
@@ -2986,6 +3635,20 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 2500,
+            "wood": 10,
+            "ore": 10,
+            "mercury": 5,
+            "sulfur": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "gorgon",
@@ -3033,6 +3696,17 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 3500,
+            "wood": 15
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 10,
+              "mercury": 10
+            }
+          ],
           "variants": [
             {
               "id": "wyvern",
@@ -3080,6 +3754,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "wood": 10,
+            "ore": 10,
+            "sulfur": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 10,
+              "ore": 10,
+              "sulfur": 20
+            }
+          ],
           "variants": [
             {
               "id": "hydra",
@@ -3133,6 +3821,16 @@
         {
           "level": 1,
           "growth": 20,
+          "building_cost": {
+            "gold": 300,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000
+            }
+          ],
           "variants": [
             {
               "id": "pixie",
@@ -3189,6 +3887,18 @@
         {
           "level": 2,
           "growth": 6,
+          "building_cost": {
+            "gold": 1500,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "wood": 2,
+              "mercury": 2,
+              "gem": 2
+            }
+          ],
           "variants": [
             {
               "id": "air_elemental",
@@ -3238,6 +3948,17 @@
         {
           "level": 3,
           "growth": 6,
+          "building_cost": {
+            "gold": 1500,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 5,
+              "mercury": 5
+            }
+          ],
           "variants": [
             {
               "id": "water_elemental",
@@ -3287,6 +4008,18 @@
         {
           "level": 4,
           "growth": 5,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 5,
+              "mercury": 5
+            }
+          ],
           "variants": [
             {
               "id": "fire_elemental",
@@ -3336,6 +4069,16 @@
         {
           "level": 5,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "sulfur": 5
+            }
+          ],
           "variants": [
             {
               "id": "earth_elemental",
@@ -3385,6 +4128,24 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 3000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 2,
+            "sulfur": 2,
+            "crystal": 2,
+            "gem": 2
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "mercury": 3,
+              "sulfur": 3,
+              "crystal": 3,
+              "gem": 3
+            }
+          ],
           "variants": [
             {
               "id": "psychic_elemental",
@@ -3432,6 +4193,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 15000,
+            "wood": 10,
+            "ore": 10,
+            "mercury": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 10,
+              "ore": 10,
+              "mercury": 20
+            }
+          ],
           "variants": [
             {
               "id": "firebird",
@@ -3495,6 +4270,16 @@
         {
           "level": 1,
           "growth": 16,
+          "building_cost": {
+            "gold": 300,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000
+            }
+          ],
           "variants": [
             {
               "id": "nymph",
@@ -3542,6 +4327,16 @@
         {
           "level": 2,
           "growth": 9,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "crew_mate",
@@ -3598,6 +4393,25 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "wood": 5
+            },
+            {
+              "gold": 3000,
+              "wood": 5,
+              "ore": 5,
+              "mercury": 5,
+              "sulfur": 5,
+              "crystal": 5,
+              "gem": 5
+            }
+          ],
           "variants": [
             {
               "id": "pirate",
@@ -3664,6 +4478,19 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "ore": 5,
+            "crystal": 2,
+            "gem": 2
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1500,
+              "crystal": 2,
+              "gem": 2
+            }
+          ],
           "variants": [
             {
               "id": "stormbird",
@@ -3720,6 +4547,18 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 3000,
+            "wood": 5,
+            "ore": 5,
+            "crystal": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "crystal": 5
+            }
+          ],
           "variants": [
             {
               "id": "sea_witch",
@@ -3767,6 +4606,19 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 4000,
+            "wood": 5,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 5,
+              "ore": 5,
+              "sulfur": 5
+            }
+          ],
           "variants": [
             {
               "id": "nix",
@@ -3814,6 +4666,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 15000,
+            "wood": 15,
+            "ore": 15,
+            "sulfur": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 15,
+              "ore": 15,
+              "sulfur": 20
+            }
+          ],
           "variants": [
             {
               "id": "sea_serpent",
@@ -3868,6 +4734,18 @@
         {
           "level": 1,
           "growth": 15,
+          "building_cost": {
+            "gold": 500,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "mercury": 5,
+              "sulfur": 5
+            }
+          ],
           "variants": [
             {
               "id": "halfling",
@@ -3916,6 +4794,18 @@
         {
           "level": 2,
           "growth": 8,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "mechanic",
@@ -3963,6 +4853,16 @@
         {
           "level": 3,
           "growth": 6,
+          "building_cost": {
+            "gold": 1000,
+            "wood": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5
+            }
+          ],
           "variants": [
             {
               "id": "armadillo",
@@ -4019,6 +4919,18 @@
         {
           "level": 4,
           "growth": 5,
+          "building_cost": {
+            "gold": 2000,
+            "wood": 5,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 10,
+              "mercury": 5
+            }
+          ],
           "variants": [
             {
               "id": "automaton",
@@ -4066,6 +4978,19 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 3000,
+            "wood": 5,
+            "ore": 5,
+            "crystal": 2,
+            "gem": 2
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "gem": 5
+            }
+          ],
           "variants": [
             {
               "id": "sandworm",
@@ -4113,6 +5038,21 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 4000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 5,
+            "sulfur": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 10,
+              "mercury": 5,
+              "sulfur": 5
+            }
+          ],
           "variants": [
             {
               "id": "gunslinger",
@@ -4160,6 +5100,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "wood": 10,
+            "ore": 10,
+            "crystal": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 10,
+              "ore": 10,
+              "crystal": 20
+            }
+          ],
           "variants": [
             {
               "id": "couatl",
@@ -4208,6 +5162,18 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "ore": 20,
+            "crystal": 20
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "ore": 10,
+              "crystal": 20
+            }
+          ],
           "variants": [
             {
               "id": "dreadnought",
@@ -4262,6 +5228,15 @@
         {
           "level": 1,
           "growth": 15,
+          "building_cost": {
+            "gold": 400,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000
+            }
+          ],
           "variants": [
             {
               "id": "kobold",
@@ -4309,6 +5284,17 @@
         {
           "level": 2,
           "growth": 9,
+          "building_cost": {
+            "gold": 1000,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "crystal": 2,
+              "gem": 2
+            }
+          ],
           "variants": [
             {
               "id": "mountain_ram",
@@ -4356,6 +5342,18 @@
         {
           "level": 3,
           "growth": 7,
+          "building_cost": {
+            "gold": 1500,
+            "wood": 5,
+            "ore": 5
+          },
+          "upgrade_costs": [
+            {
+              "gold": 1000,
+              "wood": 5,
+              "ore": 5
+            }
+          ],
           "variants": [
             {
               "id": "snow_elf",
@@ -4403,6 +5401,17 @@
         {
           "level": 4,
           "growth": 4,
+          "building_cost": {
+            "gold": 2000,
+            "ore": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 5,
+              "crystal": 5
+            }
+          ],
           "variants": [
             {
               "id": "yeti",
@@ -4450,6 +5459,23 @@
         {
           "level": 5,
           "growth": 3,
+          "building_cost": {
+            "gold": 3000,
+            "wood": 5,
+            "ore": 5,
+            "mercury": 1,
+            "sulfur": 1,
+            "crystal": 1,
+            "gem": 1
+          },
+          "upgrade_costs": [
+            {
+              "gold": 2000,
+              "ore": 5,
+              "crystal": 2,
+              "gem": 2
+            }
+          ],
           "variants": [
             {
               "id": "shaman",
@@ -4497,6 +5523,16 @@
         {
           "level": 6,
           "growth": 2,
+          "building_cost": {
+            "gold": 4000,
+            "wood": 15
+          },
+          "upgrade_costs": [
+            {
+              "gold": 3000,
+              "wood": 10
+            }
+          ],
           "variants": [
             {
               "id": "mammoth",
@@ -4553,6 +5589,20 @@
         {
           "level": 7,
           "growth": 1,
+          "building_cost": {
+            "gold": 10000,
+            "wood": 10,
+            "ore": 10,
+            "gem": 10
+          },
+          "upgrade_costs": [
+            {
+              "gold": 15000,
+              "wood": 10,
+              "ore": 10,
+              "gem": 20
+            }
+          ],
           "variants": [
             {
               "id": "jotunn",
