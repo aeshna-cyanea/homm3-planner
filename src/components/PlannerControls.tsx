@@ -9,6 +9,7 @@ export function PlannerControls(props: {
   planner: Planner;
   showBuildingCosts: boolean;
   controlsPosition: "header" | "footer";
+  contentElement: () => HTMLDivElement;
   onToggleBuildingCosts: () => void;
   onToggleControlsPosition: () => void;
 }) {
@@ -37,11 +38,18 @@ export function PlannerControls(props: {
   }
 
   function toggleControlsPosition(): void {
+    const content = props.contentElement();
+    const movingToFooter = props.controlsPosition === "header";
     const previousTop = controls.getBoundingClientRect().top;
+    content.classList.remove("is-relocating");
+    content.style.removeProperty("--planner-content-offset-y");
+    const previousContentTop = content.getBoundingClientRect().top;
     controls.classList.remove("is-relocating");
     props.onToggleControlsPosition();
     const currentTop = controls.getBoundingClientRect().top;
     const offset = previousTop - currentTop;
+    const contentOffset =
+      previousContentTop - content.getBoundingClientRect().top;
 
     if (
       offset === 0 ||
@@ -52,6 +60,15 @@ export function PlannerControls(props: {
     controls.style.setProperty("--planner-controls-offset-y", `${offset}px`);
     void controls.offsetWidth;
     controls.classList.add("is-relocating");
+
+    if (movingToFooter && contentOffset !== 0) {
+      content.style.setProperty(
+        "--planner-content-offset-y",
+        `${contentOffset}px`,
+      );
+      void content.offsetWidth;
+      content.classList.add("is-relocating");
+    }
   }
 
   function finishRelocating(event: AnimationEvent): void {

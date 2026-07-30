@@ -16,6 +16,7 @@ const githubUrl = "https://github.com/aeshna-cyanea/homm3-planner";
 const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH;
 
 export function App(props: { planner: Planner }) {
+  let plannerContent!: HTMLDivElement;
   const preferences = loadPreferences();
   const [showBuildingCosts, setShowBuildingCosts] = createSignal(
     preferences.showBuildingCosts,
@@ -53,6 +54,13 @@ export function App(props: { planner: Planner }) {
     persistPreferences({ controlsPosition: next });
   }
 
+  function finishContentRelocating(event: AnimationEvent): void {
+    if (event.animationName !== "relocate-planner-content") return;
+    const content = event.currentTarget as HTMLDivElement;
+    content.classList.remove("is-relocating");
+    content.style.removeProperty("--planner-content-offset-y");
+  }
+
   return (
     <CreatureDetailsProvider catalog={props.planner.catalog}>
       <main
@@ -65,23 +73,30 @@ export function App(props: { planner: Planner }) {
           planner={props.planner}
           showBuildingCosts={showBuildingCosts()}
           controlsPosition={controlsPosition()}
+          contentElement={() => plannerContent}
           onToggleBuildingCosts={toggleBuildingCostsVisibility}
           onToggleControlsPosition={toggleControlsPosition}
         />
-        <div class="town-list">
-          <For each={props.planner.state.townPlans}>
-            {(plan) => (
-              <TownSection
-                planner={props.planner}
-                planId={plan.id}
-                showBuildingCosts={showBuildingCosts()}
-              />
-            )}
-          </For>
-        </div>
-        <div class="planner-layout external-layout">
-          <ExternalDwellings planner={props.planner} />
-          <ExternalRecruitment planner={props.planner} />
+        <div
+          ref={plannerContent}
+          class="planner-content"
+          onAnimationEnd={finishContentRelocating}
+        >
+          <div class="town-list">
+            <For each={props.planner.state.townPlans}>
+              {(plan) => (
+                <TownSection
+                  planner={props.planner}
+                  planId={plan.id}
+                  showBuildingCosts={showBuildingCosts()}
+                />
+              )}
+            </For>
+          </div>
+          <div class="planner-layout external-layout">
+            <ExternalDwellings planner={props.planner} />
+            <ExternalRecruitment planner={props.planner} />
+          </div>
         </div>
         <SourceFooter />
       </main>

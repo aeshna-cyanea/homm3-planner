@@ -287,15 +287,52 @@ test("controls default to the header and both display preferences persist", asyn
     costsLeftOfTotal: true,
   });
 
-  const animations = await moveButton.evaluate((button) => {
+  const relocation = await moveButton.evaluate((button) => {
+    const controls = document.querySelector(".planner-controls");
+    const content = document.querySelector(".planner-content");
+    const previousContentTop = content.getBoundingClientRect().top;
     button.click();
-    return document.querySelector(".planner-controls").getAnimations()
-      .map((animation) => animation.animationName);
+    const contentAnimation = content.getAnimations().find(
+      (animation) => animation.animationName === "relocate-planner-content",
+    );
+    const timing = contentAnimation.effect.getTiming();
+    contentAnimation.currentTime = 0;
+    const delayedContentTop = content.getBoundingClientRect().top;
+    contentAnimation.currentTime = timing.delay + timing.duration / 2;
+    const halfwayContentTop = content.getBoundingClientRect().top;
+    const offset = Number.parseFloat(
+      content.style.getPropertyValue("--planner-content-offset-y"),
+    );
+    return {
+      controlAnimations: controls.getAnimations()
+        .map((animation) => animation.animationName),
+      contentAnimation: contentAnimation.animationName,
+      delay: timing.delay,
+      duration: timing.duration,
+      previousContentTop,
+      delayedContentTop,
+      halfwayContentTop,
+      finalContentTop: previousContentTop - offset,
+    };
   });
-  expect(animations).toContain("relocate-planner-controls");
+  expect(relocation.controlAnimations).toContain("relocate-planner-controls");
+  expect(relocation.contentAnimation).toBe("relocate-planner-content");
+  expect(relocation.delay).toBe(80);
+  expect(relocation.duration).toBe(420);
+  expect(relocation.delayedContentTop).toBeCloseTo(
+    relocation.previousContentTop,
+    0,
+  );
+  expect(relocation.halfwayContentTop).toBeLessThan(
+    relocation.previousContentTop,
+  );
+  expect(relocation.halfwayContentTop).toBeGreaterThan(
+    relocation.finalContentTop,
+  );
   await expect(app).toHaveAttribute("data-controls-position", "footer");
   await expect(moveButton).toHaveAccessibleName("Move controls to header");
   await expect(controls).not.toHaveClass(/is-relocating/);
+  await expect(page.locator(".planner-content")).not.toHaveClass(/is-relocating/);
 
   const footerLayout = await page.evaluate(() => {
     const controls = document.querySelector(".planner-controls").getBoundingClientRect();
@@ -326,6 +363,29 @@ test("controls default to the header and both display preferences persist", asyn
   await page.reload();
   await expect(app).toHaveAttribute("data-controls-position", "header");
   await expect(app).toHaveAttribute("data-building-costs", "hidden");
+});
+
+test("moving controls respects reduced-motion preferences", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+
+  const result = await page.locator("#move-planner-controls").evaluate((button) => {
+    const controls = document.querySelector(".planner-controls");
+    const content = document.querySelector(".planner-content");
+    const previousContentTop = content.getBoundingClientRect().top;
+    button.click();
+    return {
+      contentMovedUp: content.getBoundingClientRect().top < previousContentTop,
+      controlAnimations: controls.getAnimations().length,
+      contentAnimations: content.getAnimations().length,
+    };
+  });
+
+  expect(result).toEqual({
+    contentMovedUp: true,
+    controlAnimations: 0,
+    contentAnimations: 0,
+  });
 });
 
 test("adding a town smoothly scrolls to the new town", async ({ page }) => {
