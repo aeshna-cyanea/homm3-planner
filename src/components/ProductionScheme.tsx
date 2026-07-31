@@ -8,7 +8,7 @@ import { dwellingLabel } from "../dwelling-label";
 import { FORTIFICATION_COPY } from "../planner";
 import type { Planner } from "../planner";
 import { formatNumber } from "../resources";
-import { createThreeFingerTapRecognizer } from "../three-finger-tap";
+import { createTwoFingerTapRecognizer } from "../two-finger-tap";
 import type { Dwelling } from "../types";
 import { CreatureNameButton } from "./CreatureDetails";
 import { CostDisplay } from "./ResourceCost";
@@ -64,7 +64,7 @@ function TownControls(props: {
   );
   const pending = () => plan().pendingFortification !== null;
   const id = (name: string) => domId(name, props.planId);
-  const threeFingerTap = createThreeFingerTapRecognizer(togglePending);
+  const twoFingerTap = createTwoFingerTapRecognizer(togglePending);
 
   function togglePending(): void {
     props.planner.togglePendingFortification(props.planId);
@@ -141,10 +141,10 @@ function TownControls(props: {
           onKeyDown={handleCycleKeyDown}
           onMouseDown={handleMiddleButtonDown}
           onAuxClick={handleAuxiliaryClick}
-          onTouchStart={(event) => threeFingerTap.start(event)}
-          onTouchMove={(event) => threeFingerTap.move(event)}
-          onTouchEnd={(event) => threeFingerTap.end(event)}
-          onTouchCancel={() => threeFingerTap.cancel()}
+          onTouchStart={(event) => twoFingerTap.start(event)}
+          onTouchMove={(event) => twoFingerTap.move(event)}
+          onTouchEnd={(event) => twoFingerTap.end(event)}
+          onTouchCancel={() => twoFingerTap.cancel()}
         >
           <span class="fortification-button-copy">
             <span class="fortification-name-row">
@@ -212,7 +212,7 @@ function DwellingCard(props: {
   const externalCount = () =>
     props.planner.externalDwellingCount(basic().name);
   const pending = () => plan().pendingDwellings.includes(props.index);
-  const threeFingerTap = createThreeFingerTapRecognizer(togglePending);
+  const twoFingerTap = createTwoFingerTapRecognizer(togglePending);
 
   function togglePending(): void {
     props.planner.togglePendingDwelling(props.planId, props.index);
@@ -262,10 +262,10 @@ function DwellingCard(props: {
           class="unit-card-cycle production-card-body"
           onMouseDown={handleMiddleButtonDown}
           onAuxClick={handleAuxiliaryClick}
-          onTouchStart={(event) => threeFingerTap.start(event)}
-          onTouchMove={(event) => threeFingerTap.move(event)}
-          onTouchEnd={(event) => threeFingerTap.end(event)}
-          onTouchCancel={() => threeFingerTap.cancel()}
+          onTouchStart={(event) => twoFingerTap.start(event)}
+          onTouchMove={(event) => twoFingerTap.move(event)}
+          onTouchEnd={(event) => twoFingerTap.end(event)}
+          onTouchCancel={() => twoFingerTap.cancel()}
         >
           <button
             class="unit-card-cycle-action"

@@ -13,16 +13,16 @@ interface Gesture {
   invalid: boolean;
 }
 
-export interface ThreeFingerTapRecognizer {
+export interface TwoFingerTapRecognizer {
   start(event: TouchEvent): void;
   move(event: TouchEvent): void;
   end(event: TouchEvent): void;
   cancel(): void;
 }
 
-export function createThreeFingerTapRecognizer(
+export function createTwoFingerTapRecognizer(
   onTap: () => void,
-): ThreeFingerTapRecognizer {
+): TwoFingerTapRecognizer {
   let gesture: Gesture | undefined;
 
   function start(event: TouchEvent): void {
@@ -48,7 +48,7 @@ export function createThreeFingerTapRecognizer(
         y: touch.clientY,
       });
     }
-    if (gesture.starts.size > 3) gesture.invalid = true;
+    if (gesture.starts.size > 2) gesture.invalid = true;
   }
 
   function move(event: TouchEvent): void {
@@ -66,7 +66,7 @@ export function createThreeFingerTapRecognizer(
 
     const recognized =
       !gesture.invalid &&
-      gesture.starts.size === 3 &&
+      gesture.starts.size === 2 &&
       event.timeStamp - gesture.startedAt <= MAX_TAP_DURATION_MS;
     gesture = undefined;
     if (!recognized) return;

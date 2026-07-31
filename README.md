@@ -28,7 +28,7 @@ from a faction's production scheme or by searching the base dwelling creatures;
 repeated additions increment one shared dwelling count, and their growth bonus
 applies to every matching town.
 
-Middle-click a dwelling or fortification, three-finger tap it, or press
+Middle-click a dwelling or fortification, two-finger tap it, or press
 `Shift+Enter` while it is focused to advance it provisionally. A town can have
 multiple pending dwellings and one pending Citadel or Castle. Its blue
 one-time-costs panel groups each construction or upgrade with its cost and, for

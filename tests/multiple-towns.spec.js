@@ -9,9 +9,9 @@ async function addTown(page, town) {
     .click();
 }
 
-async function threeFingerTap(locator) {
+async function twoFingerTap(locator) {
   await locator.evaluate((target) => {
-    const touches = [0, 1, 2].map((identifier) =>
+    const touches = [0, 1].map((identifier) =>
       new Touch({
         identifier,
         target,
@@ -1011,28 +1011,28 @@ test("multiple pending dwellings are independent, individually cancelable, persi
   ).toHaveAttribute("data-pending", "true");
 });
 
-test("a three-finger touchend gesture toggles pending buildings", async ({
+test("a two-finger touchend gesture toggles pending buildings", async ({
   page,
 }) => {
   await page.goto("/");
 
   const fortification = page.locator(".fortification-cycle-button").first();
-  await threeFingerTap(fortification);
+  await twoFingerTap(fortification);
   await expect(fortification).toHaveAttribute("data-fortification", "citadel");
   await expect(fortification).toHaveAttribute("data-pending", "true");
 
-  await threeFingerTap(fortification);
+  await twoFingerTap(fortification);
   await expect(fortification).toHaveAttribute("data-fortification", "fort");
   await expect(fortification).toHaveAttribute("data-pending", "false");
 
   const card = page.locator(".town-section").first().locator(".unit-card").nth(1);
   const body = card.locator(".production-card-body");
 
-  await threeFingerTap(body);
+  await twoFingerTap(body);
   await expect(card).toHaveAttribute("data-stage", "0");
   await expect(card).toHaveAttribute("data-pending", "true");
 
-  await threeFingerTap(body);
+  await twoFingerTap(body);
   await expect(card).toHaveAttribute("data-stage", "-1");
   await expect(card).toHaveAttribute("data-pending", "false");
 });
