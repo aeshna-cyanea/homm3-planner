@@ -1,59 +1,21 @@
 ## HotA production planner
 
-The static planner reads `public/creatures.json` and calculates one week of
-production across any number of towns. Each town has its own production scheme
-and recruitment subtotal, and its default label can be renamed with the pencil
-beside it. The global-total dialog aggregates every town plus recruitment at
-external dwellings, along with any pending one-time costs. Press `T` to add a
-town or `P` to open the global total. The controls start at the top of the page;
-the arrow at their right edge moves them between the header and footer.
-Press `U` outside a text field, or use Show construction costs, to show or hide
-each dwelling's next construction or upgrade cost and the next fortification
-cost. Both display preferences persist across visits. Creature names open a
-compact reference dialog with their statistics, special abilities, recruitment
-cost, and Heroes 3 Wiki source. Clicking the dialog cycles through that
-dwelling's variants; upgraded values that differ from the base creature are
-shown in green.
+This app calculates the cost of one week of
+production of your town(s), with an option to display a global total cost.
 
-Planner changes are autosaved and restored across reloads. Press `S` or use
-Save State to create a separate restore point; press `R` or use Reset State to
-return to that restore point. Reset returns to the default plan when no restore
-point has been saved.
+Buildings in the town panel can be marked as pending. A pending building's one-time-costs panel groups each construction or upgrade with its cost and, for a newly built dwelling, its immediate production of a week's worth of
+creatures.
 
-Each dwelling cycles through none, basic, and upgraded creatures. Cove's level 3
-also cycles through its Sea Dog second upgrade. Relevant dwellings show an optional
-Horde-building toggle. Horde growth is added before Fort, Citadel, and Castle
-modifiers are applied to recruitment costs. External dwellings can be added
-from a faction's production scheme or by searching the base dwelling creatures;
-repeated additions increment one shared dwelling count, and their growth bonus
-applies to every matching town.
+### Todos
 
-Middle-click a dwelling, Horde building, or fortification, two-finger tap it,
-or press `Shift+Enter` while it is focused to build or advance it provisionally.
-A town can have multiple pending dwellings and Horde buildings, plus one pending
-Citadel or Castle. Its blue one-time-costs panel groups each construction or
-upgrade with its cost and, for a newly built base dwelling, one unmodified week
-of its creatures. Click a pending control normally to confirm its advancement,
-or use that entry's close button (or repeat the pending gesture) to cancel and
-revert it. The panel's bottom actions confirm or cancel every pending building
-in that town. Pending Horde buildings add only their construction cost and
-projected weekly growth; they do not add immediate creatures. Pending buildings
-are included when state is saved. Changing faction clears all pending buildings
-and reverts their provisional effects.
+- Implement tech requirements
+  - show a small warning flag on the card when enabling production with unmet reqs
+  - implement controls to auto-add requirements for a given building
+- serve creature icons and/or full pictures (saved in repo, but not bundled)
+- add controls for special modifiers such as astrological events, grail, and legion artefact
+- add parsing of an in-game kingdom overlay (possibly using js screen sharing apis?)
 
-`public/creatures.json` preserves the full creature statistics and source links
-in the structure used by the planner. Towns are identified by their names and
-contain dwellings with shared `level` and `growth` values plus an ordered
-`variants` list. A dwelling has an optional `horde` object when one applies.
-Non-upgradable neutral creatures are stored as single-variant dwellings under
-`neutral_dwellings`, so growth remains a property of the dwelling rather than
-the creature. The data comes from the Heroes 3 Wiki pages for the
-[creature list](https://heroes.thelazy.net/index.php/List_of_creatures) and
-[Horde buildings](https://heroes.thelazy.net/index.php/Horde_building).
-Building and upgrade costs for every faction come from the current
-[Heroes 3 Wiki faction creature-dwelling tables](https://heroes.thelazy.net/index.php/Castle_creature_dwellings).
-When a table provides costs for multiple rulesets, the data uses its HotA
-values.
+## Development
 
 Install the project dependencies once:
 
@@ -74,7 +36,7 @@ creates the ignored `dist/` deployment artifact, bundles autoComplete.js into a
 hashed file under `dist/assets/`, and generates `dist/third-party-licenses.md`.
 Use `npm run preview` to inspect the production build locally.
 
-The interface is written in SolidJS and strict TypeScript. Its source is split
+The interface is written in SolidJS TypeScript. Its source is split
 by responsibility:
 
 - `src/types.ts` defines the creature data and planner-state shapes.
@@ -93,7 +55,7 @@ repository settings, configure Pages to use **GitHub Actions** as its source.
 
 ### Offline PWA
 
-After the hosted planner has loaded once, its interface, creature data, and
+After the page has loaded once, its interface, creature data, and
 search dependency are cached for use without a network connection. The Vite PWA
 plugin generates the service worker and its precache list from the built files,
 so asset hashes and cache revisions stay synchronized automatically. Service
@@ -119,7 +81,7 @@ After an intentional visual change, refresh the screenshot baselines with
 `npm run test:visual:update` and inspect the updated images before committing them.
 
 
-### Third-party credits
+## Third-party credits
 
 The app icon uses the [Twemoji “European Castle”](https://github.com/twitter/twemoji/blob/master/assets/svg/1f3f0.svg)
 graphic, copyright 2019 Twitter, Inc. and other contributors, licensed under
@@ -127,3 +89,7 @@ graphic, copyright 2019 Twitter, Inc. and other contributors, licensed under
 
 Creature search uses [autoComplete.js](https://github.com/TarekRaafat/autoComplete.js),
 licensed under the [Apache License 2.0](https://github.com/TarekRaafat/autoComplete.js/blob/master/LICENSE).
+
+Game data comes from the
+[Heroes 3 Wiki](https://heroes.thelazy.net). The data uses HotA
+values.
