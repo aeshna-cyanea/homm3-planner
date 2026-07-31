@@ -212,7 +212,9 @@ function DwellingCard(props: {
   const externalCount = () =>
     props.planner.externalDwellingCount(basic().name);
   const pending = () => plan().pendingDwellings.includes(props.index);
+  const hordePending = () => plan().pendingHordes.includes(props.index);
   const twoFingerTap = createTwoFingerTapRecognizer(togglePending);
+  const hordeTwoFingerTap = createTwoFingerTapRecognizer(toggleHordePending);
 
   function togglePending(): void {
     props.planner.togglePendingDwelling(props.planId, props.index);
@@ -226,6 +228,16 @@ function DwellingCard(props: {
     if (event.button !== 1) return;
     event.preventDefault();
     togglePending();
+  }
+
+  function toggleHordePending(): void {
+    props.planner.togglePendingHorde(props.planId, props.index);
+  }
+
+  function handleHordeAuxiliaryClick(event: MouseEvent): void {
+    if (event.button !== 1) return;
+    event.preventDefault();
+    toggleHordePending();
   }
 
   function handleCycleKeyDown(event: KeyboardEvent): void {
@@ -242,6 +254,32 @@ function DwellingCard(props: {
     }
     event.preventDefault();
     togglePending();
+  }
+
+  function handleHordeKeyDown(event: KeyboardEvent): void {
+    if (
+      event.key !== "Enter" ||
+      !event.shiftKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey ||
+      event.repeat ||
+      event.isComposing
+    ) {
+      return;
+    }
+    event.preventDefault();
+    toggleHordePending();
+  }
+
+  function changeHorde(event: Event): void {
+    const input = event.currentTarget as HTMLInputElement;
+    props.planner.toggleHorde(
+      props.planId,
+      props.index,
+      input.checked,
+    );
+    input.checked = plan().hordeEnabled[props.index];
   }
 
   function setExternalCount(event: Event): void {
@@ -374,20 +412,43 @@ function DwellingCard(props: {
       {horde() && (
         <label
           class="horde-toggle"
-          classList={{ "is-disabled": !selected() }}
+          classList={{
+            "is-disabled": !selected(),
+            "is-pending": hordePending(),
+          }}
+          data-pending={hordePending() ? "true" : "false"}
+          title={
+            hordePending()
+              ? `Confirm ${horde()!.name}`
+              : plan().hordeEnabled[props.index]
+                ? horde()!.name
+                : `Build ${horde()!.name}`
+          }
+          onMouseDown={handleMiddleButtonDown}
+          onAuxClick={handleHordeAuxiliaryClick}
+          onTouchStart={(event) => hordeTwoFingerTap.start(event)}
+          onTouchMove={(event) => hordeTwoFingerTap.move(event)}
+          onTouchEnd={(event) => hordeTwoFingerTap.end(event)}
+          onTouchCancel={() => hordeTwoFingerTap.cancel()}
         >
           <input
             class="horde-checkbox"
             type="checkbox"
             data-slot={props.index}
+            aria-label={
+              hordePending()
+                ? `${horde()!.name}, pending. Activate to confirm; ` +
+                  "Shift Enter or middle click to cancel."
+                : plan().hordeEnabled[props.index]
+                  ? `${horde()!.name}, built`
+                  : `${horde()!.name}, not built. ` +
+                    "Shift Enter or middle click builds it as pending."
+            }
+            aria-keyshortcuts="Shift+Enter"
             checked={plan().hordeEnabled[props.index]}
             disabled={!selected()}
-            onChange={(event) =>
-              props.planner.toggleHorde(
-                props.planId,
-                props.index,
-                event.currentTarget.checked,
-              )}
+            onKeyDown={handleHordeKeyDown}
+            onChange={changeHorde}
           />
           <span class="toggle-indicator" aria-hidden="true" />
           <span class="horde-copy">
@@ -397,6 +458,18 @@ function DwellingCard(props: {
               <CostDisplay cost={horde()!.cost} />
             </small>
           </span>
+          <Show when={hordePending()}>
+            <span
+              class="pending-clock horde-pending-clock"
+              aria-hidden="true"
+              title="Pending"
+            >
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8.5" />
+                <path d="M12 7.5v5l3.5 2" />
+              </svg>
+            </span>
+          </Show>
         </label>
       )}
     </div>

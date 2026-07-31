@@ -254,6 +254,160 @@ test("reset restores the explicit save while reload restores the latest autosave
   await expect(townSelect).toHaveValue("Inferno");
 });
 
+test("the pending-building hint is blue, dismissible, and remembered", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 350, height: 800 });
+  await page.goto("/");
+
+  const hint = page.locator(".pending-building-hint");
+  const pointerCopy = hint.locator(".pending-building-hint-pointer-copy");
+  const touchCopy = hint.locator(".pending-building-hint-touch-copy");
+  const close = hint.getByRole("button", {
+    name: "Dismiss pending building tip",
+  });
+  await expect(hint).toBeVisible();
+  await expect(pointerCopy).toBeVisible();
+  await expect(pointerCopy).toHaveText(
+    "Middle-click a building to mark it as pending.",
+  );
+  await expect(pointerCopy).toHaveCSS("white-space", "normal");
+  await expect(touchCopy).toBeHidden();
+  await expect(hint).toHaveCSS(
+    "border-color",
+    "rgba(91, 166, 230, 0.78)",
+  );
+  await expect(hint).toHaveCSS(
+    "box-shadow",
+    "rgba(91, 166, 230, 0.34) 0px 0px 0px 1px, rgba(73, 152, 220, 0.28) 0px 0px 14px 0px",
+  );
+  await expect(close).toHaveCSS("color", "rgb(123, 193, 245)");
+  await expect(close).toHaveCSS(
+    "border-color",
+    "rgba(91, 166, 230, 0.78)",
+  );
+
+  const hintGeometry = await hint.evaluate((element) => {
+    const app = document.querySelector(".planner-app").getBoundingClientRect();
+    const copy = element.querySelector(
+      ".pending-building-hint-pointer-copy",
+    ).getBoundingClientRect();
+    const closeButton = element.querySelector(
+      ".pending-building-hint-close",
+    ).getBoundingClientRect();
+    const box = element.getBoundingClientRect();
+    return {
+      appCenter: app.left + app.width / 2,
+      boxCenter: box.left + box.width / 2,
+      boxNarrowerThanApp: box.width < app.width,
+      copyCenter: copy.top + copy.height / 2,
+      closeCenter: closeButton.top + closeButton.height / 2,
+    };
+  });
+  expect(hintGeometry.boxCenter).toBeCloseTo(hintGeometry.appCenter, 0);
+  expect(hintGeometry.boxNarrowerThanApp).toBe(true);
+  expect(hintGeometry.closeCenter).toBeCloseTo(hintGeometry.copyCenter, 0);
+
+  const dismissal = await close.evaluate((button) => {
+    const content = document.querySelector(".planner-content");
+    const previousContentTop = content.getBoundingClientRect().top;
+    button.click();
+    const animation = content.getAnimations().find(
+      (candidate) =>
+        candidate.animationName === "relocate-planner-content",
+    );
+    const timing = animation.effect.getTiming();
+    animation.currentTime = 0;
+    const delayedContentTop = content.getBoundingClientRect().top;
+    animation.currentTime = timing.delay + timing.duration / 2;
+    const halfwayContentTop = content.getBoundingClientRect().top;
+    const offset = Number.parseFloat(
+      content.style.getPropertyValue("--planner-content-offset-y"),
+    );
+    return {
+      delay: timing.delay,
+      duration: timing.duration,
+      previousContentTop,
+      delayedContentTop,
+      halfwayContentTop,
+      finalContentTop: previousContentTop - offset,
+    };
+  });
+  expect(dismissal.delay).toBe(80);
+  expect(dismissal.duration).toBe(420);
+  expect(dismissal.delayedContentTop).toBeCloseTo(
+    dismissal.previousContentTop,
+    0,
+  );
+  expect(dismissal.halfwayContentTop).toBeLessThan(
+    dismissal.previousContentTop,
+  );
+  expect(dismissal.halfwayContentTop).toBeGreaterThan(
+    dismissal.finalContentTop,
+  );
+  await expect(hint).toHaveCount(0);
+  await expect(page.locator(".planner-content")).not.toHaveClass(
+    /is-relocating/,
+  );
+  await expect.poll(() => page.evaluate(() => JSON.parse(
+    localStorage.getItem("hota-production-planner-preferences"),
+  ))).toEqual({
+    showBuildingCosts: false,
+    controlsPosition: "header",
+    pendingBuildingHintDismissed: true,
+  });
+
+  await page.reload();
+  await expect(hint).toHaveCount(0);
+});
+
+test("the pending-building hint closes when a building becomes pending", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const hint = page.locator(".pending-building-hint");
+  const fortification = page.locator(".fortification-cycle-button").first();
+  await expect(hint).toBeVisible();
+  await fortification.click({ button: "middle" });
+  await expect(fortification).toHaveAttribute("data-pending", "true");
+  await expect(hint).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hota-production-planner-preferences"))
+      ?.pendingBuildingHintDismissed,
+  )).toBe(true);
+
+  await page.reload();
+  await expect(hint).toHaveCount(0);
+});
+
+test("the pending-building hint uses touch copy for coarse pointers", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    baseURL: "http://127.0.0.1:4173",
+    hasTouch: true,
+    isMobile: true,
+    viewport: { width: 390, height: 844 },
+  });
+  const page = await context.newPage();
+  try {
+    await page.goto("/");
+    const hint = page.locator(".pending-building-hint");
+    await expect(
+      hint.locator(".pending-building-hint-pointer-copy"),
+    ).toBeHidden();
+    await expect(
+      hint.locator(".pending-building-hint-touch-copy"),
+    ).toHaveText("Two-finger tap a building to mark it as pending.");
+    await expect(
+      hint.locator(".pending-building-hint-touch-copy"),
+    ).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
 test("controls default to the header and both display preferences persist", async ({
   page,
 }) => {
@@ -337,9 +491,17 @@ test("controls default to the header and both display preferences persist", asyn
   const footerLayout = await page.evaluate(() => {
     const controls = document.querySelector(".planner-controls").getBoundingClientRect();
     const external = document.querySelector(".external-layout").getBoundingClientRect();
-    return controls.top > external.bottom;
+    const hint = document.querySelector(".pending-building-hint").getBoundingClientRect();
+    const towns = document.querySelector(".town-list").getBoundingClientRect();
+    return {
+      controlsBelowExternal: controls.top > external.bottom,
+      hintAboveTowns: hint.bottom < towns.top,
+    };
   });
-  expect(footerLayout).toBe(true);
+  expect(footerLayout).toEqual({
+    controlsBelowExternal: true,
+    hintAboveTowns: true,
+  });
 
   await costsButton.click();
   await expect(app).toHaveAttribute("data-building-costs", "shown");
@@ -350,6 +512,7 @@ test("controls default to the header and both display preferences persist", asyn
   ))).toEqual({
     showBuildingCosts: true,
     controlsPosition: "footer",
+    pendingBuildingHintDismissed: false,
   });
 
   await page.reload();
@@ -848,6 +1011,108 @@ test("pending construction advances, confirms, cancels, and uses compact one-tim
   await expect(archer).toHaveAttribute("data-pending", "false");
 });
 
+test("Horde buildings can be pending without adding immediate creatures", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 350, height: 900 });
+  await page.goto("/");
+
+  const town = page.locator(".town-section").first();
+  const griffinSlot = town.locator(".unit-slot").nth(2);
+  const griffinCard = griffinSlot.locator(".unit-card");
+  const horde = griffinSlot.locator(".horde-toggle");
+  const hordeCheckbox = horde.locator(".horde-checkbox");
+  const production = griffinSlot.locator(".production-detail strong");
+  const oneTime = town.locator("[data-one-time-costs]");
+
+  await griffinCard.locator(".unit-card-cycle-action").click();
+  await expect(griffinCard).toHaveAttribute("data-stage", "0");
+  await expect(production).toHaveText("7");
+  await expect(hordeCheckbox).not.toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "false");
+
+  await horde.click({ button: "middle" });
+  await expect(hordeCheckbox).toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "true");
+  await expect(horde).toHaveClass(/is-pending/);
+  await expect(horde.locator(".horde-pending-clock")).toBeHidden();
+  await expect(horde).toHaveCSS(
+    "border-color",
+    "rgb(123, 193, 245)",
+  );
+  const hordeLayout = await horde.evaluate((element) => ({
+    clientWidth: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+  }));
+  expect(hordeLayout.scrollWidth).toBeLessThanOrEqual(hordeLayout.clientWidth);
+  await expect(production).toHaveText("10");
+
+  const hordeCosts = oneTime.locator('[data-pending-horde="2"]');
+  await expect(hordeCosts).toBeVisible();
+  await expect(hordeCosts.locator(".one-time-cost-row")).toHaveCount(1);
+  await expect(hordeCosts.locator(".one-time-cost-label")).toHaveText(
+    "Building Griffin Bastion",
+  );
+  await expect(hordeCosts.locator(".one-time-cost-value .cost-item b"))
+    .toHaveText("1,000");
+  await expect(oneTime.locator(".one-time-subtotal .cost-item b"))
+    .toHaveText("1,000");
+
+  await page.locator("#open-global-total").click();
+  const globalDialog = page.locator(".global-total-dialog");
+  const hordeLineItem = globalDialog
+    .locator(".results-cost-line-item")
+    .filter({ hasText: "Building Griffin Bastion" });
+  await expect(hordeLineItem).toHaveCount(1);
+  await expect(
+    globalDialog.locator(".results-one-time-creature").filter({
+      hasText: "Griffin",
+    }),
+  ).toHaveCount(0);
+  await expect(
+    globalDialog.locator("tr:not(.results-cost-line-item)").filter({
+      hasText: "Griffin",
+    }),
+  ).toHaveCount(1);
+  await globalDialog.getByRole("button", { name: "Close" }).click();
+
+  await page.locator("#save-state").click();
+  const savedState = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hota-production-planner-state")));
+  expect(savedState.townPlans[0].dwellings[2].pendingHorde).toBe(true);
+  await page.reload();
+
+  await expect(hordeCheckbox).toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "true");
+  await expect(production).toHaveText("10");
+  await oneTime.getByRole("button", {
+    name: "Cancel building Griffin Bastion",
+  }).click();
+  await expect(hordeCheckbox).not.toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "false");
+  await expect(production).toHaveText("7");
+  await expect(oneTime).toHaveCount(0);
+
+  await hordeCheckbox.press("Shift+Enter");
+  await expect(hordeCheckbox).toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "true");
+  await horde.click();
+  await expect(hordeCheckbox).toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "false");
+  await expect(production).toHaveText("10");
+  await expect(oneTime).toHaveCount(0);
+
+  await horde.click();
+  await expect(hordeCheckbox).not.toBeChecked();
+  await hordeCheckbox.press("Shift+Enter");
+  await expect(horde).toHaveAttribute("data-pending", "true");
+  await oneTime.getByRole("button", { name: "Cancel all" }).click();
+  await expect(hordeCheckbox).not.toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "false");
+  await expect(production).toHaveText("7");
+  await expect(oneTime).toHaveCount(0);
+});
+
 test("a many-resource one-time subtotal stays on one line", async ({ page }) => {
   for (const width of [1280, 350]) {
     await page.setViewportSize({ width, height: 900 });
@@ -1035,4 +1300,17 @@ test("a two-finger touchend gesture toggles pending buildings", async ({
   await twoFingerTap(body);
   await expect(card).toHaveAttribute("data-stage", "-1");
   await expect(card).toHaveAttribute("data-pending", "false");
+
+  const hordeSlot = page.locator(".town-section").first().locator(".unit-slot").nth(2);
+  await hordeSlot.locator(".unit-card-cycle-action").click();
+  const horde = hordeSlot.locator(".horde-toggle");
+  const hordeCheckbox = horde.locator(".horde-checkbox");
+
+  await twoFingerTap(horde);
+  await expect(hordeCheckbox).toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "true");
+
+  await twoFingerTap(horde);
+  await expect(hordeCheckbox).not.toBeChecked();
+  await expect(horde).toHaveAttribute("data-pending", "false");
 });

@@ -363,6 +363,70 @@ h2 {
   margin: 1.375rem 0 0;
 }
 
+.pending-building-hint {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 2rem;
+  margin: -1.375rem auto 2.75rem;
+  padding: 0.3125rem 0.5rem 0.3125rem 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(91, 166, 230, 0.78);
+  border-radius: 0.5rem;
+  background: rgba(73, 152, 220, 0.12);
+  box-shadow:
+    0 0 0 0.0625rem rgba(91, 166, 230, 0.34),
+    0 0 0.875rem rgba(73, 152, 220, 0.28);
+  color: #b8e1ff;
+  font-size: clamp(0.68rem, calc(0.64rem + 0.2vw), 0.78rem);
+  line-height: 1.2;
+}
+
+.planner-app[data-controls-position="footer"] .pending-building-hint {
+  margin: 0 auto 2.75rem;
+}
+
+.pending-building-hint-copy {
+  min-width: 0;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+.pending-building-hint-touch-copy { display: none; }
+
+.pending-building-hint-close {
+  display: inline-grid;
+  flex: 0 0 1.375rem;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  padding: 0;
+  border: 1px solid rgba(91, 166, 230, 0.78);
+  border-radius: 50%;
+  background: rgba(73, 152, 220, 0.1);
+  color: #7bc1f5;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pending-building-hint-close:hover,
+.pending-building-hint-close:focus-visible {
+  border-color: #7bc1f5;
+  outline: none;
+  background: rgba(73, 152, 220, 0.24);
+  color: #b8e1ff;
+}
+
+.pending-building-hint-close:focus-visible {
+  box-shadow: 0 0 0 0.1875rem rgba(91, 166, 230, 0.24);
+}
+
 .planner-content.is-relocating {
   animation: relocate-planner-content 420ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
   will-change: transform;
@@ -1399,6 +1463,20 @@ select,
   background: rgba(221, 182, 94, 0.06);
 }
 
+.horde-toggle.is-pending {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  border-color: rgba(91, 166, 230, 0.78);
+  background: rgba(73, 152, 220, 0.12);
+  box-shadow:
+    0 0 0 0.0625rem rgba(91, 166, 230, 0.34),
+    0 0 0.875rem rgba(73, 152, 220, 0.28);
+}
+
+.horde-toggle.is-pending:hover {
+  border-color: #7bc1f5;
+  background: rgba(73, 152, 220, 0.18);
+}
+
 .horde-toggle input {
   position: absolute;
   opacity: 0;
@@ -1815,7 +1893,8 @@ select,
 
 /* Two 9rem cards plus their 0.75rem gap need 18.75rem. */
 @container creature-scheme (max-width: 18.75rem) {
-  .unit-card .pending-clock { display: none; }
+  .unit-card .pending-clock,
+  .horde-toggle .pending-clock { display: none; }
 }
 
 @container planner-controls (max-width: 60rem) {
@@ -1828,6 +1907,11 @@ select,
 @media (prefers-reduced-motion: reduce) {
   .planner-controls.is-relocating,
   .planner-content.is-relocating { animation: none; }
+}
+
+@media (any-pointer: coarse) {
+  .pending-building-hint-pointer-copy { display: none; }
+  .pending-building-hint-touch-copy { display: inline; }
 }
 
 @media (max-width: 48.75rem) {

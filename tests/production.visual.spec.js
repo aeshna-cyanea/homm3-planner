@@ -798,6 +798,12 @@ test("recruitment column follows desktop scrolling only", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 600 });
   await page.goto("/index.html");
   await expect(page.locator("#town-select")).toBeEnabled();
+  await page.getByRole("button", {
+    name: "Dismiss pending building tip",
+  }).click();
+  await expect(page.locator(".planner-content")).not.toHaveClass(
+    /is-relocating/,
+  );
 
   const resultsColumn = page.locator(".town-results-content");
   await expect(resultsColumn).toHaveCSS("position", "sticky");

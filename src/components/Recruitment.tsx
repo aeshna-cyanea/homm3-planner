@@ -12,6 +12,8 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
     props.planner.pendingDwellingCosts(props.planId);
   const pendingFortification = () =>
     props.planner.pendingFortificationCosts(props.planId);
+  const pendingHordes = () =>
+    props.planner.pendingHordeCosts(props.planId);
   const id = (name: string) => domId(name, props.planId);
 
   return (
@@ -20,7 +22,13 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
       data-town-results={props.planId}
       data-empty={rows().length === 0}
     >
-      <Show when={pendingFortification() || pendingCosts().length > 0}>
+      <Show
+        when={
+          pendingFortification() ||
+          pendingCosts().length > 0 ||
+          pendingHordes().length > 0
+        }
+      >
         <section
           class="results-section one-time-results-section panel"
           aria-labelledby={id("one-time-title")}
@@ -94,6 +102,25 @@ export function TownRecruitment(props: { planner: Planner; planId: string }) {
                   </div>
                 );
               }}
+            </For>
+            <For each={pendingHordes()}>
+              {(costs) => (
+                <div
+                  class="one-time-cost-group"
+                  data-pending-horde={costs.dwellingIndex}
+                >
+                  <OneTimeCostRow
+                    label={`Building ${costs.buildingName}`}
+                    cost={costs.construction}
+                    cancelLabel={`Cancel building ${costs.buildingName}`}
+                    onCancel={() =>
+                      props.planner.cancelPendingHorde(
+                        props.planId,
+                        costs.dwellingIndex,
+                      )}
+                  />
+                </div>
+              )}
             </For>
           </div>
           <div class="one-time-actions">

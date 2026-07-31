@@ -170,7 +170,9 @@ function GlobalTotalDialog(props: { planner: Planner }) {
   const hasPendingCosts = () =>
     props.planner.state.townPlans.some(
       (plan) =>
-        plan.pendingFortification !== null || plan.pendingDwellings.length > 0,
+        plan.pendingFortification !== null ||
+        plan.pendingDwellings.length > 0 ||
+        plan.pendingHordes.length > 0,
     );
 
   onMount(() => window.addEventListener("keydown", toggleWithShortcut));

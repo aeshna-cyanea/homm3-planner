@@ -7,6 +7,7 @@ const preferencesStorageKey = "hota-production-planner-preferences";
 export interface PlannerPreferences {
   showBuildingCosts: boolean;
   controlsPosition: "header" | "footer";
+  pendingBuildingHintDismissed: boolean;
 }
 
 export function loadSavedState(): SavedPlannerState | null {
@@ -46,6 +47,7 @@ export function loadPreferences(): PlannerPreferences {
   const defaults: PlannerPreferences = {
     showBuildingCosts: false,
     controlsPosition: "header",
+    pendingBuildingHintDismissed: false,
   };
 
   try {
@@ -65,6 +67,10 @@ export function loadPreferences(): PlannerPreferences {
         preferences.controlsPosition === "footer"
           ? preferences.controlsPosition
           : defaults.controlsPosition,
+      pendingBuildingHintDismissed:
+        typeof preferences.pendingBuildingHintDismissed === "boolean"
+          ? preferences.pendingBuildingHintDismissed
+          : defaults.pendingBuildingHintDismissed,
     };
   } catch {
     return defaults;

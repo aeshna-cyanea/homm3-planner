@@ -1,4 +1,11 @@
-import { For, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  For,
+  Show,
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import { isPlainShortcut } from "./keyboard";
 import {
   loadPreferences,
@@ -24,9 +31,26 @@ export function App(props: { planner: Planner }) {
   const [controlsPosition, setControlsPosition] = createSignal(
     preferences.controlsPosition,
   );
+  const [showPendingBuildingHint, setShowPendingBuildingHint] = createSignal(
+    !preferences.pendingBuildingHintDismissed,
+  );
 
   onMount(() => window.addEventListener("keydown", toggleBuildingCosts));
   onCleanup(() => window.removeEventListener("keydown", toggleBuildingCosts));
+
+  createEffect(() => {
+    if (
+      showPendingBuildingHint() &&
+      props.planner.state.townPlans.some(
+        (plan) =>
+          plan.pendingFortification !== null ||
+          plan.pendingDwellings.length > 0 ||
+          plan.pendingHordes.length > 0,
+      )
+    ) {
+      dismissPendingBuildingHint();
+    }
+  });
 
   function toggleBuildingCosts(event: KeyboardEvent): void {
     if (!isPlainShortcut(event, "u")) return;
@@ -38,8 +62,35 @@ export function App(props: { planner: Planner }) {
     savePreferences({
       showBuildingCosts: showBuildingCosts(),
       controlsPosition: controlsPosition(),
+      pendingBuildingHintDismissed: !showPendingBuildingHint(),
       ...next,
     });
+  }
+
+  function dismissPendingBuildingHint(): void {
+    if (plannerContent) {
+      plannerContent.classList.remove("is-relocating");
+      plannerContent.style.removeProperty("--planner-content-offset-y");
+    }
+    const previousContentTop = plannerContent?.getBoundingClientRect().top;
+    setShowPendingBuildingHint(false);
+    persistPreferences({ pendingBuildingHintDismissed: true });
+    if (
+      previousContentTop === undefined ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    const offset =
+      previousContentTop - plannerContent.getBoundingClientRect().top;
+    if (offset === 0) return;
+    plannerContent.style.setProperty(
+      "--planner-content-offset-y",
+      `${offset}px`,
+    );
+    void plannerContent.offsetWidth;
+    plannerContent.classList.add("is-relocating");
   }
 
   function toggleBuildingCostsVisibility(): void {
@@ -77,6 +128,9 @@ export function App(props: { planner: Planner }) {
           onToggleBuildingCosts={toggleBuildingCostsVisibility}
           onToggleControlsPosition={toggleControlsPosition}
         />
+        <Show when={showPendingBuildingHint()}>
+          <PendingBuildingHint onDismiss={dismissPendingBuildingHint} />
+        </Show>
         <div
           ref={plannerContent}
           class="planner-content"
@@ -101,6 +155,27 @@ export function App(props: { planner: Planner }) {
         <SourceFooter />
       </main>
     </CreatureDetailsProvider>
+  );
+}
+
+function PendingBuildingHint(props: { onDismiss: () => void }) {
+  return (
+    <aside class="pending-building-hint" aria-label="Pending building tip">
+      <span class="pending-building-hint-copy pending-building-hint-pointer-copy">
+        Middle-click a building to mark it as pending.
+      </span>
+      <span class="pending-building-hint-copy pending-building-hint-touch-copy">
+        Two-finger tap a building to mark it as pending.
+      </span>
+      <button
+        class="pending-building-hint-close"
+        type="button"
+        aria-label="Dismiss pending building tip"
+        onClick={props.onDismiss}
+      >
+        ×
+      </button>
+    </aside>
   );
 }
 

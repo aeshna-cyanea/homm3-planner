@@ -32,6 +32,7 @@ import type {
   PendingDwellingCosts,
   PendingFortification,
   PendingFortificationCosts,
+  PendingHordeCosts,
   PlannerState,
   RecruitmentRow,
   SavedPlannerState,
@@ -60,6 +61,7 @@ export interface Planner {
   productionTotals(planId: string): CostEntry[];
   pendingDwellingCosts(planId: string): PendingDwellingCosts[];
   pendingFortificationCosts(planId: string): PendingFortificationCosts | undefined;
+  pendingHordeCosts(planId: string): PendingHordeCosts[];
   pendingBuildingTotal(planId: string): Cost;
   externalDwellingCards(): ExternalDwellingCard[];
   externalRows(): RecruitmentRow[];
@@ -79,6 +81,8 @@ export interface Planner {
   cycleDwelling(planId: string, dwellingIndex: number): void;
   togglePendingDwelling(planId: string, dwellingIndex: number): void;
   cancelPendingDwelling(planId: string, dwellingIndex: number): void;
+  togglePendingHorde(planId: string, dwellingIndex: number): void;
+  cancelPendingHorde(planId: string, dwellingIndex: number): void;
   confirmAllPendingBuildings(planId: string): void;
   cancelAllPendingBuildings(planId: string): void;
   toggleHorde(planId: string, dwellingIndex: number, enabled: boolean): void;
@@ -310,6 +314,20 @@ export function createPlanner(catalog: Catalog): Planner {
       : undefined;
   }
 
+  function pendingHordeCosts(planId: string): PendingHordeCosts[] {
+    const currentPlan = plan(planId);
+    return currentPlan.pendingHordes.flatMap((dwellingIndex) => {
+      const horde = hordeBuilding(dwellings(planId)[dwellingIndex]);
+      return horde && currentPlan.hordeEnabled[dwellingIndex]
+        ? [{
+            dwellingIndex,
+            buildingName: horde.name,
+            construction: horde.cost,
+          }]
+        : [];
+    });
+  }
+
   function pendingCreatureRows(planId: string): RecruitmentRow[] {
     const currentPlan = plan(planId);
     return currentPlan.pendingDwellings.flatMap((dwellingIndex) => {
@@ -339,6 +357,7 @@ export function createPlanner(catalog: Catalog): Planner {
           costs.construction,
           ...(costs.creatures ? [costs.creatures.cost] : []),
         ]),
+        ...pendingHordeCosts(planId).map((costs) => costs.construction),
       ],
     );
   }
@@ -416,6 +435,11 @@ export function createPlanner(catalog: Catalog): Planner {
           : []),
         ...pendingDwellingCosts(currentPlan.id).map((costs) => ({
           label: `${capitalize(costs.action)} ${costs.dwellingName}`,
+          source: townLabel(currentPlan.id),
+          cost: costs.construction,
+        })),
+        ...pendingHordeCosts(currentPlan.id).map((costs) => ({
+          label: `Building ${costs.buildingName}`,
           source: townLabel(currentPlan.id),
           cost: costs.construction,
         })),
@@ -518,6 +542,7 @@ export function createPlanner(catalog: Catalog): Planner {
           selectedCreature:
             selectedCreature(dwelling, currentPlan.selections[index])?.name ?? null,
           hordeEnabled: Boolean(currentPlan.hordeEnabled[index]),
+          pendingHorde: currentPlan.pendingHordes.includes(index),
         })),
       })),
       externalDwellings: state.externalDwellings.map((dwelling) => ({ ...dwelling })),
@@ -536,6 +561,7 @@ export function createPlanner(catalog: Catalog): Planner {
     productionTotals,
     pendingDwellingCosts,
     pendingFortificationCosts,
+    pendingHordeCosts,
     pendingBuildingTotal,
     externalDwellingCards,
     externalRows,
@@ -592,6 +618,7 @@ export function createPlanner(catalog: Catalog): Planner {
         pendingFortification: null,
         selections: replacement.selections,
         hordeEnabled: replacement.hordeEnabled,
+        pendingHordes: [],
         pendingDwellings: [],
       });
     },
@@ -642,6 +669,8 @@ export function createPlanner(catalog: Catalog): Planner {
       setState("townPlans", index, "selections", dwellingIndex, selection);
       if (selection < 0) {
         setState("townPlans", index, "hordeEnabled", dwellingIndex, false);
+        setState("townPlans", index, "pendingHordes", (pending) =>
+          pending.filter((candidate) => candidate !== dwellingIndex));
       }
     },
 
@@ -670,10 +699,36 @@ export function createPlanner(catalog: Catalog): Planner {
 
     cancelPendingDwelling,
 
+    togglePendingHorde(planId, dwellingIndex) {
+      const index = planIndex(planId);
+      const currentPlan = plan(planId);
+      if (currentPlan.pendingHordes.includes(dwellingIndex)) {
+        cancelPendingHorde(planId, dwellingIndex);
+        return;
+      }
+
+      const dwelling = dwellings(planId)[dwellingIndex];
+      if (
+        !dwelling ||
+        !creature(planId, dwellingIndex) ||
+        !hordeBuilding(dwelling) ||
+        currentPlan.hordeEnabled[dwellingIndex]
+      ) {
+        return;
+      }
+
+      setState("townPlans", index, "hordeEnabled", dwellingIndex, true);
+      setState("townPlans", index, "pendingHordes", (pending) =>
+        [...pending, dwellingIndex].sort((left, right) => left - right));
+    },
+
+    cancelPendingHorde,
+
     confirmAllPendingBuildings(planId) {
       const index = planIndex(planId);
       setState("townPlans", index, "pendingFortification", null);
       setState("townPlans", index, "pendingDwellings", []);
+      setState("townPlans", index, "pendingHordes", []);
     },
 
     cancelAllPendingBuildings(planId) {
@@ -681,12 +736,21 @@ export function createPlanner(catalog: Catalog): Planner {
       for (const dwellingIndex of [...plan(planId).pendingDwellings]) {
         cancelPendingDwelling(planId, dwellingIndex);
       }
+      for (const dwellingIndex of [...plan(planId).pendingHordes]) {
+        cancelPendingHorde(planId, dwellingIndex);
+      }
     },
 
     toggleHorde(planId, dwellingIndex, enabled) {
+      const index = planIndex(planId);
+      if (plan(planId).pendingHordes.includes(dwellingIndex)) {
+        setState("townPlans", index, "pendingHordes", (pending) =>
+          pending.filter((candidate) => candidate !== dwellingIndex));
+        return;
+      }
       setState(
         "townPlans",
-        planIndex(planId),
+        index,
         "hordeEnabled",
         dwellingIndex,
         Boolean(
@@ -759,7 +823,21 @@ export function createPlanner(catalog: Catalog): Planner {
       pending.filter((candidate) => candidate !== dwellingIndex));
     if (selection < 0) {
       setState("townPlans", index, "hordeEnabled", dwellingIndex, false);
+      setState("townPlans", index, "pendingHordes", (pending) =>
+        pending.filter((candidate) => candidate !== dwellingIndex));
     }
+  }
+
+  function cancelPendingHorde(
+    planId: string,
+    dwellingIndex: number,
+  ): void {
+    const index = planIndex(planId);
+    if (!plan(planId).pendingHordes.includes(dwellingIndex)) return;
+
+    setState("townPlans", index, "hordeEnabled", dwellingIndex, false);
+    setState("townPlans", index, "pendingHordes", (pending) =>
+      pending.filter((candidate) => candidate !== dwellingIndex));
   }
 
   function cancelPendingFortification(planId: string): void {
@@ -788,6 +866,7 @@ function createPlan(catalog: Catalog, townName: string, id = "town-1"): TownPlan
     pendingFortification: null,
     selections: town.dwellings.map((_, index) => (index === 0 ? 0 : -1)),
     hordeEnabled: town.dwellings.map(() => false),
+    pendingHordes: [],
     pendingDwellings: [],
   };
 }
@@ -844,6 +923,9 @@ function restoreState(
         plan.selections[dwellingIndex] >= 0 &&
         hordeBuilding(dwelling),
       );
+      if (savedDwelling.pendingHorde && plan.hordeEnabled[dwellingIndex]) {
+        plan.pendingHordes.push(dwellingIndex);
+      }
     }
     const savedPendingNames = Array.isArray(savedPlan.pendingDwellings)
       ? savedPlan.pendingDwellings.filter(

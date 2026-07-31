@@ -28,16 +28,18 @@ from a faction's production scheme or by searching the base dwelling creatures;
 repeated additions increment one shared dwelling count, and their growth bonus
 applies to every matching town.
 
-Middle-click a dwelling or fortification, two-finger tap it, or press
-`Shift+Enter` while it is focused to advance it provisionally. A town can have
-multiple pending dwellings and one pending Citadel or Castle. Its blue
-one-time-costs panel groups each construction or upgrade with its cost and, for
-a newly built base dwelling, one unmodified week of its creatures. Click a
-pending control normally to confirm its advancement, or use that entry's close
-button (or repeat the pending gesture) to cancel and revert it. The panel's
-bottom actions confirm or cancel every pending building in that town. Pending
-buildings are included when state is saved. Changing faction clears pending
-dwellings and cancels any pending fortification, reverting its advancement.
+Middle-click a dwelling, Horde building, or fortification, two-finger tap it,
+or press `Shift+Enter` while it is focused to build or advance it provisionally.
+A town can have multiple pending dwellings and Horde buildings, plus one pending
+Citadel or Castle. Its blue one-time-costs panel groups each construction or
+upgrade with its cost and, for a newly built base dwelling, one unmodified week
+of its creatures. Click a pending control normally to confirm its advancement,
+or use that entry's close button (or repeat the pending gesture) to cancel and
+revert it. The panel's bottom actions confirm or cancel every pending building
+in that town. Pending Horde buildings add only their construction cost and
+projected weekly growth; they do not add immediate creatures. Pending buildings
+are included when state is saved. Changing faction clears all pending buildings
+and reverts their provisional effects.
 
 `public/creatures.json` preserves the full creature statistics and source links
 in the structure used by the planner. Towns are identified by their names and

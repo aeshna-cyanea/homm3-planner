@@ -125,6 +125,7 @@ export interface TownPlan {
   pendingFortification: PendingFortification | null;
   selections: number[];
   hordeEnabled: boolean[];
+  pendingHordes: number[];
   pendingDwellings: number[];
 }
 
@@ -142,6 +143,7 @@ export interface SavedDwelling {
   basicCreature: string | null;
   selectedCreature: string | null;
   hordeEnabled: boolean;
+  pendingHorde?: boolean;
 }
 
 export interface SavedTownPlan {
@@ -192,6 +194,12 @@ export interface PendingDwellingCosts {
 
 export interface PendingFortificationCosts {
   fortification: PendingFortification;
+  buildingName: string;
+  construction: Cost;
+}
+
+export interface PendingHordeCosts {
+  dwellingIndex: number;
   buildingName: string;
   construction: Cost;
 }
